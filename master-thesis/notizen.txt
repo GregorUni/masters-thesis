@@ -1,0 +1,60 @@
+Privacy-Aware Smart Metering: A Survey
+Sören Finster and Ingmar Baumgart
+
+Beschreibung: gutes survey über billing und network operating
+trusted platform modules scheint wichtig zu sein....
+zwei quellen dazu im paper angegeben
+
+*BSI Smartmeteransatz lesen
+
+Notizen zu APB:
+Kapitel 5.1.1 Welche Art von Informationen erhält man aus Nachrichten aus Kommunikationssystemen(kann quasi auf das Stromnetz übertragen werden)
+Kapitel 5.3 ist interessant gerade der absatz zu zeit. und welche informationen man bezüglich nachrichten erhält, wenn diese zu einem bestimmten zeitraum aufgerufen werden.
+Kapitel 5.4 interessant. aber nicht anwendbar auf stromnetze
+Kapitel 5.4.1 Schutz des Empängers (muss nicht betrachtet werden?, weil der stromnetzanbieter als empfänger bekannt ist)
+Tim wegen impliziten Addressen fragen. zu aufwendig und komplex
+Möglicher schutz zu sidechannel angriffen -> bedeutungslose nachrichten Kapitel 5.4.3 --> kritisch
+Kollisionsauflösungsalgorithmus mit Mittelwertbildung und überlagerndem Empfangen ist am effizientesten, aber praktisch möglich?
+
+Datenschutz und Sicherheit in Kommunikationsnetzen von AFP könnte eine gute quelle sein.
+
+->>Mögliche lösung, baum netz mit überlagertem senden(eine ähnliche struktur wurde in einem paper genutzt)
+
+PPMA:
+Paillier Kryptosystem basierend auf homomorphe verschlüsselung.
+benötigt eine ttp, die aber nur zur initialisierung des systems benötigt wird.
+Smart Meter kommunizieren mit sogenannten Gate Ways, die für eine Gruppe von Smart Metern zuständig sind.
+Smart Meter verschlüsselt seinen Stromverbrauch. Diese werden dann im Gateways aggregiert und zum CC weitergeleitet.
+Im CC sieht man dann die Anzahl der Gruppen(und wie viele Nutzer es in den Gruppen gibt) und den Stromverbrauch für das gebiet.
+Gibt auche eine Komplextheoretische Analyse.
+Was nicht berücksichtigt wurde sind Smart Meter ausfälle.
+
+BSI-Papier:
+Eine ziemlich gute grafik zum anforderungsprofil von Smart Metern.
+Ansonsten wird nur gesagt, dass der Stromverbrauch direkt ans EMT(Stromprovider gesendet werden muss) wahrscheinlich gibt es also keine zusätzliche infrastruktur um geräte wie MIXe oder sonstiges zu etablieren.
+
+EPPA:
+reduziert overhead von multidimensionalen daten (kw-verbrauch, zeit... etc)
+nutzt auch paillier homomorphe verschlüsselung.
+bei eppa ist eine residential area innerhalb des wifi signals von dem Gateway(ein wenig klein)
+paillier ist auch gut für unterschiedlich viele nutzer im stromnetz
+selbst wenn die datenbank vom gw angegriffen wird, ist paillier sicher (auch wenn die datenbank vom strom provider angegriffen wird)
+hier initialisiert aber der stromprovider das kryptographische system
+"The proposed EPPA scheme enables a residential user to embed multidimensional data into one compressed data. It largely reduces the encryption times for users"
+performance ist ganz ok (ähnlich wie bei ppma) wobei da nicht das kryptographische system vom strom provider initialisiert wird.
+dann müsste auch jeder stromprovider sein eigenes asymmetrisches verschlüsselungssystem haben
+
+Smart Grid Cyber Security: A German Perspective:
+soll eine zusammenfassung sein von dem BSI und bewertet diese zugleich.
+geht auf die wahrscheinlichsten angriffe ein wie z.b austausch von software im smart meter gateway um z.B einen günstigeren stromvertrag zu bekommen.
+2. angriff: angriff auf z.b windräder um so das stromnetz in ungleichheit zu bringen.
+3. angriff espionage: zugriff auf vertrauliche nutzerdaten von haushälten.
+
+smart meter gateways fassen mehrere homemeter zusammen und senden dann die informationen zu strom provider.
+sie werden in nicht öffentlich zugänglichen orten verbaut um manipulation vorzubeugen.
+
+DC netz implementieren in gridlabd
+
+DC netz mit 3 raspberrypis und einem stromnetz provider raspberry pi der dann über grafana anzeigt welche daten er bekommt.
+
+was passiert wenn extrem unterschiedliche kennlinien überlagert werden im dc netz mit wenigen nutzern?

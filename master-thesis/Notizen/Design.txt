@@ -1,0 +1,3 @@
+Notizen für Design:
+
+Grundzustand: Es ist davon auszugehen, dass es bereits mehrere Smart Meter Gateways gibt, die in einem bestehenden Grid operieren.

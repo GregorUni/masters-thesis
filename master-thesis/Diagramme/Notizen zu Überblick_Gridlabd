@@ -1,0 +1,21 @@
+Ablauf Gridlab-D Core Initialisierung:
+
+1. Initialisiere Zeitparameter(Welche Zeitzone, bzw. nutze Computerzeit, wenn keine Zeit in GLM-Datei einegestellt ist.
+2. Speichere den Pfad des Verzeichnissen, in dem die GLM-Datei aufgerufen wird.
+3. Speichere Command Line Parameter
+4. Initialisiere den Scheduler von Gridlab-D bzw. PRNG für Scheduler
+
+Gridlab-D API:
+The runtime module API links the GridLAB-D core to modules that are created to perform various modeling tasks.
+Also Gridlab-D core wird mit den Modulen verbunden durch die API. Der Core kommuniziert durch ein Skript mit den Modul Objekten. Das Skript
+entscheidet, welche Funktionen aufgerufen werden.
+https://github.com/gridlab-d/gridlab-d/blob/master/gldcore/gridlabd.h
+
+Eine Sequenz von der Gridlab-D API sieht folgendermaßen aus:
+1. Registrierung: Ein Modul registriert alle Objektklassen, die im Modul implementiert sind.
+2. Erstellung: Der Core ruft Funktionen auf, die die Objekte erstellen während das Model geladen wird.
+3. Definition: Der Core speichert alle Werte von Objekten, die in der GLM Datei spezifiert werden. Nach diesem Schritt wurden alle Referenzen in der GLM Datei im Core gespeichert.
+4. Validation: Das erstellte Model im Core wird durch das Modul validiert(kurzgesagt).
+5. Initialisierung: Der Core ruft die letzte Initialisierungsmethode auf nachdem der Kontext des Objekts komplett definiert worden ist.
+6. Synchronisation: Eine Operation die sich mehrfach wiederholt, bis es kein Objekt mehr gibt, dass eine Zustandsänderung erwartet. Der return Wert ist die Zeit, die erwartet wird, bis sich
+der Zustand des Objektes wieder ändert.

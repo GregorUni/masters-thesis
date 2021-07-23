@@ -1,0 +1,43 @@
+% Encoding: UTF-8
+
+@Article{795138,
+  author  = {Drenker, S. and Kader, A.},
+  title   = {Nonintrusive monitoring of electric loads},
+  journal = {IEEE Computer Applications in Power},
+  year    = {1999},
+  volume  = {12},
+  number  = {4},
+  pages   = {47-51},
+  doi     = {10.1109/67.795138},
+}
+
+@Article{finster2015privacy,
+  author    = {Finster, S{\"o}ren and Baumgart, Ingmar},
+  title     = {Privacy-aware smart metering: A survey},
+  journal   = {IEEE communications surveys \& tutorials},
+  year      = {2015},
+  volume    = {17},
+  number    = {2},
+  pages     = {1088--1101},
+  publisher = {IEEE},
+}
+
+@Article{fan2012smart,
+  author    = {Fan, Zhong and Kulkarni, Parag and Gormus, Sedat and Efthymiou, Costas and Kalogridis, Georgios and Sooriyabandara, Mahesh and Zhu, Ziming and Lambotharan, Sangarapillai and Chin, Woon Hau},
+  title     = {Smart grid communications: Overview of research challenges, solutions, and standardization activities},
+  journal   = {IEEE Communications Surveys \& Tutorials},
+  year      = {2012},
+  volume    = {15},
+  number    = {1},
+  pages     = {21--38},
+  publisher = {IEEE},
+}
+
+@Online{spiegel,
+  author = {Dr. Heike Le Ker},
+  title  = {"Umwelt-Heuchler" Streit um Al Gores Energieverbrauch},
+  date   = {2007-03-01},
+  url    = {https://www.spiegel.de/wissenschaft/natur/umwelt-heuchler-streit-um-al-gores-energieverbrauch-a-469153.html},
+}
+
+@Comment{jabref-meta: databaseType:biblatex;}
