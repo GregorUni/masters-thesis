@@ -1,3 +1,37 @@
 Notizen für Design:
 
+Es gibt eine .pdf vom BSI in der Informationen zum Sicherheitsmodul gefunden werden können. Also welche kryptografische Operationen werden unterstützt.
+
+Kommunikation: Ein Smart Meter Gateway beantragt die Kommunikation zum Stromanbieter über den Smart Meter Gateway Admin 
+
+Operationen:
+Hier werden alle Möglichen Operationen aufgelistet, die im Protokoll berücksichtig werden:
+-Systeminitialisierung: Wie wird ein mögliches DC-Nets initialisiert in einem bestehenden System?
+-Registrierung: Ein Smart Meter Gateway muss sich bei einem Stromanbieter registrieren und sich beim DC-Netz anmelden. (Wie sieht der Schlüsselgraph aus?) (Wie wird mit anderen Smart Meter Gateways kommuniziert, obwohl dies nicht technisch möglich ist)
+-Nutzerwechsel: mehrere private Nutzer können den Stromanbieter wechseln. Wie wird damit umgegangen? stabiles system etc... (wird das vom smart meter gateway oder vom admin ausgelöst?)
+
+
+
+schau mal nach den Failure handling fällen nach! für sachen die man beachten muss. Sollte im Skript von Pfitzmann beantwortet werden.
+
+
+
+
+
+
+
+
+
+
 Grundzustand: Es ist davon auszugehen, dass es bereits mehrere Smart Meter Gateways gibt, die in einem bestehenden Grid operieren.
+
+
+
+
+
+
+
+
+Problem: Ein Smart Meter Gateway kümmert sich um die Meter Daten, aber wie verhält sich das Smart Meter Gateway, wenn unterschiedliche Meter bei unterschiedlichen Anbietern sind? und ein Anbieter z.B nicht im DC-Netz operiert. etc.
+-Mögliche Lösung: Zeitslots. Jeder Anbieter bekommt einen Zeitslot bei dem gesendet wird. Anbieter mit DC-Netzen können Zeitslots sperren, sodass es nicht zu einer "falschen(bad)" Überlagerung kommt.
+
