@@ -1,3 +1,7 @@
+Vokabeln die ich vergesse:
+Controllable  Local  Systems (CLS)
+
+
 Notizen für Design:
 
 Es gibt eine .pdf vom BSI in der Informationen zum Sicherheitsmodul gefunden werden können. Also welche kryptografische Operationen werden unterstützt.
@@ -5,25 +9,43 @@ Es gibt eine .pdf vom BSI in der Informationen zum Sicherheitsmodul gefunden wer
 Kommunikation: Ein Smart Meter Gateway beantragt die Kommunikation zum Stromanbieter über den Smart Meter Gateway Admin 
 
 Operationen:
-Hier werden alle Möglichen Operationen aufgelistet, die im Protokoll berücksichtig werden:
+Hier werden alle Möglichen Operationen aufgelistet, die im Protokoll berücksichtigt werden:
 -Systeminitialisierung: Wie wird ein mögliches DC-Nets initialisiert in einem bestehenden System?
+Lösung: Smart Meter müssen als Clients mit anderen Smart Metern(oder einen Server) kommunizieren. Damit die Inhaltsdaten nicht mitgelesen werden können, muss ein Schlüsselgraph 
+erstellt werden, der definiert wie Clients untereinander kommunizieren und ihre Schlüssel addieren oder subtrahieren. Tauschen zwei Clients einen Schlüssel miteinander aus, entsteht eine Kante im Schlüsselgraph wodurch andere Teilnehmer wissen, dass eine Kommunikationsverbindung erstelllt wurde.(bzw wissen überhaupt clients wie der komplette Schlüsselgraph aussieht?)
+Der Schlüsselaustausch zwischen zwei Clients spielt dabei eine zentrale Rolle. Für jede gesendete Nachricht muss ein neuer Schlüssel erstellt werden und dann mit der Nachricht verknüpft werden.
+Damit nicht bei jeder DC-Runde ein neuer Schlüsselaustausch durchgeführt werden muss, werden einmalig Seeds ausgetauscht mit denen jeweils ein PRNG pro Client initialisiert wird. Wenn unter gleichen Bedingungen der PRNG auf beiden Clients initialisiert wird, dann wird jeweils der gleiche Schlüssel erzeugt. Das führt zu einer Reduktion der theoretischen Sicherheit, aber mit guten PRNG kann immernoch
+eine komplexitätstheoretische Sicherheit erreicht werden.
+
+
 -Registrierung: Ein Smart Meter Gateway muss sich bei einem Stromanbieter registrieren und sich beim DC-Netz anmelden. (Wie sieht der Schlüsselgraph aus?) (Wie wird mit anderen Smart Meter Gateways kommuniziert, obwohl dies nicht technisch möglich ist)
 -Nutzerwechsel: mehrere private Nutzer können den Stromanbieter wechseln. Wie wird damit umgegangen? stabiles system etc... (wird das vom smart meter gateway oder vom admin ausgelöst?)
 
+Technische Hindernisse:
+In der technischen Richtlinie vom BSI wird definiert, welche Anforderungen und mit welchen Rechten Smart Meter kommunizieren dürfen.
+Mit der aktuellen Richtlinie ist es Smart Metern nicht erlaubt ins WAN zu kommunizieren außer es handelt sich um eine Kommunikation mit dem SMGW Admin oder Kommunikation an externe Marktteilnehmer. Es ist nicht vorgesehen, dass verschiedene SMGW untereinander kommunizieren.
+Dabei führt das BSI auf, dass es die mindestanforderungen sind und dies gibt spielraum für erweiterungen der anwendungsfälle. Da es bereits erlaubt ist mit externen Markteilnehmern zu kommunizieren, kann man diesen Anwendungsfall erweitern indem die Kommunikation mit dem externen Markteilnehmer als Anmeldung für das DC-Netz genutzt wird.
+1. Eine mögliche Lösung wäre es, dass ein neuer Teilnehmer, der sich im DC-Netz anmelden möchte eine spezielle Anfrage an seinen Stromanbieter sendet. Diese Anfrage stellt eine Bitte des SMGW dar, sich im 
+DC-Netzes anzumelden. Nun werden verschiedene zufällige und bereits angemeldete Clients(SMGW) vorgeschlagen. Die bereits angemeldeten Clients können sich also nicht aussuchen, welche neue Kommunikationspartner sie bekommen (der Gedanke ist, dass es viele verschiedene kleine DC-Netze gibt, die getrennte Schlüsselgraphen besitzen, jedes DC-Netz sendet seine globale Summe an den Stromanbieter, der alle Werte aufsummiert. Man muss nur darauf achten, dass es eine Mindestanzahl an Teilnehmern pro DC-Netz gibt). Diese müssen als authorized external market participants bei den Anfragenden SMGW eingetragen werden, um eine Kommunikation zu erlauben(Diese Eintragung muss der SMGW Admin durchführen). Gleichzeitig muss auch der SMGW admin vom zufällig ausgewählten Client den neuen Teilnehmer des DC-Netzes als authorized external market participant eintragen, um eine Kommunikation zu erreichen. Nun kann der neue Teilnehme mit einem Client, der sich bereits im DC-Netz befindet, kommunizieren. Mittels eine Diffie-Hellman schlüsselaustausch (oder einen anderen Schlüsselaustausch der wahl) können nun die die SChritte der Systeminitialisierung durchgeführt werden. 
+Also mittels eines sicheren kanals, der durch den Diffie-Hellman schlüsselaustausch erzeugt wurde, können die Seeds für einen PRNG kommuniziert werden.
+-Was passiert wenn ein Teilnehmer entfernt wird? Dann wird dieser als authorized external market participants gelöscht. Bei vielen kleinen DC-Netzen (und auch kleinen DC-Gruppen) kann dies zu einer Teilung von einem DC-Netz in zwei führen. Dann senden, die geteilten Netze einzeln ihre lokalen Summe an den Stromanbieter, der diese Summen addiert.
+
+Wichtig! ---> Können viele verschiedene DC-Netze(also mehrere getrennte Schlüsselgraphen) als ein DC-Netz kommunizieren?  
+Sollen die Meter ein DC-netz bilden und die globale Summe an ein SMGW verteilen? oder sollen die SMGW ein DC-Netz bilden und die globale Summe an den Stromprovider verteilen? --> noch ein wenig effizienter?
 
 
 schau mal nach den Failure handling fällen nach! für sachen die man beachten muss. Sollte im Skript von Pfitzmann beantwortet werden.
 
+Das SMGW muss mindestens diese Anwendungsfälle unterstützen. D.h es können Anwendungsfälle erweitert werden.
+
+
+-Keine Verbindung zum Netz: Problem z.B Smart Meter kann seine aktuellen Verbräuche nicht an das DC-Nets schicken, weil ein Stromausfall vorherrscht oder keine Internetverbindung vorliegt.
+-Was bei missbrauch, falscher Verbrauchsübermittlung oder Boykottierung des Netzes, sodass ein Falscher Zustand vermittelt wird?
 
 
 
 
-
-
-
-
-
-Grundzustand: Es ist davon auszugehen, dass es bereits mehrere Smart Meter Gateways gibt, die in einem bestehenden Grid operieren.
+-Grundzustand: Es ist davon auszugehen, dass es bereits mehrere Smart Meter Gateways gibt, die in einem bestehenden Grid operieren.
 
 
 
@@ -33,5 +55,5 @@ Grundzustand: Es ist davon auszugehen, dass es bereits mehrere Smart Meter Gatew
 
 
 Problem: Ein Smart Meter Gateway kümmert sich um die Meter Daten, aber wie verhält sich das Smart Meter Gateway, wenn unterschiedliche Meter bei unterschiedlichen Anbietern sind? und ein Anbieter z.B nicht im DC-Netz operiert. etc.
--Mögliche Lösung: Zeitslots. Jeder Anbieter bekommt einen Zeitslot bei dem gesendet wird. Anbieter mit DC-Netzen können Zeitslots sperren, sodass es nicht zu einer "falschen(bad)" Überlagerung kommt.
+-Mögliche Lösung: Zeitslots/Zeitraum. Jeder Anbieter bekommt einen Zeitslot/Zeitraum bei dem gesendet wird. Anbieter mit DC-Netzen können Zeitslots sperren, sodass es nicht zu einer "falschen(bad)" Überlagerung kommt.
 
