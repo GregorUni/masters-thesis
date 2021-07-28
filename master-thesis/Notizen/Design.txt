@@ -1,6 +1,13 @@
 Vokabeln die ich vergesse:
 Controllable  Local  Systems (CLS)
 
+Top-down methode: die SMGW bilden mit anderen SMGW ein DC-Netz (lokale Gruppen) und schicken verteilt mehrere Teilverbräuche an den Stromanbieter.
+Problem: SMGW können nicht miteinander kommunizieren(mögliche Lösung wurde bereits aufgeschrieben und SMGW müssten technisch in der Lage dazu sein mehrere Meterverbräuche zu addieren bzw.
+es könnte an dieser Stelle zu neuen implementationsfehler kommen(und zu sicherheitsschwächen führen)
+
+Bottom-up methode: einzelne Meter bilden ein DC-Net und schicken ihre aggregierten Ergebnisse an das SMGW.
+Problem: Meter müssen miteinander kommunizieren dürfen.(können aber laut richtlinie nur mit dem SMGW kommunizieren)
+könnte mit Diffie-Helmann gelöst werden.
 
 Notizen für Design:
 
@@ -26,12 +33,18 @@ In der technischen Richtlinie vom BSI wird definiert, welche Anforderungen und m
 Mit der aktuellen Richtlinie ist es Smart Metern nicht erlaubt ins WAN zu kommunizieren außer es handelt sich um eine Kommunikation mit dem SMGW Admin oder Kommunikation an externe Marktteilnehmer. Es ist nicht vorgesehen, dass verschiedene SMGW untereinander kommunizieren.
 Dabei führt das BSI auf, dass es die mindestanforderungen sind und dies gibt spielraum für erweiterungen der anwendungsfälle. Da es bereits erlaubt ist mit externen Markteilnehmern zu kommunizieren, kann man diesen Anwendungsfall erweitern indem die Kommunikation mit dem externen Markteilnehmer als Anmeldung für das DC-Netz genutzt wird.
 1. Eine mögliche Lösung wäre es, dass ein neuer Teilnehmer, der sich im DC-Netz anmelden möchte eine spezielle Anfrage an seinen Stromanbieter sendet. Diese Anfrage stellt eine Bitte des SMGW dar, sich im 
-DC-Netzes anzumelden. Nun werden verschiedene zufällige und bereits angemeldete Clients(SMGW) vorgeschlagen. Die bereits angemeldeten Clients können sich also nicht aussuchen, welche neue Kommunikationspartner sie bekommen (der Gedanke ist, dass es viele verschiedene kleine DC-Netze gibt, die getrennte Schlüsselgraphen besitzen, jedes DC-Netz sendet seine globale Summe an den Stromanbieter, der alle Werte aufsummiert. Man muss nur darauf achten, dass es eine Mindestanzahl an Teilnehmern pro DC-Netz gibt). Diese müssen als authorized external market participants bei den Anfragenden SMGW eingetragen werden, um eine Kommunikation zu erlauben(Diese Eintragung muss der SMGW Admin durchführen). Gleichzeitig muss auch der SMGW admin vom zufällig ausgewählten Client den neuen Teilnehmer des DC-Netzes als authorized external market participant eintragen, um eine Kommunikation zu erreichen. Nun kann der neue Teilnehme mit einem Client, der sich bereits im DC-Netz befindet, kommunizieren. Mittels eine Diffie-Hellman schlüsselaustausch (oder einen anderen Schlüsselaustausch der wahl) können nun die die SChritte der Systeminitialisierung durchgeführt werden. 
+DC-Netzes anzumelden. Nun werden verschiedene zufällige und bereits angemeldete Clients(SMGW) vorgeschlagen(bzw. ein zufälliger client aus einer bereits bestehenden DC-Netz gruppe). Die bereits angemeldeten Clients können sich also nicht aussuchen, welche neue Kommunikationspartner sie bekommen (der Gedanke ist, dass es viele verschiedene kleine DC-Netze gibt, die getrennte Schlüsselgraphen besitzen, jedes DC-Netz sendet seine globale Summe an den Stromanbieter, der alle Werte aufsummiert. Man muss nur darauf achten, dass es eine Mindestanzahl an Teilnehmern pro DC-Netz gibt. Des Weiteren können dadurch auch geographische Gruppen gebildet werden. Also eine bestimmte Gruppe spiegelt den verbrauch einer Stadt wieder und so ist es möglich den Stromverbrauch lokal/geographisch nachzuvollziehen). Diese müssen als authorized external market participants bei den Anfragenden SMGW eingetragen werden, um eine Kommunikation zu erlauben(Diese Eintragung muss der SMGW Admin durchführen). Gleichzeitig muss auch der SMGW admin vom zufällig ausgewählten Client den neuen Teilnehmer des DC-Netzes als authorized external market participant eintragen, um eine Kommunikation zu erreichen. Nun kann der neue Teilnehmer mit einem Client, der sich bereits im DC-Netz befindet, kommunizieren. Mittels eine Diffie-Hellman schlüsselaustausch (oder einen anderen Schlüsselaustausch der wahl) können nun die die SChritte der Systeminitialisierung durchgeführt werden. Ein weiterer Vorteil ist, dass bei einer Möglichen Fehlerkorrektur(wie bei Prof. Pfitzmann beschrieben) kleinere DC-Netze durchaus ausfallen könnten, da mehrere DC-Netze auch eine Redundanz darstellen und kleinere Netze vernachlässigbar sind, falls keine korrekten Daten geschickt werden können. Also besteht durchaus ein Interesse, dass man mehrere minimale (minimal im Sinne von kleinst mögliche Gruppe mit höchstmöglicher Anonymität) DC-Netze bildet.
+
 Also mittels eines sicheren kanals, der durch den Diffie-Hellman schlüsselaustausch erzeugt wurde, können die Seeds für einen PRNG kommuniziert werden.
 -Was passiert wenn ein Teilnehmer entfernt wird? Dann wird dieser als authorized external market participants gelöscht. Bei vielen kleinen DC-Netzen (und auch kleinen DC-Gruppen) kann dies zu einer Teilung von einem DC-Netz in zwei führen. Dann senden, die geteilten Netze einzeln ihre lokalen Summe an den Stromanbieter, der diese Summen addiert.
 
 Wichtig! ---> Können viele verschiedene DC-Netze(also mehrere getrennte Schlüsselgraphen) als ein DC-Netz kommunizieren?  
 Sollen die Meter ein DC-netz bilden und die globale Summe an ein SMGW verteilen? oder sollen die SMGW ein DC-Netz bilden und die globale Summe an den Stromprovider verteilen? --> noch ein wenig effizienter?
+
+Durchführung: Bisher wurden technische Schritte erklärt um ein DC-Netz in das bereits operierende Stromnetz zu implementieren. Wie sieht eine typische Operation im Stromnetz aus?
+Am besten wäre es, wenn es eine synchronisierte Uhrzeit gibt in der alle DC-Netze(in einer Region) gleichzeitig senden und überlagern. Aus den DC-Netzen werden mehrere Teil-Stromverbräuche gesendet, die an den Stromanbieter weitergeleitet werden. Der Stromanbieter muss nur alle Teilverbräuche addieren und bekommt somit den Gesamtverbrauch des Stromnetzes. Diese Daten sind komplett anonym und gibt nur die Auskunft
+
+
 
 
 schau mal nach den Failure handling fällen nach! für sachen die man beachten muss. Sollte im Skript von Pfitzmann beantwortet werden.
