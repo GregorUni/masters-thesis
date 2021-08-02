@@ -8,9 +8,13 @@ es könnte an dieser Stelle zu neuen implementationsfehler kommen(und zu sicherh
 Bottom-up methode: einzelne Meter bilden ein DC-Net und schicken ihre aggregierten Ergebnisse an das SMGW.
 Problem: Meter müssen miteinander kommunizieren dürfen.(können aber laut richtlinie nur mit dem SMGW kommunizieren)
 könnte mit Diffie-Helmann gelöst werden.
+Problem:
+Das SMGW MUSS auf  Anforderung  des  SMGW  Administrators Schlüssel  und  Zertifikate für  die  Kommunikation  mit  Zählern  im  LMN  erstellen,  verteilen,  aktivieren, deaktivieren bzw. löschen können.
+SMGW könnte jede Kommunikation über Meter mitlesen, aber geht nicht mehr wenn Diffie-Hellmann.
+ABER meter haben soweit ich weiß keine IP-Addressen? Wie könnten Sie untereinander kommunizieren?
 
 Notizen für Design:
-
+/////////////////////Top-dowm Approach
 Es gibt eine .pdf vom BSI in der Informationen zum Sicherheitsmodul gefunden werden können. Also welche kryptografische Operationen werden unterstützt.
 
 Kommunikation: Ein Smart Meter Gateway beantragt die Kommunikation zum Stromanbieter über den Smart Meter Gateway Admin 
@@ -42,9 +46,15 @@ Wichtig! ---> Können viele verschiedene DC-Netze(also mehrere getrennte Schlüs
 Sollen die Meter ein DC-netz bilden und die globale Summe an ein SMGW verteilen? oder sollen die SMGW ein DC-Netz bilden und die globale Summe an den Stromprovider verteilen? --> noch ein wenig effizienter?
 
 Durchführung: Bisher wurden technische Schritte erklärt um ein DC-Netz in das bereits operierende Stromnetz zu implementieren. Wie sieht eine typische Operation im Stromnetz aus?
-Am besten wäre es, wenn es eine synchronisierte Uhrzeit gibt in der alle DC-Netze(in einer Region) gleichzeitig senden und überlagern. Aus den DC-Netzen werden mehrere Teil-Stromverbräuche gesendet, die an den Stromanbieter weitergeleitet werden. Der Stromanbieter muss nur alle Teilverbräuche addieren und bekommt somit den Gesamtverbrauch des Stromnetzes. Diese Daten sind komplett anonym und gibt nur die Auskunft
+Am besten wäre es, wenn es eine synchronisierte Uhrzeit gibt in der alle DC-Netze(in einer Region) gleichzeitig senden und überlagern. Aus den DC-Netzen werden mehrere Teil-Stromverbräuche gesendet, die an den Stromanbieter weitergeleitet werden. Der Stromanbieter muss nur alle Teilverbräuche addieren und bekommt somit den Gesamtverbrauch des Stromnetzes. Diese Daten sind komplett anonym und gibt nur die Auskunft über den Gesamtverbrauches eines kleinen DC-Netzes aus. 
 
+(debunked)Log-Problem:
+Laut den technischen Richtlinien müsste die interne Struktur des Logs abgeändert werden. Aktuell gibt es 3 verschiedene Log-Typen Letztverbraucher-Schnittstelle, CLS-Schnittstelle und die Service-Techniker-Schnittstelle. Die Letztverbraucher-Schnittstelle ist hier von interesse. Denn aktuell dürfen nur Letztverbraucher(also Consumer) auf diese Log-Daten mittels eines CLS-Gerätes aus dem HAN darauf zugreifen. Der aktuellste Letztverbraucher-Wert ist von Interesse für das DC-Netz. Deshalb braucht das SMGW zugriff auf diesen Wert um alle Letztverbraucher-werte (von einem Stromprovider) zu aggregieren. 
+Damit dann die lokale Summe aus dem aggregierten Wert gebildet werden kann.
 
+AggregierungsProblem:
+1. "Aus  bestimmten  Messwerten  ermittelt  das  SMGW  mit  Hilfe  eines  Regelwerks  abgeleitete Messwerte und versendet diese verarbeiteten Werte an berechtigte externe Marktteilnehmer." Diese Messwerte werden in Messwertlisten im SMGW gespeichert. Das SMGW greift auf diese Liste zu und aggregiert alle Werte(von Metern die zum gleichen Stromprovider gehören), sodass die lokale Summe im DC-Netz gebildet werden kann. 
+2. Da mehrere SMGW ein DC-Netz bilden, müssen sie sich abstimmen, dass nur ein SMGW die globale Summe an den Stromanbieter sendet. Ansonsten würde es zu Redundanz führen und zu einem falschen Ergebnis beim Stromanbieter.
 
 
 schau mal nach den Failure handling fällen nach! für sachen die man beachten muss. Sollte im Skript von Pfitzmann beantwortet werden.
@@ -60,13 +70,7 @@ Das SMGW muss mindestens diese Anwendungsfälle unterstützen. D.h es können An
 
 -Grundzustand: Es ist davon auszugehen, dass es bereits mehrere Smart Meter Gateways gibt, die in einem bestehenden Grid operieren.
 
-
-
-
-
-
-
-
 Problem: Ein Smart Meter Gateway kümmert sich um die Meter Daten, aber wie verhält sich das Smart Meter Gateway, wenn unterschiedliche Meter bei unterschiedlichen Anbietern sind? und ein Anbieter z.B nicht im DC-Netz operiert. etc.
 -Mögliche Lösung: Zeitslots/Zeitraum. Jeder Anbieter bekommt einen Zeitslot/Zeitraum bei dem gesendet wird. Anbieter mit DC-Netzen können Zeitslots sperren, sodass es nicht zu einer "falschen(bad)" Überlagerung kommt.
 
+//////////////////////////////// Bottom-Up Approach
