@@ -1,5 +1,6 @@
 Vokabeln die ich vergesse:
 Controllable  Local  Systems (CLS)
+Seite 146 technische Richtlinie unglaublich wichtig!
 
 Top-down methode: die SMGW bilden mit anderen SMGW ein DC-Netz (lokale Gruppen) und schicken verteilt mehrere Teilverbräuche an den Stromanbieter.
 Problem: SMGW können nicht miteinander kommunizieren(mögliche Lösung wurde bereits aufgeschrieben und SMGW müssten technisch in der Lage dazu sein mehrere Meterverbräuche zu addieren bzw.
@@ -56,7 +57,6 @@ AggregierungsProblem:
 1. "Aus  bestimmten  Messwerten  ermittelt  das  SMGW  mit  Hilfe  eines  Regelwerks  abgeleitete Messwerte und versendet diese verarbeiteten Werte an berechtigte externe Marktteilnehmer." Diese Messwerte werden in Messwertlisten im SMGW gespeichert. Das SMGW greift auf diese Liste zu und aggregiert alle Werte(von Metern die zum gleichen Stromprovider gehören), sodass die lokale Summe im DC-Netz gebildet werden kann. 
 2. Da mehrere SMGW ein DC-Netz bilden, müssen sie sich abstimmen, dass nur ein SMGW die globale Summe an den Stromanbieter sendet. Ansonsten würde es zu Redundanz führen und zu einem falschen Ergebnis beim Stromanbieter.
 
-
 schau mal nach den Failure handling fällen nach! für sachen die man beachten muss. Sollte im Skript von Pfitzmann beantwortet werden.
 
 Das SMGW muss mindestens diese Anwendungsfälle unterstützen. D.h es können Anwendungsfälle erweitert werden.
@@ -65,12 +65,30 @@ Das SMGW muss mindestens diese Anwendungsfälle unterstützen. D.h es können An
 -Keine Verbindung zum Netz: Problem z.B Smart Meter kann seine aktuellen Verbräuche nicht an das DC-Nets schicken, weil ein Stromausfall vorherrscht oder keine Internetverbindung vorliegt.
 -Was bei missbrauch, falscher Verbrauchsübermittlung oder Boykottierung des Netzes, sodass ein Falscher Zustand vermittelt wird?
 
-
-
-
 -Grundzustand: Es ist davon auszugehen, dass es bereits mehrere Smart Meter Gateways gibt, die in einem bestehenden Grid operieren.
 
 Problem: Ein Smart Meter Gateway kümmert sich um die Meter Daten, aber wie verhält sich das Smart Meter Gateway, wenn unterschiedliche Meter bei unterschiedlichen Anbietern sind? und ein Anbieter z.B nicht im DC-Netz operiert. etc.
 -Mögliche Lösung: Zeitslots/Zeitraum. Jeder Anbieter bekommt einen Zeitslot/Zeitraum bei dem gesendet wird. Anbieter mit DC-Netzen können Zeitslots sperren, sodass es nicht zu einer "falschen(bad)" Überlagerung kommt.
 
+Abbildung 26 technische Richtlinie:
+Die Abbildung zeigt ein Diagramm wie die Messwerte intern im SMGW verarbeitet werden. Da das SMGW eine zentrale Rolle in der Lösung spielt, ist dieses Diagramm wichtig um die technischen Details zu illustrieren. Zunächst muss erwähnt werden, dass gewisse terminologische Anforderungen durch die technische Richtlinie gestellt werden. "Das  SMGW MUSSmindestens  folgende  Informationen  an  der  Schnittstelle  für  Anzeigeeinheiten bereitstellen....
+Dabei müssen Verbrauchs-sowie Einspeisewerte für die folgenden Zeiträume bereitgestellt werden:die letzten 7 Tage, Tag für Tag ,die letzte Woche (aggregiert)."
+Deshalb sollten die lokale Summe erst nach der Messwertverarbeitung bzw. dem Schritt "Messwerte neuer Messgrößen" gebildet werden. Dabei ist zu beachten, dass es möglicherweise zu einer Einschränkung der Konfiguration der Auswertungsprofile bzw. Kommunikationsprofile führen kann. Das sollte jedoch zu keinen größeren Problemen führen(da durch das DC-netz sicherlich einige Regeln "nicht mehr möglich" sind, aber trotzdem ein Großteil aller Funktionen durchführbar sind). Mit diesem Ansatz kann ein DC-Netz implementiert werden, ohne großartig die interne Struktur des SMGW zu ändern.
+
+
+Vllt noch schreiben, ob dadurch Ereignisse wie eichtechnische Logeinträge erschwert werden, durch die Anonymität?
 //////////////////////////////// Bottom-Up Approach
+-Systeminitialisierung: Wie wird ein mögliches DC-Nets initialisiert in einem bestehenden System?
+Lösung: bei dem Bottom-up Approach kommunizieren mehrere Meter über ein DC-Netz im LMN.  
+Warum ist es nicht möglich?
+Terminologie:
+MUSS bedeutet, dass es sich um eine normative Anforderung handelt.
+DARF NICHT / DARF KEIN bezeichnet den normativen Ausschluss einer Eigenschaft.
+SOLL  NICHT  / SOLL  KEIN kennzeichnet  die  dringende  Empfehlung,  eine  Eigenschaft auszuschließen. Abweichungen zu diesen Festlegungen müssen begründet werden. 
+KANN / DARF bedeutet, dass die Eigenschaften fakultativ oder optional sind.
+
+"Das SMGW MUSS zu jedem angeschlossenen Zähler aktuelle Zählerstände der relevanten gemessenen Messgrößen vorhalten. Der SMGW-Admin MUSS dazu konfigurieren können, welche Messgrößen  des  Zählers  relevant  sind  und  in  Form  von  aktuellen  Zählerständen  im  SMGW  abgebildet werden müssen"
+
+Siehe Seite 146 technische Richtlinie. 
+Laut dem aktuellen Konzept der Datenverarbeitung wäre es gar nicht möglich dem Endnutzer die Verbrauchsdaten mitzuteilen. Mit dem Bottom-up Approach ist es dem SMGW gar nicht möglich zu erkennen, von welchem Meter Verbrauchsdaten gesendet werden, da das DC-Netz Senderanonymität garantiert. Dementsprechend würden fast alle Anwendungsfälle im HAN nicht umsetzbar sein und eine Reihe von MUSS Anforderungen können nicht mehr garantiert werden. Da die Meter selbst mit(wahrscheinlich) nur mit geringen Anforderungen gebaut wurden und demtnentsprechend die Hardware nur wenig leisten kann, ist es nicht unrealistisch, dass Komponenten/Funktionen wie die Messwertlisten (für den Endnutzer) oder der Letztverbraucher Log im Meter zwischengespeichert werden. 
+
