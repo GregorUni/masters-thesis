@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.11.11)  7 JUL 2021 14:35
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.11.11)  2 AUG 2021 18:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -876,7 +876,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.217 
+l.219 
       
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -893,7 +893,7 @@ Package balance Warning: You have called \balance in second column
 ! Undefined control sequence.
 \f@nch@elh ...adfootfont \acmConference@shortname 
                                                   , \acmConference@date , \a...
-l.245 \end{document}
+l.247 \end{document}
                     
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -904,7 +904,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \f@nch@elh ...nce@shortname , \acmConference@date 
                                                   , \acmConference@venue \st...
-l.245 \end{document}
+l.247 \end{document}
                     
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -915,7 +915,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \f@nch@elh ...ference@date , \acmConference@venue 
                                                   \strut 
-l.245 \end{document}
+l.247 \end{document}
                     
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -924,13 +924,17 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 [2.2]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 245.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 245.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 247.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 247.
  (./Essay.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 245.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 245.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 247.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 247.
 Package rerunfilecheck Info: File `Essay.out' has not changed.
 (rerunfilecheck)             Checksum: C281F1DA8A099A0BCEE6925F5A2B1906;1047.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
  16447 strings out of 494880

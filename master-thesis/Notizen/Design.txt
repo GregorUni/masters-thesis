@@ -1,6 +1,6 @@
 Vokabeln die ich vergesse:
 Controllable  Local  Systems (CLS)
-Seite 146 technische Richtlinie unglaublich wichtig!
+Seite 146 technische Richtlinie unglaublich wichtig! bzw kapitel 4.3.1
 
 Top-down methode: die SMGW bilden mit anderen SMGW ein DC-Netz (lokale Gruppen) und schicken verteilt mehrere Teilverbräuche an den Stromanbieter.
 Problem: SMGW können nicht miteinander kommunizieren(mögliche Lösung wurde bereits aufgeschrieben und SMGW müssten technisch in der Lage dazu sein mehrere Meterverbräuche zu addieren bzw.
@@ -63,7 +63,8 @@ Das SMGW muss mindestens diese Anwendungsfälle unterstützen. D.h es können An
 
 
 -Keine Verbindung zum Netz: Problem z.B Smart Meter kann seine aktuellen Verbräuche nicht an das DC-Nets schicken, weil ein Stromausfall vorherrscht oder keine Internetverbindung vorliegt.
--Was bei missbrauch, falscher Verbrauchsübermittlung oder Boykottierung des Netzes, sodass ein Falscher Zustand vermittelt wird?
+-Was bei missbrauch, falscher Verbrauchsübermittlung 
+oder Boykottierung des Netzes, sodass ein Falscher Zustand vermittelt wird?
 
 -Grundzustand: Es ist davon auszugehen, dass es bereits mehrere Smart Meter Gateways gibt, die in einem bestehenden Grid operieren.
 
@@ -77,6 +78,15 @@ Deshalb sollten die lokale Summe erst nach der Messwertverarbeitung bzw. dem Sch
 
 
 Vllt noch schreiben, ob dadurch Ereignisse wie eichtechnische Logeinträge erschwert werden, durch die Anonymität?
+
+Fehlertoleranz:
+vllt sowas wie der Kollisionsauflösungsalgorithmus mit Mittelwertbildung(also das es ein Bit für die Anzahl der Nachrichten gibt) um zu sehen wie viele Stationen senden konnten.(damit kann man sehen, ob es zu einem großflächigen stromausfall gekommen ist etc.)
+
+Ein Gedanke ist, dass eine Station die sich im Fehler modi befindet nur Leernachrichten sendet.
+
+Die Fehlertoleranz im DC-Netz bezieht sich größtenteils auf die Erkenntnisse von Prof. Pfitzmann.
+Bei dem DC-Netz müssen alle Schlüssel fehlerfrei ausgetauscht worden sein.( Es wurde bereits beschrieben wie der Schlüsselaustausch stattfindet) Die PNRG müssen synchron sein, damit die erzeugten Schlüssel gleich sind. Ein Fehler/fehlsynchronisation führt dazu, dass keine Teilnehmerstation senden kann. Erst wenn der fehler korrigiert wurde, ist ein Senden wieder möglich. (es sei denn es gibt redundanzen)
+
 //////////////////////////////// Bottom-Up Approach
 -Systeminitialisierung: Wie wird ein mögliches DC-Nets initialisiert in einem bestehenden System?
 Lösung: bei dem Bottom-up Approach kommunizieren mehrere Meter über ein DC-Netz im LMN.  
