@@ -85,7 +85,26 @@ vllt sowas wie der Kollisionsauflösungsalgorithmus mit Mittelwertbildung(also d
 Ein Gedanke ist, dass eine Station die sich im Fehler modi befindet nur Leernachrichten sendet.
 
 Die Fehlertoleranz im DC-Netz bezieht sich größtenteils auf die Erkenntnisse von Prof. Pfitzmann.
-Bei dem DC-Netz müssen alle Schlüssel fehlerfrei ausgetauscht worden sein.( Es wurde bereits beschrieben wie der Schlüsselaustausch stattfindet) Die PNRG müssen synchron sein, damit die erzeugten Schlüssel gleich sind. Ein Fehler/fehlsynchronisation führt dazu, dass keine Teilnehmerstation senden kann. Erst wenn der fehler korrigiert wurde, ist ein Senden wieder möglich. (es sei denn es gibt redundanzen)
+Bei dem DC-Netz müssen alle Schlüssel fehlerfrei ausgetauscht worden sein.( Es wurde bereits beschrieben wie der Schlüsselaustausch stattfindet) Die PNRG müssen synchron sein, damit die erzeugten Schlüssel gleich sind. Ein Fehler/fehlsynchronisation führt dazu, dass keine Teilnehmerstation senden kann. Erst wenn der fehler korrigiert wurde, ist ein Senden wieder möglich. (es sei denn es gibt redundanzen). Ziel dieser Arbeit ist, dass man möglichst kleine DC-Netze bildet, die trotzdem ein größtmögliches level an anonymität garantieren(nochmal nachfragen ob das stimmt.) 
+
+Warum kleine DC-Netze?
+DC-Netze sind besonders praktisch, wenn es um die Überlagerung von Nachrichten bzw. den Stromverbräuchen geht. Aber bereits bei einen Fehler von einem Verbraucher(wie z.B internetausfall) ist es niemanden im Netz mehr möglich sinnvoll zu Überlagern. Um eine möglichst hohe Verfügbarkeit zu erreichen, bietet es sich an mehrere minimal von einander getrennte DC-netze zu betreiben. Wenn es in einem kleinen DC-Netz zu einem Ausfall kommt kann ein Protokoll gestartet werden um den Fehler zu entdecken. Durch die Minimalität des DC-Netzes kann ein Ausfall von einem oder mehreren Netzen vernachlässigt werden. (da z-B. in großen städten es nicht auffällt, wenn eine Prozentual geringe menge nicht senden kann). Gleichzeitig können die Menge aller Sender aufaddiert werden (wie bei der mittelwertbildung). Damit weiß der Stromprovider wie viele sender es gibt und kann einschätzen wie Vertrauenswürdig die gelieferten Daten sind.
+
+Warum kein senderpartitioniertes DC-Netz?
+Aufwand soll nicht groß sein, aber die Senderanonymität wird verringert und es ist deshalb in dieser Arbeit nicht sinnvoll, da man durch die minimalen Netze nicht noch zusätzlich an anonymität einbüßen möchte. ABER es wird eine "vollständige Fehlerüberdeckung erreicht".
+
+Transiente und permanente Fehler:
+Die transienten Fehler im DC-Netz werden durch Ende-zu-Ende-Protokolle toleriert.
+Permanente Fehler entstehen durch Desynchronisation (z.B durch PRNG oder Internetausfall)
+Laut pfitzmann können fehler leicht behoben werden. Die Hauptarbeit liegt also in der Fehlererkennung und Fehlerlokalisierung.
+
+Fehler in der oberen Schicht 1 lassen sich durch Redundanzen wie CRC lösen, die am Ende einer Nachricht angefügt werden können.
+
+Siehe seite 253-255 im Skript
+
+Wie umgehen mit Bit overflows also wenn addiert wird von 9 auf 11?
+
+
 
 //////////////////////////////// Bottom-Up Approach
 -Systeminitialisierung: Wie wird ein mögliches DC-Nets initialisiert in einem bestehenden System?
