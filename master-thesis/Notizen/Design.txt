@@ -1,6 +1,7 @@
 Vokabeln die ich vergesse:
 Controllable  Local  Systems (CLS)
 Seite 146 technische Richtlinie unglaublich wichtig! bzw kapitel 4.3.1
+Mehrfachzugriff (wenn mehrere Teilnehmer auf einen Zeitslot vom DC-net zugreifen)
 
 Top-down methode: die SMGW bilden mit anderen SMGW ein DC-Netz (lokale Gruppen) und schicken verteilt mehrere Teilverbräuche an den Stromanbieter.
 Problem: SMGW können nicht miteinander kommunizieren(mögliche Lösung wurde bereits aufgeschrieben und SMGW müssten technisch in der Lage dazu sein mehrere Meterverbräuche zu addieren bzw.
@@ -93,19 +94,57 @@ DC-Netze sind besonders praktisch, wenn es um die Überlagerung von Nachrichten 
 Warum kein senderpartitioniertes DC-Netz?
 Aufwand soll nicht groß sein, aber die Senderanonymität wird verringert und es ist deshalb in dieser Arbeit nicht sinnvoll, da man durch die minimalen Netze nicht noch zusätzlich an anonymität einbüßen möchte. ABER es wird eine "vollständige Fehlerüberdeckung erreicht".
 
-Transiente und permanente Fehler:
+Transiente(also vorrübergehend) und permanente Fehler:
 Die transienten Fehler im DC-Netz werden durch Ende-zu-Ende-Protokolle toleriert.
-Permanente Fehler entstehen durch Desynchronisation (z.B durch PRNG oder Internetausfall)
+Permanente Fehler entstehen durch Desynchronisation (z.B durch PRNG)
 Laut pfitzmann können fehler leicht behoben werden. Die Hauptarbeit liegt also in der Fehlererkennung und Fehlerlokalisierung.
 
+Mögliche permanente Fehler:
+Ausfall von PRNG -> neuverteilung der schlüssel bzw. seeds
+Ausfall von modulo addierer -> austausch von addierern
+
+Hauptproblem Fehlererkennung:
+
+DC-Netze werden auf der Schicht 1 und Schicht 2 implementiert.
+
 Fehler in der oberen Schicht 1 lassen sich durch Redundanzen wie CRC lösen, die am Ende einer Nachricht angefügt werden können.
+Sollte es bei z.B. CRC zu einem ungültigen Prüfzeichen kommen, so liegt ein Fehler bei der Überlagerung vor.
+
+Fehler bei Mehrfachzugriffsverfahren:
+Man arbeitet mit zwei "Modi" eine normalen A-Modi und einen Fehlermodi F-modi in dem nach Fehlern gesucht wird.
+Bei Fehler wird das Mehrfachzugriffsverfahren neuinitialisiert um mögliche transiente Fehler und Fehler in der oberen Schicht 1 auszuschließen.
+Sollten trotzdem noch Fehler vorherrschen (oder es wurde ein anderer permanenter Fehler gefunden) wird in den F-modi umgeschaltet. Nun wird folgendes Protokoll umgesetzt.
+Protokoll:
+1. Jede Station erstellt einen recovery point und speichert die aktuell ausgetauschten schlüssel.
+2. Nun wird eine selbstdiagnose ausgeführt. Es werden paarweise zufällige Schlüssel in den PRNG geladen und mit einer zufälligen Nachricht lokal überlagert. Sollte das Ergebnis nicht die zufällige Nachricht sein, so ist die Station fehlerhaft. Dies wird den anderen Stationen mitgeteilt. Die Schlüssel der fehlerhafte Station werden nun verworfen und es wird in den A-modus gewechselt.
+ODER: Die station ist fehlerfrei so wird der recovery point wiederhergestellt.
+Von hier aus gibt es 3 Fehlertypen, die auftreten könnten:
+1. Eine Station, die so fehlerhaft ist, dass sie wieder ihren Fehler dem Netz mitteilen kann, noch kommunizieren kann.
+2. Schlüssel/Synchronisationen von mind. 2 Stationen gingen verloren.
+3. Das unterliegende Kommunikationsnetz, Globale überlagerung ist Fehlerhaft.
+
+Um den Fehler genauer zu lokalisieren, werden die Schlüsselpaare Schritt für schritt halbiert(man startet bei der hälfte) und es werden leerbotschaften gesendet. 
+Ist das ergebnis jedes mal 0 liegt der Fehler mit sehr hoher wahrscheinlichkeit in der anderen hälfte. Ein stuck at zero fault muss auch ausgeschlossen werden.
+
+ODER das ergebnis ist nicht jedes mal 0. Dann befindet sich der Fehler in dieser hälfte und es wird weiter halbiert um den Fehler genauer zu lokalisieren.
+
+Wenn der Schlüsselgraph nur noch eine Kante besitzt und weiterhin nach 100 Tests nicht nur Nullen gesendet werden, dann Tauschen die beiden Letzten Stationen neue Schlüssel aus bzw. einen neuen PRNG-Startwert. Damit kann man Schlüsselsynchronisationsfehler erkennen.
+
+Sollte wiederum immer noch keine korrekten Nachrichten übermittelt werden zwischen den zwei Stationen, dann werden die eben ausgetauschten schlüssel verworfen und es werden neue Schlüssel bzw. PRNG-Startwert mit einer dritten und vierten Station ausgetauscht. Dann wird der Test wiederholt. Sollte der Test weiterhin fehlerhaft ausfallen, so ist mit hoher Wahrscheinlichkeit das zugrundeliegende Kommunikationsnetz oder die globale Überlagerung fehlerhaft.
+
+ODER beim zugrundeliegenden Test ist nur ein Test fehlerhaft. Dann ist die ursprüngliche verdächtige Station als fehlerhaft angesehen und aus dem betriebgenommen(aus dem Schlüsselgraphen entfernt).
+Dann kann wieder in den A-Modus geschaltet werden und das Mehrfachzugriffsverfahren wird neu initialisiert.
+
+
+
 
 Siehe seite 253-255 im Skript
 
-Wie umgehen mit Bit overflows also wenn addiert wird von 9 auf 11?
+Wie umgehen mit Bit overflows also wenn addiert wird von 9+2 auf 11?
 
 
-
+Zeitsynchronisation:
+siehe 3.2.6
 //////////////////////////////// Bottom-Up Approach
 -Systeminitialisierung: Wie wird ein mögliches DC-Nets initialisiert in einem bestehenden System?
 Lösung: bei dem Bottom-up Approach kommunizieren mehrere Meter über ein DC-Netz im LMN.  
