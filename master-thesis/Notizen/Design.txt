@@ -135,6 +135,20 @@ Sollte wiederum immer noch keine korrekten Nachrichten übermittelt werden zwisc
 ODER beim zugrundeliegenden Test ist nur ein Test fehlerhaft. Dann ist die ursprüngliche verdächtige Station als fehlerhaft angesehen und aus dem betriebgenommen(aus dem Schlüsselgraphen entfernt).
 Dann kann wieder in den A-Modus geschaltet werden und das Mehrfachzugriffsverfahren wird neu initialisiert.
 
+Eigenschaften:
+
+1. Anonymität:
+Durch die Nutzung von PRNG sinkt die Anonymität von informationstheoretisch sicheren zu einer komplexitätstheoretisch sicheren Anonymität. Trotzdem
+Auch wenn ein SMGW von einem Angreifer kontrolliert werden sollte, dann wäre es nicht dem Angreifer möglich den Stromverbrauch von anderen SMGW mitzulesen. Nur in spezialfällen wäre es möglich, dass ein kontrolliertes SMGW ein weiteres SMGW abhören kann, aber dann hätte der Angreifer nur die aggregierten Messwerte aller Meter, die das abgehörte SMGW betreut. Des Weiteren ist es durch die Technische Richtlinie nicht möglich, dass SMGW Admins einzelne Meterdaten anfordern/lesen können. Dadurch müssen potentiell kontrollierte SMGW nicht betrachtet werden. Außerdem gilt es in dieser Arbeit herauszufinden, wie minimal DC-Netze sein können, um eine größtmögliche Anonymität mit der höchstmöglichen Verfügbarkeit zu erreichen.
+
+2. Authentikation: 
+Ein Smart meter muss nicht authentifiziert werden durch das DC-Netz. Die Operationen, die im DC-Netz stattfinden, werden erst spät bei der Messwertverarbeitung ausgeführt. Bis zu diesem Zeitpunkt wurden die Messwerte und die Meter bereits authentifiziert. Sollten bei der Authentifizierung probleme auftreten, so könnten diese wie bei SMGW ohne DC-Netz ins eichtechnische Logbuch bzw. ins Systemlogbuch eingetragen werden.
+
+3. Verfügbarkeit:
+Es ist mit einer sehr hohen Verfügbarkeit mit DC-Netzen zu rechnen. Trotzdem müssen einige Vorkehrungen getroffen werden, um eine hohe Verfügbarkeit zu gewährleisten. Es wurde bereits erwähnt, dass es zu transienten als auch permanenten Fehlern kommen kann. Treten diese Fehler auf, so ist es keinem Benutzer im DC-Netz möglich Nachrichten zu überlagern. Die Lösung hierfür ist, dass man mit mehreren voneinander getrennten DC-Netzen arbeitet. Sollte es zu einem Fehler in einem DC-Netz kommen, kann das DC-Netz vernachlässigt werden, da Fehler in kleinen DC-Netzen nicht so stark ins Gewicht fallen, als Fehler in wenigen großen DC-Netzen. Des Weiteren sollte ein Fehler bemerkt werden, so wurde ein Fehlerprotokoll beschrieben(Von Prof. Pfitzmann) welches die schwerwiegensten Fehler tolerieren kann und das System wieder in einen geordneten Zustand bringen kann. Sollte auch diese Möglichkeit versagen, so müsste ein techniker das Problem beheben. Nichtsdestotrotz könnte ein genaues Bild des Stromnetzes(welches Wort) auch wenn mehrere DC-Netze aktuell nicht senden können. 
+
+4. Skalierbarkeit:
+
 
 
 
@@ -159,4 +173,8 @@ KANN / DARF bedeutet, dass die Eigenschaften fakultativ oder optional sind.
 
 Siehe Seite 146 technische Richtlinie. 
 Laut dem aktuellen Konzept der Datenverarbeitung wäre es gar nicht möglich dem Endnutzer die Verbrauchsdaten mitzuteilen. Mit dem Bottom-up Approach ist es dem SMGW gar nicht möglich zu erkennen, von welchem Meter Verbrauchsdaten gesendet werden, da das DC-Netz Senderanonymität garantiert. Dementsprechend würden fast alle Anwendungsfälle im HAN nicht umsetzbar sein und eine Reihe von MUSS Anforderungen können nicht mehr garantiert werden. Da die Meter selbst mit(wahrscheinlich) nur mit geringen Anforderungen gebaut wurden und demtnentsprechend die Hardware nur wenig leisten kann, ist es nicht unrealistisch, dass Komponenten/Funktionen wie die Messwertlisten (für den Endnutzer) oder der Letztverbraucher Log im Meter zwischengespeichert werden. 
+
+///////////////////////////////////////////
+
+Punkte die Anna Biselli betrachtet hat.
 
