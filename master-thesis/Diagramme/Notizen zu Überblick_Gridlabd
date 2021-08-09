@@ -1,3 +1,5 @@
+Wo am besten den DC-Algo implementieren?
+
 Ablauf Gridlab-D Core Initialisierung:
 
 1. Initialisiere Zeitparameter(Welche Zeitzone, bzw. nutze Computerzeit, wenn keine Zeit in GLM-Datei einegestellt ist.
@@ -19,3 +21,11 @@ Eine Sequenz von der Gridlab-D API sieht folgendermaßen aus:
 5. Initialisierung: Der Core ruft die letzte Initialisierungsmethode auf nachdem der Kontext des Objekts komplett definiert worden ist.
 6. Synchronisation: Eine Operation die sich mehrfach wiederholt, bis es kein Objekt mehr gibt, dass eine Zustandsänderung erwartet. Der return Wert ist die Zeit, die erwartet wird, bis sich
 der Zustand des Objektes wieder ändert.
+
+1. Ansatz:
+Es wäre möglich das DC-Netz entweder bei den Triplex_Nodes zu implementieren oder im Gridlab-d Core. Möglicherweise mal schauen wie es im Tape Modul gemacht wird?
+So wie es aussieht gibt es eine Funktion "gl_publish_variable". Über diese Funktion kommt man an die Daten von den Variablen für jedes Objekt ran?!
+Dann wäre die einfachste Lösung, dass man eine zusätzliche Variable im Triplex_Node erzeugt und das wäre ein Integer, wobei jedes Integer ein DC-Netz darstellt. Dann wird jedes DC-Netz über den IntegerIdentifier berechnet.
+
+
+Also Variablen für Triplex_node werden in node.h definiert.
