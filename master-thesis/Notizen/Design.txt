@@ -147,9 +147,9 @@ Ein Smart meter muss nicht authentifiziert werden durch das DC-Netz. Die Operati
 3. Verfügbarkeit:
 Es ist mit einer sehr hohen Verfügbarkeit mit DC-Netzen zu rechnen. Trotzdem müssen einige Vorkehrungen getroffen werden, um eine hohe Verfügbarkeit zu gewährleisten. Es wurde bereits erwähnt, dass es zu transienten als auch permanenten Fehlern kommen kann. Treten diese Fehler auf, so ist es keinem Benutzer im DC-Netz möglich Nachrichten zu überlagern. Die Lösung hierfür ist, dass man mit mehreren voneinander getrennten DC-Netzen arbeitet. Sollte es zu einem Fehler in einem DC-Netz kommen, kann das DC-Netz vernachlässigt werden, da Fehler in kleinen DC-Netzen nicht so stark ins Gewicht fallen, als Fehler in wenigen großen DC-Netzen. Des Weiteren sollte ein Fehler bemerkt werden, so wurde ein Fehlerprotokoll beschrieben(Von Prof. Pfitzmann) welches die schwerwiegensten Fehler tolerieren kann und das System wieder in einen geordneten Zustand bringen kann. Sollte auch diese Möglichkeit versagen, so müsste ein techniker das Problem beheben. Nichtsdestotrotz könnte ein genaues Bild des Stromnetzes(welches Wort) auch wenn mehrere DC-Netze aktuell nicht senden können. 
 
-4. Skalierbarkeit:
-
-
+4. Skalierbarkeit und Effizienz:
+Die hier vorgeschlagene Struktur ist stark skalierbar, da neue Nutzer entweder zu bereits bestehenden DC-Netzen hinzugefügt werden oder selbst ein neues DC-Netz erstellen können. Da die größe von den DC-Netzen klein ist und alle Nutzer gleichzeitig überlagern (also zum gleichen Zeitpunkt senden) kommt es nicht zu einer Überlastung bzw. Bottleneck. 
+Außerdem ist davon auszugehen, dass die Bildung der globalen Summe (also eine Runde im DC-Netz) effizient durchführbar ist. Denn abgesehen von der Schlüsselbildung werden im DC-Netz hauptsächlich Additionen mit Modulo durchgeführt, die leicht umsetzbar sind. Des Weiteren sollte es zu Fehlern kommen, können die im Protokoll vorgeschlagenen Fehlerkorrekturmaßnahmen schnell umgesetzt werden. Nur wenn es zu einem unwahrscheinlichen durch das Protokoll unlösbaren Fehler kommt, müssen Servicetechniker vor Ort den Fehler beheben. Der Strom provider bekommt von mehreren Hundert SMGW die aggregierten Stromverbräuche, die müssen dann nochmals addiert werden, aber das sollte ebenfalls zu keinen Performanceverlusten führen.
 
 
 Siehe seite 253-255 im Skript
