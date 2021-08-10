@@ -29,3 +29,4 @@ Dann wäre die einfachste Lösung, dass man eine zusätzliche Variable im Triple
 
 
 Also Variablen für Triplex_node werden in node.h definiert.
+Es macht eventuell mehr sinn den dc_net identifier im node.cpp zu definieren. Schau da mal im code nach.
