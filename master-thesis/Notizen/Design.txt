@@ -56,6 +56,8 @@ ACHTUNG: Der Stromprovider kennt niemals den Schlüsselgraphen(würde Raum für 
 FRAGE: Was passiert, wenn ein Schlüsselgraph in zwei resultierende DC-Netze zerbricht, diese es voneinander aber nicht wissen?
 Bzw. was passiert, wenn ein Schlüsselgraph nicht in zwei resultierende DC-Netze zerbricht, aber alle CLient denken, sie wären in dem gleichen DC-netz?
 
+Siehe notizen auf dem blog!
+
 
 Bei vielen kleinen DC-Netzen (und auch kleinen DC-Gruppen) kann dies zu einer Teilung von einem DC-Netz in zwei führen. Dann senden, die geteilten Netze einzeln ihre lokalen Summe an den Stromanbieter, der diese Summen addiert.(hier muss wieder darauf geachtet werden, dass nicht die minimale Anzahl an Teilnehmern eines DC-Netzes unterschritten wird.
 
