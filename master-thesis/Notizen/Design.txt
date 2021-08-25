@@ -2,6 +2,7 @@ Vokabeln die ich vergesse:
 Controllable  Local  Systems (CLS)
 Seite 146 technische Richtlinie unglaublich wichtig! bzw kapitel 4.3.1
 Mehrfachzugriff (wenn mehrere Teilnehmer auf einen Zeitslot vom DC-net zugreifen)
+schauen was der Messstellenbetreiber macht und wie das mit der authentifikation zusammenhängt (zwischen stromanbieter und SMGW)
 
 Top-down methode: die SMGW bilden mit anderen SMGW ein DC-Netz (lokale Gruppen) und schicken verteilt mehrere Teilverbräuche an den Stromanbieter.
 Problem: SMGW können nicht miteinander kommunizieren(mögliche Lösung wurde bereits aufgeschrieben und SMGW müssten technisch in der Lage dazu sein mehrere Meterverbräuche zu addieren bzw.
@@ -23,9 +24,9 @@ Kommunikation: Ein Smart Meter Gateway beantragt die Kommunikation zum Stromanbi
 
 Operationen:
 Hier werden alle Möglichen Operationen aufgelistet, die im Protokoll berücksichtigt werden:
--Systeminitialisierung: Wie wird ein mögliches DC-Nets initialisiert in einem bestehenden System?
-Lösung: Smart Meter müssen als Clients mit anderen Smart Metern(oder einen Server) kommunizieren. Damit die Inhaltsdaten nicht mitgelesen werden können, muss ein Schlüsselgraph 
-erstellt werden, der definiert wie Clients untereinander kommunizieren und ihre Schlüssel addieren oder subtrahieren. Tauschen zwei Clients einen Schlüssel miteinander aus, entsteht eine Kante im Schlüsselgraph wodurch andere Teilnehmer wissen, dass eine Kommunikationsverbindung erstelllt wurde.(bzw wissen überhaupt clients wie der komplette Schlüsselgraph aussieht?)
+-Systeminitialisierung: Wie wird ein mögliches DC-Nets initialisiert in einem bestehenden System? Wie wird eine Verbindung im DC-Netz aufgebaut? Wie findet eine Verbindung statt?
+Lösung:
+Jedes DC-Netz (im Falle von mehreren Netzen) erhält eine eineindeutige Identifikationsnummer. Smart Meter Gateways müssen als Clients mit anderen Smart Metern Gateways kommunizieren. Damit die Inhaltsdaten nicht mitgelesen werden können, muss ein Schlüsselgraph erstellt werden, der definiert wie Clients untereinander kommunizieren und ihre Schlüssel addieren oder subtrahieren. Tauschen zwei Clients einen Schlüssel miteinander aus, entsteht eine Kante im Schlüsselgraph. Andere Teilnehmer im DC-Netz wissen jedoch nicht, dass eine Kommunikationsverbindung erstelllt wurde. Gleichzeitig tauschen die beiden Clients Kommunikationsdetails miteinander aus wie z.B die eineindeutige TeilnehmerId, die jeder Teilnehmer im DC-Netz erhält. Die beiden Clients (und auch alle anderen Teilnehmer mit ausnahme des Stromproviders) können keinen Überblick über den eigentlichen Schlüsselgraphen haben, aber durch die ausgetauschten Kommunikationsdetails kennt jeder Teilnehmer im DC-Netz die Identifikationsnummer(oder Teilnehmernummer) seines Nachbarns.
 Der Schlüsselaustausch zwischen zwei Clients spielt dabei eine zentrale Rolle. Für jede gesendete Nachricht muss ein neuer Schlüssel erstellt werden und dann mit der Nachricht verknüpft(Xored) werden.
 Damit nicht bei jeder DC-Runde ein neuer Schlüsselaustausch durchgeführt werden muss, werden einmalig Seeds ausgetauscht mit denen jeweils ein PRNG pro Client initialisiert wird. Wenn unter gleichen Bedingungen der PRNG auf beiden Clients initialisiert wird, dann wird jeweils der gleiche Schlüssel erzeugt. Das führt zu einer Reduktion der theoretischen Sicherheit, aber mit guten PRNG kann immernoch
 eine komplexitätstheoretische Sicherheit erreicht werden.
@@ -165,8 +166,8 @@ Auch wenn ein SMGW von einem Angreifer kontrolliert werden sollte, dann wäre es
 (halbwegs debunked)
 Nur in spezialfällen wäre es möglich, dass ein kontrolliertes SMGW ein weiteres SMGW abhören kann(bzw. mehrere und zwar genau dann, wenn der Angreifer der Parent von Leafs ist), aber dann hätte der Angreifer nur die aggregierten Messwerte aller Meter, die das abgehörte SMGW betreut. Des Weiteren ist es durch die Technische Richtlinie nicht möglich, dass SMGW Admins einzelne Meterdaten anfordern/lesen können. Dadurch müssen potentiell kontrollierte SMGW nicht betrachtet werden. Außerdem gilt es in dieser Arbeit herauszufinden, wie minimal DC-Netze sein können, um eine größtmögliche Anonymität mit der höchstmöglichen Verfügbarkeit zu erreichen.
 
-2. Authentikation: 
-Ein Smart meter muss nicht authentifiziert werden durch das DC-Netz. Die Operationen, die im DC-Netz stattfinden, werden erst spät bei der Messwertverarbeitung ausgeführt. Bis zu diesem Zeitpunkt wurden die Messwerte und die Meter bereits authentifiziert. Sollten bei der Authentifizierung probleme auftreten, so könnten diese wie bei SMGW ohne DC-Netz ins eichtechnische Logbuch bzw. ins Systemlogbuch eingetragen werden. Ansosten ist der Eintritt in das DC-Netz ein kritischer Punkt. 
+2. Authentifizierung: 
+Ein Smart meter muss nicht authentifiziert werden durch das DC-Netz. Die Operationen, die im DC-Netz stattfinden, werden erst spät bei der Messwertverarbeitung ausgeführt. Bis zu diesem Zeitpunkt wurden die Messwerte und die Meter bereits authentifiziert. Sollten bei der Authentifizierung probleme auftreten, so könnten diese wie bei SMGW ohne DC-Netz ins eichtechnische Logbuch bzw. ins Systemlogbuch eingetragen werden. Ansosten ist der Eintritt in das DC-Netz ein kritischer Punkt. Das SMGW muss auch nicht authentifiziert werden(warum eigentlich genau?) Hat das sicherheitsmodul, damit kann sich das smart meter gateway ausweisen. Deshalb kann der fall vernachlässigt werden.
 
 Man möchte vermeiden, dass potentielle Angreifer(mit fake SMGW) in das Netz eintreten um Daten klauen zu können. Deshalb muss zwischen dem Strom provider und dem SMGW eine klare Authentifizierung stattfinden, die nur bei Erfolg ein SMGW in das DC-Netz aufnimmt.
 

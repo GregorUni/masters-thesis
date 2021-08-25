@@ -30,3 +30,37 @@ Dann wäre die einfachste Lösung, dass man eine zusätzliche Variable im Triple
 
 Also Variablen für Triplex_node werden in node.h definiert.
 Es macht eventuell mehr sinn den dc_net identifier im node.cpp zu definieren. Schau da mal im code nach.
+
+Klassen Erweitern:
+http://gridlab-d.shoutwiki.com/wiki/Creating_GLM_Files
+
+gl_verbose() wichtiger aufruf zum debuggen!
+Gridlab-D Struktur:
+http://gridlab-d.shoutwiki.com/wiki/Programming_conventions
+http://gridlab-d.shoutwiki.com/wiki/Theory_of_operation -> Welche funktionen sind die main funktionen.
+
+Wird in core/exec.c gestartet und dort ist der main loop:
+
+Synchronization procedure
+
+Objects are instances of classes. Each class has a synchronization characteristic the determines when it receives synchronization signals from the main exec loop. The sync signals are sent in the following order
+
+    create - called once per object
+    init - called until object confirms successful initiatialization (only called once prior to Hassayampa (Version 3.0))
+
+do until clock stops
+
+        precommit - called once per timestep before sync; used to setup for new timestep
+
+    do until valid timestep is found'
+
+            presync - called once per pass from the top rank down; used to prepare objects for bottom-up pass
+            sync - called once per pass from the bottom rank up; used to perform main calculations in objects
+            postsync - called once per pass from the top rank down; used to complete calculations
+
+        commit - called once per timestep after sync; used to lock-in states
+
+    finalize - called once per simulation after clock stops
+    term - called to terminate simulation
+
+sync und init sind wahrscheinlich wichtige funktionen, da in init die parameter von der glm initialisiert werden und in sync könnte man den dc_algorithmus bilden.
