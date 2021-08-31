@@ -20,6 +20,14 @@ Notizen für Design:
 /////////////////////Top-down Approach
 Es gibt eine .pdf vom BSI in der Informationen zum Sicherheitsmodul gefunden werden können. Also welche kryptografische Operationen werden unterstützt.
 
+HEADER: |DC-Net Identifier|Client-Identifier|Übertragungsbit|lokale Summe |
+DC-Net Identifier: eineindeutiger Identifier, der angibt in welchem DC-Netz sich ein SGMW befindet
+Client-Identifier: eineindeutiger CLient Identifier, jeder Client bekommt in einem DC-Netz einen eineindeutigen Identifier
+wo die Benachrichtigungsnachricht vom Stromprovider hin?
+Wie sieht eine Benachrichtigung aus vom SGMW um in ein DC-Netz einzutreten?
+Wie sieht eine Notfallnachricht von SMGW an den Stromprovider aus?
+Wie sehen die Tunnelinformationen aus?
+
 Kommunikation:
 In diesem Protokoll wird davon ausgegangen, dass alle SMGW in einem 15 minütigen Takt Stromverbräuche an einen Stromanbieter senden. 
 
@@ -39,21 +47,26 @@ eine komplexitätstheoretische Sicherheit erreicht werden.
 -Nutzerwechsel: mehrere private Nutzer können den Stromanbieter wechseln. Wie wird damit umgegangen? stabiles system etc... (wird das vom smart meter gateway oder vom admin ausgelöst?)
 
 Verbindungsaufbau zwischen zwei SGMW:
-
 Technische Hindernisse:
 In der technischen Richtlinie vom BSI wird definiert, welche Anforderungen und mit welchen Rechten Smart Meter kommunizieren dürfen.
 Mit der aktuellen Richtlinie ist es Smart Metern nicht erlaubt ins WAN zu kommunizieren außer es handelt sich um eine Kommunikation mit dem SMGW Admin oder Kommunikation an externe Marktteilnehmer. Es ist nicht vorgesehen, dass verschiedene SMGW untereinander kommunizieren.
-Eine mögliche Lösung wäre es, wenn ein Teilnehmer ,der sich im DC-Netz anmelden möchte eine spezielle Anfrage an seinen Stromanbieter sendet. Diese Anfrage stellt eine Bitte des SMGW dar, sich in einem 
-DC-Netzes anzumelden. Der Stromanbieter ordnet dem anfragenden DC-Client in eine geographische Region zu und schlägt zufällige und bereits angemeldete Clients(SMGW) vor(bzw. ein zufälliger client aus einer bereits bestehenden DC-Netz gruppe). Die bereits angemeldeten Clients können sich also nicht aussuchen, welche neuen Kommunikationspartner sie bekommen (der Gedanke ist, dass es viele verschiedene kleine DC-Netze gibt, die getrennte Schlüsselgraphen besitzen, jedes DC-Netz sendet seine lokale Summe an den Stromanbieter, der alle Werte aufsummiert und die globale Summe bildet (für ein DC-Netz). Man muss nur darauf achten, dass es eine Mindestanzahl an Teilnehmern pro DC-Netz gibt. Des Weiteren können dadurch auch geographische Gruppen gebildet werden. Also eine bestimmte Gruppe spiegelt den verbrauch einer Stadt wieder und so ist es möglich den Stromverbrauch lokal/geographisch nachzuvollziehen). Der DC_Client wird nur vom Stromprovider informiert, dass dieser einen neuen Nachbarn erhält. 
+
+Registrierung:
+Eine mögliche Lösung wäre es, wenn ein Teilnehmer ,der sich im DC-Netz anmelden möchte eine spezielle definierte Anfrage an seinen Stromanbieter sendet. Diese Anfrage stellt eine Bitte des SMGW dar, sich in einem DC-Netz anzumelden. Der Stromanbieter ordnet dem anfragenden DC-Client in eine geographische Region zu und schlägt einen geeigneten und bestenfalls bereits im DC-Netz angemeldeten Clients(SMGW) vor. Der Stromprovider baut nun einen Tunnel auf und sendet die Tunnelinformationen an den DC-Client und den registrierenden Client. Über diesen Tunnel ist es den beiden SGMW möglich eine Kommunikationsverbindung über den Stromanbieter aufzubauen. Der DC_Client wird nur vom Stromprovider informiert, dass dieser einen neuen Nachbarn erhält und Kontaktinformationen austauschen muss.
+Das anfragende SMGW muss nun noch die Seeds zu einem (oder mehreren) Clients im DC-Netz senden. 
+Damit der Stromprovider die Seeds nicht mitlesen kann, tätigen die CLients über den bereit gestellten Tunneln einen Diffie Helmann Schlüsselaustausch, um verschlüsselte Nachrichten versenden zu können. Sobald einmal die Seeds ausgetauscht wurden, wird der Stromprovider von dem anfragenden Client informiert, dass dieser erfolgreich im DC-Netz eingetreten ist.(vllt durch eine verifikation?) Anschließend können alle Teilnehmer im DC-Netz ihre lokale Summen an den Strom provider senden und dieser bildet die globale Summe. Der Stromprovider ist dafür zuständig, dass Nachrichten bei Bedarf auch in Zukunft über den bereits genutzen Tunnel zwischen den angemeldeten Clients ausgetauscht werden können.
+
+Die bereits angemeldeten Clients können sich also nicht aussuchen, welche neuen Kommunikationspartner sie bekommen. Zusätzlich muss darauf geachtet werden, dass es eine Mindestanzahl an Teilnehmern pro DC-Netz nicht unterschritten wird. Eine bestimmte Gruppe kann den verbrauch einer Stadt wiederspiegeln und so kann der Stromverbrauch lokal/geographisch nachzuvollzogen werden). 
+
+(der Gedanke ist, dass es viele verschiedene kleine DC-Netze gibt, die getrennte Schlüsselgraphen besitzen, jedes DC-Netz sendet seine lokale Summe an den Stromanbieter, der alle Werte aufsummiert und die globale Summe bildet (für ein DC-Netz)
 
 Bei diesem Ansatz muss keine Authentifizierung zwischen dem anfragenden SMGW und dem Stromprovider durchgeführt werden. Denn der Stromprovider ist bereits (von dem SMGW Gateway) verifiziert worden. 
-
-Das anfragende SMGW muss nun noch die Seeds mit einem (oder mehreren) von den im DC-Netz austauschen. Damit der Stromprovider die Seeds nicht mitlesen kann, tätigen die CLients über den bereit gestellten Tunneln eine Diffie Helmann Schlüsselaustausch, um verschlüsselte Nachrichten versenden zu können. Sobald einmal die Seeds ausgetauscht wurden, wird der Stromprovider von dem anfragenden Client informiert, dass dieser erfolgreich im DC-Netz eingetreten ist.(vllt durch eine verifikation?) Anschließend können alle Teilnehmer im DC-Netz ihre lokale Summen an den Strom provider senden und dieser bildet die globale Summe. Der Stromprovider ist dafür zuständig, dass auch in Zukunft Nachrichten bei Bedarf zu den bereits angemeldeten Client im DC-Netz weitergeleitet wird von dem neuen DC-Mitglied.
 
 Austritt aus dem DC-Netz:
 
 Also mittels eines sicheren kanals, der durch den Diffie-Hellman schlüsselaustausch erzeugt wurde, können die Seeds für einen PRNG kommuniziert werden.
--Was passiert wenn ein Teilnehmer entfernt wird? Dann wird eine definierte Nachricht an den Stromprovider gesendet. Damit teilt das SMGW dem Stromprovider mit, dass es aus dem DC-Netz austreten wird. Nun informiert der Stromprovider die Nachbarn des austretenden Clients mit einer Benachrichtigungsnachricht 001. Mit dieser Benachrichtigung werden den Nachbarn signalisiert, dass sie ihre PRNG konfigurationen zu Knoten X wegwerfen und diese somit nicht weiter in der Berechnung der lokalen Summe (in der nächsten generation) verwendet werden. Damit es nicht zu einer Störung der Synchronisation im DC-Netz kommt(was dazu führt, dass keine sinnvolle globale Summe errechnet werden kann), müssen die "Nachbarn" eine Bestätigung(das die Nachricht verstanden wurde und alle Seeds weggeworfen wurden) an den Stromprovider senden. (was wenn nicht bestätigt wurde?)
+-Was passiert wenn ein Teilnehmer entfernt wird? 
+Dann wird eine definierte Nachricht an den Stromprovider gesendet. Damit teilt das SMGW dem Stromprovider mit, dass es aus dem DC-Netz austreten wird. Nun informiert der Stromprovider die Nachbarn des austretenden Clients mit einer Benachrichtigungsnachricht 001. Mit dieser Benachrichtigung wird den Nachbarn signalisiert, dass sie ihre PRNG konfigurationen zu Client X wegwerfen und diese somit nicht weiter in der Berechnung der lokalen Summe (in der nächsten generation) verwendet werden. Damit es nicht zu einer Störung der Synchronisation im DC-Netz kommt(was dazu führt, dass keine sinnvolle globale Summe errechnet werden kann), müssen die "Nachbarn" eine Bestätigung(das die Nachricht verstanden wurde und alle Seeds weggeworfen wurden) an den Stromprovider senden. (was wenn nicht bestätigt wurde?)
 Schlüsselgraphen:
 Es kann dazu kommen, dass beim Austritt eines Clients der DC-Schlüsselgraph in zwei Teile zerbricht. Das Problem hierbei ist, dass weder die SMGW Clients noch der Stromanbieter wissen, ob sich der Schlüsselgraph zerteilt. Sollte dies der Fall sein, so senden zwei voneinander getrennte DC-Netze auf die gleiche DC-Netz ID. Der Stromprovider könnte zwar trotzdem eine sinnvolle globale Summe bilden(weil quasi zwei globale Summen aufaddiert werden), aber man könnte schnell den überblick aus den daraus resultierenden Schlüsselgraphen verlieren und die Mindestanzahl der Teilnehmer in einem DC-Netz könnte unterschritten werden. Eine mögliche Fehlererkennung bei Problemen könnte gar unmöglich werden.
 Um eine Funktionsfähigkeit/Wartbarkeit des Schlüsselgraphen zu gewährleisten werden folgende Maßnahmen getroffen:
