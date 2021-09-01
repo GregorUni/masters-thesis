@@ -1,0 +1,30 @@
+Ziel: Man möchte aus den Ergebnissen des DC-Netzes eine gewichtung für anonymität haben.
+Bzw. man könnte auch eine Lossfunktion nutzen.
+
+https://dsp.stackexchange.com/questions/14306/percentage-difference-between-two-signals
+https://www.researchgate.net/post/How_to_find_the_similatiy_between_two_curves_Is_there_any_criterion
+
+Correlation:
+Man könnte eine Woche in Gridlabd simulieren.
+Dann bildet man einen korrelations koeffizienten von dem Ergebnis des DC-Netzes und den Inputs.
+Anschließend vergleicht man die korrelationskoeffizient von mehrere dc-netz mit n=2,5,10,25,50,100 etc... 
+das macht man solange, bis der korrelationskoeffizient einen min limes erreicht.
+
+Welchen korrelations koeffizienten?
+root mean squared error
+
+CORRELATION IN MULTIVARIATE ANALYSIS:
+mehrere variablen-> correlationsmatrix
+
+man könnte die fourir transformation benutzen:
+https://stackoverflow.com/questions/7396814/cross-correlation-in-matlab-without-using-the-inbuilt-function
+
+Mean absolute percentage error:
+https://en.wikipedia.org/wiki/Mean_absolute_percentage_error
+
+Euklidische Distanz?
+
+sehr gute quelle:
+https://www.tandfonline.com/doi/full/10.1080/10408340500526766
+if two random variables x and y are statistically independent, their correlation coefficient is zero. However, the converse is not true; i.e., if r = 0, this does not necessarily imply that x and y are statistically independent [64]. The correlation coefficient is thus an estimate of association between the variables and is valid only when the observations are randomly drawn.
+siehe CORRELATION IN MULTIVARIATE ANALYSIS

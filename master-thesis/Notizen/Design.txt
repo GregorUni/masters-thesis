@@ -20,9 +20,10 @@ Notizen für Design:
 /////////////////////Top-down Approach
 Es gibt eine .pdf vom BSI in der Informationen zum Sicherheitsmodul gefunden werden können. Also welche kryptografische Operationen werden unterstützt.
 
-HEADER: |DC-Net Identifier|Client-Identifier|Übertragungsbit|lokale Summe |
+HEADER: |DC-Net Identifier|Client-Identifier|Übertragungsbit|Zeitstempel|Daten(lokale Summe) |
 DC-Net Identifier: eineindeutiger Identifier, der angibt in welchem DC-Netz sich ein SGMW befindet
 Client-Identifier: eineindeutiger CLient Identifier, jeder Client bekommt in einem DC-Netz einen eineindeutigen Identifier
+Zeitstempel: Ist ein Zeitstempel, der angibt für welche generation die daten (lokale summe) bestimmt sind.
 wo die Benachrichtigungsnachricht vom Stromprovider hin?
 Wie sieht eine Benachrichtigung aus vom SGMW um in ein DC-Netz einzutreten?
 Wie sieht eine Notfallnachricht von SMGW an den Stromprovider aus?
@@ -46,7 +47,7 @@ eine komplexitätstheoretische Sicherheit erreicht werden.
 -Registrierung: Ein Smart Meter Gateway muss sich bei einem Stromanbieter registrieren und sich beim DC-Netz anmelden. (Wie sieht der Schlüsselgraph aus?) (Wie wird mit anderen Smart Meter Gateways kommuniziert, obwohl dies nicht technisch möglich ist)
 -Nutzerwechsel: mehrere private Nutzer können den Stromanbieter wechseln. Wie wird damit umgegangen? stabiles system etc... (wird das vom smart meter gateway oder vom admin ausgelöst?)
 
-Verbindungsaufbau zwischen zwei SGMW:
+Verbindungsaufbau zwischen zwei SGMWs:
 Technische Hindernisse:
 In der technischen Richtlinie vom BSI wird definiert, welche Anforderungen und mit welchen Rechten Smart Meter kommunizieren dürfen.
 Mit der aktuellen Richtlinie ist es Smart Metern nicht erlaubt ins WAN zu kommunizieren außer es handelt sich um eine Kommunikation mit dem SMGW Admin oder Kommunikation an externe Marktteilnehmer. Es ist nicht vorgesehen, dass verschiedene SMGW untereinander kommunizieren.
@@ -66,7 +67,7 @@ Austritt aus dem DC-Netz:
 
 Also mittels eines sicheren kanals, der durch den Diffie-Hellman schlüsselaustausch erzeugt wurde, können die Seeds für einen PRNG kommuniziert werden.
 -Was passiert wenn ein Teilnehmer entfernt wird? 
-Dann wird eine definierte Nachricht an den Stromprovider gesendet. Damit teilt das SMGW dem Stromprovider mit, dass es aus dem DC-Netz austreten wird. Nun informiert der Stromprovider die Nachbarn des austretenden Clients mit einer Benachrichtigungsnachricht 001. Mit dieser Benachrichtigung wird den Nachbarn signalisiert, dass sie ihre PRNG konfigurationen zu Client X wegwerfen und diese somit nicht weiter in der Berechnung der lokalen Summe (in der nächsten generation) verwendet werden. Damit es nicht zu einer Störung der Synchronisation im DC-Netz kommt(was dazu führt, dass keine sinnvolle globale Summe errechnet werden kann), müssen die "Nachbarn" eine Bestätigung(das die Nachricht verstanden wurde und alle Seeds weggeworfen wurden) an den Stromprovider senden. (was wenn nicht bestätigt wurde?)
+Dann wird eine definierte Nachricht an den Stromprovider gesendet. Damit teilt das SMGW dem Stromprovider mit, dass es aus dem DC-Netz austreten wird. Nun informiert der Stromprovider die Nachbarn des austretenden Clients mit einer Benachrichtigungsnachricht 001. Mit dieser Benachrichtigung wird den Nachbarn signalisiert, dass sie ihre PRNG konfigurationen zu Client X wegwerfen und diese somit nicht weiter in der Berechnung der lokalen Summe (in der nächsten generation) verwendet werden darf. Damit es nicht zu einer Störung der Synchronisation im DC-Netz kommt(was dazu führt, dass keine sinnvolle globale Summe errechnet werden kann), müssen die "Nachbarn" eine Bestätigung(das die Nachricht verstanden wurde und alle Seeds weggeworfen wurden) an den Stromprovider senden. (was wenn nicht bestätigt wurde?)
 Schlüsselgraphen:
 Es kann dazu kommen, dass beim Austritt eines Clients der DC-Schlüsselgraph in zwei Teile zerbricht. Das Problem hierbei ist, dass weder die SMGW Clients noch der Stromanbieter wissen, ob sich der Schlüsselgraph zerteilt. Sollte dies der Fall sein, so senden zwei voneinander getrennte DC-Netze auf die gleiche DC-Netz ID. Der Stromprovider könnte zwar trotzdem eine sinnvolle globale Summe bilden(weil quasi zwei globale Summen aufaddiert werden), aber man könnte schnell den überblick aus den daraus resultierenden Schlüsselgraphen verlieren und die Mindestanzahl der Teilnehmer in einem DC-Netz könnte unterschritten werden. Eine mögliche Fehlererkennung bei Problemen könnte gar unmöglich werden.
 Um eine Funktionsfähigkeit/Wartbarkeit des Schlüsselgraphen zu gewährleisten werden folgende Maßnahmen getroffen:
@@ -80,6 +81,8 @@ Annahme: Pro generation darf nur ein SMGW aus dem DC-Netz austreten!
 
 Siehe notizen auf dem blog!
 
+Internetausfall/Ausfall von dem SMGW:
+
 Was tun bei einem Internetausfall -> zu jeder lokalen Summe wird ein Zeitstempel angefügt. Dann können die Nachrichten auch später an den Stromprovider gesendet werden.
 Dieser kann dann auch nach einen späteren Zeittick(Generation) die Daten wieder zusammensetzen. 
 Was wenn ein SMGW über längere Zeit ausfällt?
@@ -89,11 +92,19 @@ Sollte der defekte Nachbar wieder kommunikationsfähig sein, dann sind zwei mög
 1.2. die backupSchlüssel von den Nachbarn werden benutzt. Doch diesmal wird für die lokale Summe die schlüssel von den nicht defekten Nachbarn abgespalten und nur der SChlüssel von dem defekten Nachbarn benutzt. Daraufhin wird per Zeitstempel die verlorenen Generationen nachgesendet. (die nicht defekten nachbarn würden dann allerdings doppelt gerechnet)
 1.3. wie zweitens bloß, dass es einem Zeitraum gibt z.b 0:00 wo alle nicht gesendeten stromverläufe nachgesendet werden)
 
-2. Sobald ein SMGW in einer Generation keine lokale Summe sendet, dann wird es als faulty angesehen. Der Stromprovider erkennt das faulty SMGW, durch die CLient-Id die bisher nicht übermittelt wurde und durch das unvollstädige Übertragungsbit(also wie viele Sender gesendet haben). Durch das unvollständige Übertragungsbit weiß man wie viele "defekte" SMGW Clients es gibt. Der Stromprovider kann nicht die globale Summe bilden und hat somit keinen Überblick über das Stromnetz. Daher broadcastet der Stromprovider Benachrichtigung 002 und alle Clients werfen ihre Schlüssel von den defekten Clients weg und bilden erneut in der gleichen Generation eine lokale Summe nur ohne SChlüssel des defekten CLients.
-Sollte ein Client durch zufall nun keinen Schlüssel mehr haben mit dem die lokale Summe überlagert werden kann, so sendet dieser eine Notnachricht an den Stromprovider. Dieser führt einen erneuten Registrierungsschritt mit dem abgetrennten Client aus und verbindet diesen mit dem DC-Netz bevor die lokalen Summen gebildet werden.
+2. Sobald ein SMGW in einer Generation keine lokale Summe sendet, dann wird es als faulty angesehen. Der Stromprovider erkennt das faulty SMGW, durch die CLient-Id die bisher nicht übermittelt wurde und durch das unvollstädige Übertragungsbit(also wie viele Sender gesendet haben). Durch das unvollständige Übertragungsbit weiß man wie viele "defekte" SMGW Clients es gibt. Der Stromprovider kann nicht die globale Summe bilden und hat somit keinen Überblick über das Stromnetz. Daher broadcastet der Stromprovider Benachrichtigung 002 und alle Clients werfen ihre Schlüssel von den defekten Clients weg und bilden erneut in der gleichen Generation eine lokale Summe nur ohne SChlüssel des defekten CLients. 
+Sollte ein Client durch zufall nun keinen Schlüssel mehr haben mit dem die lokale Summe überlagert werden kann, weil sein einziger Nachbar faulty ist ,so sendet dieser eine Notnachricht an den Stromprovider. Dieser führt einen erneuten Registrierungsschritt mit dem abgetrennten Client aus und verbindet diesen mit dem DC-Netz bevor die lokalen Summen gebildet werden.
+
+Der faulty client kann durch den Internetausfall nicht rechtzeitig die lokale summe versenden. Das bedeutet der faulty client kann mehrere generationen verpassen und muss deshalb stromverbräuche nachsenden. Dies kann der faulty client in einem extra zeitfenster nachsenden, indem nur der nachbar eines faulty clients und der faulty client nachsenden. (der nachbar sendet 000 und der faulty client seine verspätete lokale summe). Das funktioniert aber nur, wenn mindestens zwei faulty clients für ein zeitfenster nachsenden. ansonsten könnte der stromanbieter einfach folgendes berechnen: neues ergebnis - altes ergebnis = stromverbrauch von dem faulty client.
+
+also es ist wahrscheinlich besser einfach so den stromverbrauch nachzusenden ohne dc-netz.
 
 Durchführung: Bisher wurden technische Schritte erklärt um ein DC-Netz in das bereits operierende Stromnetz zu implementieren. Wie sieht eine typische Operation im Stromnetz aus?
 Am besten wäre es, wenn es eine synchronisierte Uhrzeit gibt in der alle DC-Netze(in einer Region) gleichzeitig senden und überlagern. Aus den DC-Netzen werden mehrere Teil-Stromverbräuche gesendet, die an den Stromanbieter weitergeleitet werden. Der Stromanbieter muss nur alle Teilverbräuche (lokale Summen) addieren und bekommt somit den Gesamtverbrauch des Stromnetzes. Diese Daten sind komplett anonym und gibt nur die Auskunft über den Gesamtverbrauches eines kleinen DC-Netzes aus. In der Technischen Richtlinie wird auch erwähnt, wie die Zähler Zeit synchronisieren, also ist eine Zeitgleiche sendung von Nachrichten durchaus umsetzbar.
+
+Was passiert, wenn alle eine globale Summe senden, aber diese inkorrekt ist?
+
+Implementation des DC-Netzes im SMGW:
 
 Abbildung 26 technische Richtlinie:
 Die Abbildung zeigt ein Diagramm wie die Messwerte intern im SMGW verarbeitet werden. Da das SMGW eine zentrale Rolle in der Lösung spielt, ist dieses Diagramm wichtig um die technischen Details zu illustrieren. Zunächst muss erwähnt werden, dass gewisse terminologische Anforderungen durch die technische Richtlinie gestellt werden. "Das  SMGW MUSS mindestens  folgende  Informationen  an  der  Schnittstelle  für  Anzeigeeinheiten bereitstellen....
@@ -248,6 +259,9 @@ registrierung:
 austritt:
 normale operation:
 ausfall bei einem teilnehmer: temporäres entfernen von teilnehmer
+was passiert, wenn alle eine lokale summe senden, aber der globale wert falsch ist.
+
+gibt es einen algo um zwei graphen(schlüsselgraphen) miteinander zu vereinen?
 
 differenzielle privacy
 
