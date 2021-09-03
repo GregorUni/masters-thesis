@@ -13,6 +13,8 @@ das macht man solange, bis der korrelationskoeffizient einen min limes erreicht.
 Welchen korrelations koeffizienten?
 root mean squared error
 
+bzw. nicht lineare korrelation
+
 CORRELATION IN MULTIVARIATE ANALYSIS:
 mehrere variablen-> correlationsmatrix
 

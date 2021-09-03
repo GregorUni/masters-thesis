@@ -20,7 +20,7 @@ Notizen für Design:
 /////////////////////Top-down Approach
 Es gibt eine .pdf vom BSI in der Informationen zum Sicherheitsmodul gefunden werden können. Also welche kryptografische Operationen werden unterstützt.
 
-HEADER: |DC-Net Identifier|Client-Identifier|Übertragungsbit|Zeitstempel|Daten(lokale Summe) |
+HEADER: |DC-Net Identifier|Client-Identifier|Übertragungsbit|Zeitstempel|Benachrichtigungen|Daten(lokale Summe) |
 DC-Net Identifier: eineindeutiger Identifier, der angibt in welchem DC-Netz sich ein SGMW befindet
 Client-Identifier: eineindeutiger CLient Identifier, jeder Client bekommt in einem DC-Netz einen eineindeutigen Identifier
 Zeitstempel: Ist ein Zeitstempel, der angibt für welche generation die daten (lokale summe) bestimmt sind.
@@ -79,6 +79,8 @@ Anmerkung: der stromprovider kennt den Schlüsselgraphen. Denn er verbindet alle
 
 Annahme: Pro generation darf nur ein SMGW aus dem DC-Netz austreten! 
 
+Vorteil: Dadurch dass es nur einen Empfänger im DC-Netz gibt, müssen die Clients die lokalen Summen untereinander nicht austauschen, wodurch das DC-Netz sehr Performant ist.
+
 Siehe notizen auf dem blog!
 
 Internetausfall/Ausfall von dem SMGW:
@@ -102,8 +104,6 @@ also es ist wahrscheinlich besser einfach so den stromverbrauch nachzusenden ohn
 Durchführung: Bisher wurden technische Schritte erklärt um ein DC-Netz in das bereits operierende Stromnetz zu implementieren. Wie sieht eine typische Operation im Stromnetz aus?
 Am besten wäre es, wenn es eine synchronisierte Uhrzeit gibt in der alle DC-Netze(in einer Region) gleichzeitig senden und überlagern. Aus den DC-Netzen werden mehrere Teil-Stromverbräuche gesendet, die an den Stromanbieter weitergeleitet werden. Der Stromanbieter muss nur alle Teilverbräuche (lokale Summen) addieren und bekommt somit den Gesamtverbrauch des Stromnetzes. Diese Daten sind komplett anonym und gibt nur die Auskunft über den Gesamtverbrauches eines kleinen DC-Netzes aus. In der Technischen Richtlinie wird auch erwähnt, wie die Zähler Zeit synchronisieren, also ist eine Zeitgleiche sendung von Nachrichten durchaus umsetzbar.
 
-Was passiert, wenn alle eine globale Summe senden, aber diese inkorrekt ist?
-
 Implementation des DC-Netzes im SMGW:
 
 Abbildung 26 technische Richtlinie:
@@ -114,19 +114,11 @@ Deshalb sollten die lokale Summe erst nach der Messwertverarbeitung bzw. dem Sch
 Vllt noch schreiben, ob dadurch Ereignisse wie eichtechnische Logeinträge erschwert werden, durch die Anonymität?
 Antwort nein, da die Operationen des DC-Netz innerhalb der Funktionalität des SMGW erst so spät durchgeführt werden. Deshalb wurden die wichtigen Operationen wie Messwertverarbeitung und logbuch einträge bereits ausgeführt.
 
-Fehlertoleranz:
-vllt sowas wie der Kollisionsauflösungsalgorithmus mit Mittelwertbildung(also das es ein Bit für die Anzahl der Nachrichten gibt) um zu sehen wie viele Stationen senden konnten.(damit kann man sehen, ob es zu einem großflächigen stromausfall gekommen ist etc.)
----> Der Gedanke ist, dass ein DC-Netz,dass sich im Fehler modi befindet nur Leernachrichten sendet und das Nachrichtenbit nicht erhöht. So kann der Stromprovider abschätzen, wie viele DC-netze ausgefallen sind(Gesamtanzahl DC-Netze minus Anzahl Gesendeter DC_netze)
-
 Die Fehlertoleranz im DC-Netz bezieht sich größtenteils auf die Erkenntnisse von Prof. Pfitzmann.
 Damit ein DC-Netz arbeiten kann, müssen mehrere Anforderungen erreicht werden:
 Bei dem DC-Netz müssen alle Schlüssel fehlerfrei ausgetauscht worden sein.( Es wurde bereits beschrieben wie der Schlüsselaustausch stattfindet) Die PNRG müssen synchron sein, damit die erzeugten Schlüssel gleich sind. Ein Fehler/fehlsynchronisation führt dazu, dass keine Teilnehmerstation senden kann. Erst wenn der fehler korrigiert wurde, ist ein Senden wieder möglich. (es sei denn es gibt redundanzen). Ziel dieser Arbeit ist, dass man möglichst kleine DC-Netze bildet, die trotzdem ein größtmögliches level an anonymität garantieren(nochmal nachfragen ob das stimmt.) 
 
-Warum kleine DC-Netze?
-DC-Netze sind besonders praktisch, wenn es um die Überlagerung von Nachrichten bzw. den Stromverbräuchen geht. Aber bereits bei einen Fehler von einem Verbraucher(wie z.B internetausfall) ist es niemanden im Netz mehr möglich sinnvoll zu Überlagern. Um eine möglichst hohe Verfügbarkeit zu erreichen, bietet es sich an mehrere minimal von einander getrennte DC-netze zu betreiben. Wenn es in einem kleinen DC-Netz zu einem Ausfall kommt kann ein Protokoll gestartet werden um den Fehler zu entdecken. Durch die Minimalität des DC-Netzes kann ein Ausfall von einem oder mehreren Netzen vernachlässigt werden. (da z-B. in großen städten es nicht auffällt, wenn eine Prozentual geringe menge nicht senden kann). Gleichzeitig können die Menge aller Sender aufaddiert werden (wie bei der mittelwertbildung). Damit weiß der Stromprovider wie viele sender es gibt und kann einschätzen wie Vertrauenswürdig die gelieferten Daten sind.
-
-Warum kein senderpartitioniertes DC-Netz?
-Aufwand soll nicht groß sein, aber die Senderanonymität wird verringert und es ist deshalb in dieser Arbeit nicht sinnvoll, da man durch die minimalen Netze nicht noch zusätzlich an anonymität einbüßen möchte. ABER es wird eine "vollständige Fehlerüberdeckung erreicht".
+Was passiert, wenn alle eine globale Summe senden, aber diese inkorrekt ist? 
 
 Pfitzmann Protokoll:
 Transiente(also vorrübergehend) und permanente Fehler:
@@ -145,47 +137,38 @@ DC-Netze werden auf der Schicht 1 und Schicht 2 implementiert.
 Fehler in der oberen Schicht 1 lassen sich durch Redundanzen wie CRC lösen, die am Ende einer Nachricht angefügt werden können.
 Sollte es bei z.B. CRC zu einem ungültigen Prüfzeichen kommen, so liegt ein Fehler bei der Überlagerung vor.
 
-Fehler bei Mehrfachzugriffsverfahren:
-Man arbeitet mit zwei "Modi" eine normalen A-Modi und einen Fehlermodi F-modi in dem nach Fehlern gesucht wird.
-Bei Fehler wird das Mehrfachzugriffsverfahren neuinitialisiert um mögliche transiente Fehler und Fehler in der oberen Schicht 1 auszuschließen.
-Sollten trotzdem noch Fehler vorherrschen (oder es wurde ein anderer permanenter Fehler gefunden) wird in den F-modi umgeschaltet. Nun wird folgendes Protokoll umgesetzt.
-Protokoll:
-1. Jede Station erstellt einen recovery point und speichert die aktuell ausgetauschten schlüssel.
-2. Nun wird eine selbstdiagnose ausgeführt. Es werden paarweise zufällige Schlüssel in den PRNG geladen und mit einer zufälligen Nachricht lokal überlagert. Sollte das Ergebnis nicht die zufällige Nachricht sein, so ist die Station fehlerhaft. Dies wird den anderen Stationen mitgeteilt. Die Schlüssel der fehlerhafte Station werden nun verworfen und es wird in den A-modus gewechselt.
-ODER: Die station ist fehlerfrei so wird der recovery point wiederhergestellt.
-Von hier aus gibt es 3 Fehlertypen, die auftreten könnten:
-1. Eine Station, die so fehlerhaft ist, dass sie wieder ihren Fehler dem Netz mitteilen kann, noch kommunizieren kann.
-2. Schlüssel/Synchronisationen von mind. 2 Stationen gingen verloren.
-3. Das unterliegende Kommunikationsnetz, Globale überlagerung ist Fehlerhaft.
+Folgenden Fehler können in einem DC-Netz auftreten:
+1.Fehler bei Mehrfachzugriffsverfahren:
+Fehler im Mehrfachzugriffsverfahren können gar nicht entstehen, da es ja gewollt ist, dass alle teilnehmer gleichzeitig senden!
+sendet ein teilnehmer nicht, dann wird er als defekt angesehen und wird aus dem netz(wie oben beschrieben) entfernt.
+2.Ein SMGW ist defekt:
+Kann per selbstdiagnose herausgefunden werden wie es pfitzmann beschrieben hat.
+3.PRNG Seeds verloren:
+Bleibt noch das Problem mit den PRNG. Es kann sein, dass ein SMGW die seeds für den PRNG verloren hat und somit falsche Schlüssel erzeugt. Um diesen Fehler vorzubeugen wird über einen Befehl des Stromanbieters (Benachrichtigung 003) alle SMGWs aufgefordert neue Seeds auszutauschen um dortige Synchronisationsstörungen zu vermeiden. Pro Paar im Schlüsselgraph muss nur ein Seed ausgetauscht werden.
 
-Um den Fehler genauer zu lokalisieren, werden die Schlüsselpaare Schritt für schritt halbiert(man startet bei der hälfte) und es werden leerbotschaften gesendet. 
-Ist das ergebnis jedes mal 0 liegt der Fehler mit sehr hoher wahrscheinlichkeit in der anderen hälfte. Ein stuck at zero fault muss auch ausgeschlossen werden.
+Warum kleine DC-Netze?
+DC-Netze sind besonders praktisch, wenn es um die Überlagerung von Nachrichten bzw. den Stromverbräuchen geht. Aber bereits bei einen Fehler von einem Verbraucher(wie z.B internetausfall) ist es niemanden im Netz mehr möglich sinnvoll zu Überlagern. Um eine möglichst hohe Verfügbarkeit zu erreichen, bietet es sich an mehrere minimal von einander getrennte DC-netze zu betreiben. Wenn es in einem kleinen DC-Netz zu einem Ausfall kommt kann ein Protokoll gestartet werden um den Fehler zu entdecken. Durch die Minimalität des DC-Netzes kann ein Ausfall von einem oder mehreren Netzen vernachlässigt werden. (da z-B. in großen städten es nicht auffällt, wenn eine Prozentual geringe menge nicht senden kann). Gleichzeitig können die Menge aller Sender aufaddiert werden (wie bei der mittelwertbildung). Damit weiß der Stromprovider wie viele sender es gibt und kann einschätzen wie Vertrauenswürdig die gelieferten Daten sind.
 
-ODER das ergebnis ist nicht jedes mal 0. Dann befindet sich der Fehler in dieser hälfte und es wird weiter halbiert um den Fehler genauer zu lokalisieren.
-
-Wenn der Schlüsselgraph nur noch eine Kante besitzt und weiterhin nach 100 Tests nicht nur Nullen gesendet werden, dann Tauschen die beiden Letzten Stationen neue Schlüssel aus bzw. einen neuen PRNG-Startwert. Damit kann man Schlüsselsynchronisationsfehler erkennen.
-
-Sollte wiederum immer noch keine korrekten Nachrichten übermittelt werden zwischen den zwei Stationen, dann werden die eben ausgetauschten schlüssel verworfen und es werden neue Schlüssel bzw. PRNG-Startwert mit einer dritten und vierten Station ausgetauscht. Dann wird der Test wiederholt. Sollte der Test weiterhin fehlerhaft ausfallen, so ist mit hoher Wahrscheinlichkeit das zugrundeliegende Kommunikationsnetz oder die globale Überlagerung fehlerhaft.
-
-ODER beim zugrundeliegenden Test ist nur ein Test fehlerhaft. Dann ist die ursprüngliche verdächtige Station als fehlerhaft angesehen und aus dem betriebgenommen(aus dem Schlüsselgraphen entfernt).
-Dann kann wieder in den A-Modus geschaltet werden und das Mehrfachzugriffsverfahren wird neu initialisiert.
+Warum kein senderpartitioniertes DC-Netz?
+Aufwand soll nicht groß sein, aber die Senderanonymität wird verringert und es ist deshalb in dieser Arbeit nicht sinnvoll, da man durch die minimalen Netze nicht noch zusätzlich an anonymität einbüßen möchte. ABER es wird eine "vollständige Fehlerüberdeckung erreicht".
 
 Eigenschaften:
 
 1. Anonymität:
 Durch die Nutzung von PRNG sinkt die Anonymität von informationstheoretisch sicheren zu einer komplexitätstheoretisch sicheren Anonymität. Trotzdem
-Auch wenn ein SMGW von einem Angreifer kontrolliert werden sollte, dann wäre es nicht dem Angreifer möglich den Stromverbrauch von anderen SMGW mitzulesen. Denn der Angreifer hat keinen Zugriff auf die globale Summe. Diese kann erst bei Stromprovider errechnet werden. Mit dem vorgeschlagenen Verfahren fehlen dem Angreifer die nötigen Informationen um einen potentiellen Angriff auf das DC-Netz zu starten(wenn dieser nur die Kontrolle über ein SMGW hat). Des Weiteren hat der Angreifer auch keine Informationen über den Schlüsselgraphen. Das erschwert die Chancen auf einen erfolgreichen Angriff zusätzlich. Zumal (weiter oben bzw. siehe Blog) ein Verfahren vorgeschlagen wurde, indem das DC-Netz operieren kann ohne das auch nur ein Teilnehmer Kenntnisse vom gesamten Schlüsselgraphen hat. Zwar wäre der Stromprovider technisch in der Lage den Schlüsselgraphen zu speichern, aber erst wenn ein AngreiferSMGW und der Stromprovider zusammenarbeiten, wären Angriffe auf die Anonymität möglich.
+Auch wenn ein SMGW von einem Angreifer kontrolliert werden sollte, dann wäre es nicht dem Angreifer möglich den Stromverbrauch von anderen SMGW mitzulesen. Denn der Angreifer hat keinen Zugriff auf die globale Summe. Diese kann erst bei Stromprovider errechnet werden. Mit dem vorgeschlagenen Verfahren fehlen dem Angreifer die nötigen Informationen um einen potentiellen Angriff auf das DC-Netz zu starten(wenn dieser nur die Kontrolle über ein SMGW hat). Des Weiteren hat der Angreifer auch keine Informationen über den Schlüsselgraphen. Das erschwert die Chancen auf einen erfolgreichen Angriff zusätzlich.
 
 (halbwegs debunked)
 Nur in spezialfällen wäre es möglich, dass ein kontrolliertes SMGW ein weiteres SMGW abhören kann(bzw. mehrere und zwar genau dann, wenn der Angreifer der Parent von Leafs ist), aber dann hätte der Angreifer nur die aggregierten Messwerte aller Meter, die das abgehörte SMGW betreut. Des Weiteren ist es durch die Technische Richtlinie nicht möglich, dass SMGW Admins einzelne Meterdaten anfordern/lesen können. Dadurch müssen potentiell kontrollierte SMGW nicht betrachtet werden. Außerdem gilt es in dieser Arbeit herauszufinden, wie minimal DC-Netze sein können, um eine größtmögliche Anonymität mit der höchstmöglichen Verfügbarkeit zu erreichen.
 
 2. Authentifizierung: 
-Ein Smart meter muss nicht authentifiziert werden durch das DC-Netz. Die Operationen, die im DC-Netz stattfinden, werden erst spät bei der Messwertverarbeitung ausgeführt. Bis zu diesem Zeitpunkt wurden die Messwerte und die Meter bereits authentifiziert. Sollten bei der Authentifizierung probleme auftreten, so könnten diese wie bei SMGW ohne DC-Netz ins eichtechnische Logbuch bzw. ins Systemlogbuch eingetragen werden. Ansosten ist der Eintritt in das DC-Netz ein kritischer Punkt. Das SMGW muss auch nicht authentifiziert werden(warum eigentlich genau?) Hat das sicherheitsmodul, damit kann sich das smart meter gateway ausweisen. Deshalb kann der fall vernachlässigt werden.
+Ein Smart meter aus dem LMN muss nicht authentifiziert werden durch das DC-Netz. Die Operationen, die im DC-Netz stattfinden, werden erst spät bei der Messwertverarbeitung ausgeführt. Bis zu diesem Zeitpunkt wurden die Messwerte und die Meter bereits authentifiziert. Sollten bei der Authentifizierung probleme auftreten, so könnten diese wie bei SMGW ohne DC-Netz ins eichtechnische Logbuch bzw. ins Systemlogbuch eingetragen werden. Ansosten ist der Eintritt in das DC-Netz ein kritischer Punkt. Das SMGW muss auch nicht authentifiziert werden(warum eigentlich genau?) Hat das sicherheitsmodul, damit kann sich das smart meter gateway ausweisen. Deshalb kann der fall vernachlässigt werden.
 
 Man möchte vermeiden, dass potentielle Angreifer(mit fake SMGW) in das Netz eintreten um Daten klauen zu können. Deshalb muss zwischen dem Strom provider und dem SMGW eine klare Authentifizierung stattfinden, die nur bei Erfolg ein SMGW in das DC-Netz aufnimmt.
 
 3. Verfügbarkeit:
-Es ist mit einer sehr hohen Verfügbarkeit mit DC-Netzen zu rechnen. Trotzdem müssen einige Vorkehrungen getroffen werden, um eine hohe Verfügbarkeit zu gewährleisten. Es wurde bereits erwähnt, dass es zu transienten als auch permanenten Fehlern kommen kann. Treten diese Fehler auf, so ist es keinem Benutzer im DC-Netz möglich Nachrichten sinnvoll zu überlagern. Die Lösung hierfür ist, dass man mit mehreren voneinander getrennten DC-Netzen arbeitet. Sollte es zu einem Fehler in einem DC-Netz kommen, kann das DC-Netz vernachlässigt werden, da Fehler in kleinen DC-Netzen nicht so stark ins Gewicht fallen, als Fehler in wenigen großen DC-Netzen. Des Weiteren sollte ein Fehler bemerkt werden, so wurde ein Fehlerprotokoll beschrieben(Von Prof. Pfitzmann) welches die schwerwiegensten Fehler tolerieren kann und das System wieder in einen geordneten Zustand bringen kann. Sollte auch diese Möglichkeit versagen, so müsste ein techniker das Problem beheben. Nichtsdestotrotz könnte ein genaues Bild des Stromnetzes(welches Wort) auch wenn mehrere DC-Netze aktuell nicht senden können. Des Weiteren wurde auch beschrieben, welche Maßnahmen durchgeführt werden, wenn ein SMGW aus einem DC-Netz austritt und es zu einer Teilung des Schlüsselgraphes führt. Diese Maßnahmen mindern ebenfalls nicht die Verfügbarkeit und sollten keine Auswirkungen auf das laufende System haben.
+Es ist mit einer sehr hohen Verfügbarkeit mit DC-Netzen zu rechnen. Trotzdem müssen einige Vorkehrungen getroffen werden, um eine hohe Verfügbarkeit zu gewährleisten. Es wurde bereits erwähnt, dass es zu transienten als auch permanenten Fehlern kommen kann. Treten diese Fehler auf, so ist es keinem Benutzer im DC-Netz möglich Nachrichten sinnvoll zu überlagern. Die Lösung hierfür ist, dass man mit mehreren voneinander getrennten DC-Netzen arbeitet. 
+(debunked)Sollte es zu einem Fehler in einem DC-Netz kommen, kann das DC-Netz vernachlässigt werden, da Fehler in kleinen DC-Netzen nicht so stark ins Gewicht fallen, als Fehler in wenigen großen DC-Netzen. Des Weiteren sollte ein Fehler bemerkt werden, so wurde ein Fehlerprotokoll beschrieben(Von Prof. Pfitzmann) welches die schwerwiegensten Fehler tolerieren kann und das System wieder in einen geordneten Zustand bringen kann. Sollte auch diese Möglichkeit versagen, so müsste ein techniker das Problem beheben. Nichtsdestotrotz könnte ein genaues Bild des Stromnetzes(welches Wort) auch wenn mehrere DC-Netze aktuell nicht senden können. Des Weiteren wurde auch beschrieben, welche Maßnahmen durchgeführt werden, wenn ein SMGW aus einem DC-Netz austritt und es zu einer Teilung des Schlüsselgraphes führt. Diese Maßnahmen mindern ebenfalls nicht die Verfügbarkeit und sollten keine Auswirkungen auf das laufende System haben.
 
 4. Skalierbarkeit und Effizienz:
 Die hier vorgeschlagene Struktur ist stark skalierbar, da neue Nutzer entweder zu bereits bestehenden DC-Netzen hinzugefügt werden oder selbst ein neues DC-Netz erstellen können. Da die größe von den DC-Netzen klein ist und alle Nutzer gleichzeitig überlagern (also zum gleichen Zeitpunkt senden) kommt es nicht zu einer Überlastung bzw. Bottleneck. 
@@ -277,4 +260,27 @@ Um zu überprüfen, ob der Schlüsselgraph noch funktionsfähig ist (also nicht 
 Ist das Ergebnis nicht korrekt so ist der Schlüsselgraph zerteilt. In diesem Fall informiert der Stromanbieter alle Clients, dass die Verifizierung fehlgeschlagen ist. Damit es wieder einen einheitlichen Schlüsselgraph gibt, melden sich alle ehemaligen Nachbarn (des ausgetretenen Clients) beim Stromanbieter. Dann erstellt der Stromanbieter wieder einen Tunnel (so wie beim Eintreten) und stellt eine kommunikationsmöglichkeit für die ehemaligen Nachbarn her. Diese tauschen nun Seeds miteinander aus um PRNG konfigurieren zu können(also wie beim Eintritt in das DC-Netz). Durch diese Maßnahme ist es garantiert, dass es wieder einen einheitlichen Schlüsselgraph gibt und dem Stromanbieter ist es wieder möglich eine sinnvolle globale Summe zu bilden.
 Mit diesem Verfahren ist es sogar möglich, dass der Stromanbieter keine Kenntnisse über den Schlüsselgraphen haben muss! (obwohl er den Schlüsselgraphen speichern könnte)
  
+Man arbeitet mit zwei "Modi" eine normalen A-Modi und einen Fehlermodi F-modi in dem nach Fehlern gesucht wird.
+Bei Fehler wird das Mehrfachzugriffsverfahren neuinitialisiert um mögliche transiente Fehler und Fehler in der oberen Schicht 1 auszuschließen.
+Sollten trotzdem noch Fehler vorherrschen (oder es wurde ein anderer permanenter Fehler gefunden) wird in den F-modi umgeschaltet. Nun wird folgendes Protokoll umgesetzt.
+Protokoll:
+1. Jede Station erstellt einen recovery point und speichert die aktuell ausgetauschten schlüssel.
+2. Nun wird eine selbstdiagnose ausgeführt. Es werden paarweise zufällige Schlüssel in den PRNG geladen und mit einer zufälligen Nachricht lokal überlagert. Sollte das Ergebnis nicht die zufällige Nachricht sein, so ist die Station fehlerhaft. Dies wird den anderen Stationen mitgeteilt. Die Schlüssel der fehlerhafte Station werden nun verworfen und es wird in den A-modus gewechselt.
+ODER: Die station ist fehlerfrei so wird der recovery point wiederhergestellt.
+Von hier aus gibt es 3 Fehlertypen, die auftreten könnten:
+1. Eine Station, die so fehlerhaft ist, dass sie wieder ihren Fehler dem Netz mitteilen kann, noch kommunizieren kann.
+2. Schlüssel/Synchronisationen von mind. 2 Stationen gingen verloren.
+3. Das unterliegende Kommunikationsnetz, Globale überlagerung ist Fehlerhaft.
+
+Um den Fehler genauer zu lokalisieren, werden die Schlüsselpaare Schritt für schritt halbiert(man startet bei der hälfte) und es werden leerbotschaften gesendet. 
+Ist das ergebnis jedes mal 0 liegt der Fehler mit sehr hoher wahrscheinlichkeit in der anderen hälfte. Ein stuck at zero fault muss auch ausgeschlossen werden.
+
+ODER das ergebnis ist nicht jedes mal 0. Dann befindet sich der Fehler in dieser hälfte und es wird weiter halbiert um den Fehler genauer zu lokalisieren.
+
+Wenn der Schlüsselgraph nur noch eine Kante besitzt und weiterhin nach 100 Tests nicht nur Nullen gesendet werden, dann Tauschen die beiden Letzten Stationen neue Schlüssel aus bzw. einen neuen PRNG-Startwert. Damit kann man Schlüsselsynchronisationsfehler erkennen.
+
+Sollte wiederum immer noch keine korrekten Nachrichten übermittelt werden zwischen den zwei Stationen, dann werden die eben ausgetauschten schlüssel verworfen und es werden neue Schlüssel bzw. PRNG-Startwert mit einer dritten und vierten Station ausgetauscht. Dann wird der Test wiederholt. Sollte der Test weiterhin fehlerhaft ausfallen, so ist mit hoher Wahrscheinlichkeit das zugrundeliegende Kommunikationsnetz oder die globale Überlagerung fehlerhaft.
+
+ODER beim zugrundeliegenden Test ist nur ein Test fehlerhaft. Dann ist die ursprüngliche verdächtige Station als fehlerhaft angesehen und aus dem betriebgenommen(aus dem Schlüsselgraphen entfernt).
+Dann kann wieder in den A-Modus geschaltet werden und das Mehrfachzugriffsverfahren wird neu initialisiert.
 
