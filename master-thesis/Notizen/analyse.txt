@@ -12,6 +12,7 @@ das macht man solange, bis der korrelationskoeffizient einen min limes erreicht.
 
 Welchen korrelations koeffizienten?
 root mean squared error
+selbstähnlichkeit
 
 bzw. nicht lineare korrelation
 
@@ -30,3 +31,14 @@ sehr gute quelle:
 https://www.tandfonline.com/doi/full/10.1080/10408340500526766
 if two random variables x and y are statistically independent, their correlation coefficient is zero. However, the converse is not true; i.e., if r = 0, this does not necessarily imply that x and y are statistically independent [64]. The correlation coefficient is thus an estimate of association between the variables and is valid only when the observations are randomly drawn.
 siehe CORRELATION IN MULTIVARIATE ANALYSIS
+
+
+Man nimmt ein intervall von nutzern bei dem zu einem zeitpunkt t ungefähr 90% aller werte liegen und dann setzt man das ins verhältnis, wenn einer einen sehr hohen verbrauch hat inwieweit der alle beinflusst. 
+Was müsste einer machen um den wert auf 80% zu setzen?
+stetigkeit nachweisen.
+was bedeutet stetigkeit und differnzierbarkeit?
+verstärkte stetigkeit nachlesen.
+
+Ansatz:
+Man errechnet das min Intervall welches 90% aller nutzer zu einem zeitpunkt t besitzen. Anschließend berechnet man das Top 1% max intervall von den höchsten verbrauchern. Dann setzt man einen wert fest, dass wenn der höchstwert von den Top 1% verbraucher nur noch minimal ins gewicht fällt , wenn viele nutzer im dc-netz sind, dass dann anonymität erreicht wird.
+

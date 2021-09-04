@@ -100,6 +100,7 @@ Sollte ein Client durch zufall nun keinen Schlüssel mehr haben mit dem die loka
 Der faulty client kann durch den Internetausfall nicht rechtzeitig die lokale summe versenden. Das bedeutet der faulty client kann mehrere generationen verpassen und muss deshalb stromverbräuche nachsenden. Dies kann der faulty client in einem extra zeitfenster nachsenden, indem nur der nachbar eines faulty clients und der faulty client nachsenden. (der nachbar sendet 000 und der faulty client seine verspätete lokale summe). Das funktioniert aber nur, wenn mindestens zwei faulty clients für ein zeitfenster nachsenden. ansonsten könnte der stromanbieter einfach folgendes berechnen: neues ergebnis - altes ergebnis = stromverbrauch von dem faulty client.
 
 also es ist wahrscheinlich besser einfach so den stromverbrauch nachzusenden ohne dc-netz.
+oder den stromverbrauch gar nicht senden.
 
 Durchführung: Bisher wurden technische Schritte erklärt um ein DC-Netz in das bereits operierende Stromnetz zu implementieren. Wie sieht eine typische Operation im Stromnetz aus?
 Am besten wäre es, wenn es eine synchronisierte Uhrzeit gibt in der alle DC-Netze(in einer Region) gleichzeitig senden und überlagern. Aus den DC-Netzen werden mehrere Teil-Stromverbräuche gesendet, die an den Stromanbieter weitergeleitet werden. Der Stromanbieter muss nur alle Teilverbräuche (lokale Summen) addieren und bekommt somit den Gesamtverbrauch des Stromnetzes. Diese Daten sind komplett anonym und gibt nur die Auskunft über den Gesamtverbrauches eines kleinen DC-Netzes aus. In der Technischen Richtlinie wird auch erwähnt, wie die Zähler Zeit synchronisieren, also ist eine Zeitgleiche sendung von Nachrichten durchaus umsetzbar.
@@ -145,6 +146,8 @@ sendet ein teilnehmer nicht, dann wird er als defekt angesehen und wird aus dem 
 Kann per selbstdiagnose herausgefunden werden wie es pfitzmann beschrieben hat.
 3.PRNG Seeds verloren:
 Bleibt noch das Problem mit den PRNG. Es kann sein, dass ein SMGW die seeds für den PRNG verloren hat und somit falsche Schlüssel erzeugt. Um diesen Fehler vorzubeugen wird über einen Befehl des Stromanbieters (Benachrichtigung 003) alle SMGWs aufgefordert neue Seeds auszutauschen um dortige Synchronisationsstörungen zu vermeiden. Pro Paar im Schlüsselgraph muss nur ein Seed ausgetauscht werden.
+
+3. Seeds werden an Zeitstempel gekoppelt. So kann es nicht dazu kommen. Das die Seeds asynchron werden.(weil der zeitstempel die erste operation des PRNG beschreibt und jede generation wird eine Operation durchgeführt. 
 
 Warum kleine DC-Netze?
 DC-Netze sind besonders praktisch, wenn es um die Überlagerung von Nachrichten bzw. den Stromverbräuchen geht. Aber bereits bei einen Fehler von einem Verbraucher(wie z.B internetausfall) ist es niemanden im Netz mehr möglich sinnvoll zu Überlagern. Um eine möglichst hohe Verfügbarkeit zu erreichen, bietet es sich an mehrere minimal von einander getrennte DC-netze zu betreiben. Wenn es in einem kleinen DC-Netz zu einem Ausfall kommt kann ein Protokoll gestartet werden um den Fehler zu entdecken. Durch die Minimalität des DC-Netzes kann ein Ausfall von einem oder mehreren Netzen vernachlässigt werden. (da z-B. in großen städten es nicht auffällt, wenn eine Prozentual geringe menge nicht senden kann). Gleichzeitig können die Menge aller Sender aufaddiert werden (wie bei der mittelwertbildung). Damit weiß der Stromprovider wie viele sender es gibt und kann einschätzen wie Vertrauenswürdig die gelieferten Daten sind.
@@ -283,4 +286,11 @@ Sollte wiederum immer noch keine korrekten Nachrichten übermittelt werden zwisc
 
 ODER beim zugrundeliegenden Test ist nur ein Test fehlerhaft. Dann ist die ursprüngliche verdächtige Station als fehlerhaft angesehen und aus dem betriebgenommen(aus dem Schlüsselgraphen entfernt).
 Dann kann wieder in den A-Modus geschaltet werden und das Mehrfachzugriffsverfahren wird neu initialisiert.
+
+
+//////////////////////////////////////////////////////////
+
+todo:
+
+irgendwas erstellen damit man sieht, wie der schlüsselgraph aktuell gehalten wird nach einem dc client austritt.
 
