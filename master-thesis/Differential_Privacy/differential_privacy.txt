@@ -1,0 +1,9 @@
+Man möchte aus dem Ergebnis keine Schlussfolgerungen auf den einzelnen Nutzer ziehe. (statistical inference)
+
+Man möchte also sogenannte re-identification attacks unterbinden.
+
+On the other hand, large-scale monitoring and control systems typically only require
+aggregate statistics about a population.
+
+Aggregation is beneficial to privacy, but examples have
+also shown that this is not sufficient to a priori rule out the possibility of significant privacy breaches.
