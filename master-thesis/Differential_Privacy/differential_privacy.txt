@@ -7,3 +7,12 @@ aggregate statistics about a population.
 
 Aggregation is beneficial to privacy, but examples have
 also shown that this is not sufficient to a priori rule out the possibility of significant privacy breaches.
+
+what differential privacy aims for is not to prevent information disclosure
+per se, but to guarantee that if an individual provides her data, it does not become
+significantly easier to make new inferences about that specific individual compared
+to the situation where her records is not in the dataset.
+
+epsilon-delta stetigkeit:
+∀ϵ>0 ∃δ>0 ∀x∈D:(|x−x0|<δ⇒||f(x)−f(x0)||<ϵ)
+das heißt, es gibt ein delta für jeden x-wert z.b x0=6 (auf der x-achse 5,9-6). dann gibt es eine funktion dessen ergebnis kleiner als epsilon ist. 
