@@ -1,3 +1,6 @@
+start: 12.10.2012 
+end:28.02.2014
+##################
 library(sets)
 library(lubridate)
 library(dplyr)
@@ -8,7 +11,7 @@ filterByDate<-function()
 datalist3 = list()
 datalist4 = list()
 #how many files are used for filtering(current its 20 files)
-for(i in 1:20) {
+for(i in 1:160) {
 nameoffile2<-paste("Power-Networks-LCL-June2015(withAcornGps)v2_",i,".csv", sep="")
 file2 <- read.table(file = nameoffile2,header=TRUE, sep = ",",stringsAsFactors = FALSE,comment.char = "")
 #these lines are checking that an LCLid has more than 39000 values and filters every LCLid which is under this threshold
@@ -25,12 +28,25 @@ df3
 ##########################################################################
 
 #define a set to get the number of LCLid 
+medianOfKWs <- vector()
 setwithLCLid<-as.set(df3[[1]])
 #get number of LCLid
 lengthofset=length(setwithLCLid)
 #iterates over number of LCLid and takes one house and write all values in a .csv
 for(i in 1:lengthofset) {
+#iterate through different houses
 elementofset<-set(as.character(setwithLCLid)[i])
 getKW<- subset(df3, LCLid %in% elementofset)
+#get KW numbers
 getKW<-getKW[,4:4]
+#get numeric kw numbers
+getKW<-as.numeric(getKW)
+getKW<-getKW[!is.na(getKW)]
+#sort by decreasing
+getKW<-sort(getKW, decreasing = FALSE)
+getKW<-getKW[round(0.05 * length(getKW)) : length(getKW)]
+medianOfKWs[i]<-getKW[1]
 }
+filteredmedianOfKWs = medianOfKWs[medianOfKWs > 0.01]
+#####kw average per half hour!!!!
+mean(filteredmedianOfKWs)
