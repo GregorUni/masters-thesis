@@ -1,5 +1,8 @@
 start: 12.10.2012 
 end:28.02.2014
+low:0.06
+high:1.054031
+high:1.539
 ##################
 library(sets)
 library(lubridate)
@@ -11,16 +14,17 @@ filterByDate<-function()
 datalist3 = list()
 datalist4 = list()
 #how many files are used for filtering(current its 20 files)
-for(i in 1:160) {
+for(i in 1:20) {
 nameoffile2<-paste("Power-Networks-LCL-June2015(withAcornGps)v2_",i,".csv", sep="")
 file2 <- read.table(file = nameoffile2,header=TRUE, sep = ",",stringsAsFactors = FALSE,comment.char = "")
 #these lines are checking that an LCLid has more than 39000 values and filters every LCLid which is under this threshold
-ind<- with(file2,table(file2$LCLid) > 39000)
+#8500 = 1 year
+ind<- with(file2,table(file2$LCLid) > 15000)
 ind <- ind[ind == TRUE]
 ind <-rownames(ind)
 file2<- subset(file2, LCLid %in% ind)
 #in this lane its possible to change the start and enddate
-datalist3[[i]]<-file2[(file2[[3]] > "2012-04-08" & file2[[3]] <= "2014-02-28"),] 
+datalist3[[i]]<-file2[(file2[[3]] > "2011-11-29" & file2[[3]] <= "2014-02-28"),] 
 }
 df3 <<- do.call(rbind, datalist3)
 df3
@@ -44,9 +48,40 @@ getKW<-as.numeric(getKW)
 getKW<-getKW[!is.na(getKW)]
 #sort by decreasing
 getKW<-sort(getKW, decreasing = FALSE)
-getKW<-getKW[round(0.05 * length(getKW)) : length(getKW)]
+getKW<-getKW[round(0.01 * length(getKW)) : length(getKW)]
 medianOfKWs[i]<-getKW[1]
 }
 filteredmedianOfKWs = medianOfKWs[medianOfKWs > 0.01]
 #####kw average per half hour!!!!
 mean(filteredmedianOfKWs)
+########################################################################
+#define a set to get the number of LCLid
+highKWs <- vector()
+setwithLCLid<-as.set(df3[[1]])
+#get number of LCLid
+lengthofset=length(setwithLCLid)
+#iterates over number of LCLid and takes one house and write all values in a .csv
+for(i in 1:lengthofset) {
+#iterate through different houses
+elementofset<-set(as.character(setwithLCLid)[i])
+getKW<- subset(df3, LCLid %in% elementofset)
+#get KW numbers
+getKW<-getKW[,4:4]
+#get numeric kw numbers
+getKW<-as.numeric(getKW)
+getKW<-getKW[!is.na(getKW)]
+#sort by ascending
+getKW<-sort(getKW, decreasing = TRUE)
+getKW<-getKW[round(0.01 * length(getKW)) : length(getKW)]
+highKWs[i]<-getKW[1]
+}
+#####kw average per half hour!!!!
+mean(highKWs)
+
+df4<-na.omit(df3[,4])
+df4 <-sort(df4[1], decreasing = FALSE)
+####################################################
+test <-as.vector(df3[,4])
+test<-as.numeric(test)
+test <-sort(test, decreasing = TRUE)
+test2<-test[round(0.01 * length(test)) : length(test)]

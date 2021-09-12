@@ -1,4 +1,4 @@
-Man möchte aus dem Ergebnis keine Schlussfolgerungen auf den einzelnen Nutzer ziehe. (statistical inference)
+Man möchte aus dem Ergebnis keine Schlussfolgerungen auf den einzelnen Nutzer ziehen. (statistical inference)
 
 Man möchte also sogenannte re-identification attacks unterbinden.
 
@@ -16,3 +16,14 @@ to the situation where her records is not in the dataset.
 epsilon-delta stetigkeit:
 ∀ϵ>0 ∃δ>0 ∀x∈D:(|x−x0|<δ⇒||f(x)−f(x0)||<ϵ)
 das heißt, es gibt ein delta für jeden x-wert z.b x0=6 (auf der x-achse 5,9-6). dann gibt es eine funktion dessen ergebnis kleiner als epsilon ist. 
+
+
+
+
+###################################################
+
+Standardabweichung:
+Man schaut sich z.b drei graphen an und vergleicht sie mit dem ergebnis. dann bildet man eine standardabweichung überhalb und unterhalb von dem normierten ergebnis. und vergelicht wie lange die die input kurven außerhalb von der standardabweicchung ist.
+Und dann fügt man noch einen weiteren nutzer hinzu und schaut ob der auch in der standardabweichung bleibt bzw. inwiefern sich die kurve verändert.
+
+grpc
