@@ -19,12 +19,12 @@ nameoffile2<-paste("Power-Networks-LCL-June2015(withAcornGps)v2_",i,".csv", sep=
 file2 <- read.table(file = nameoffile2,header=TRUE, sep = ",",stringsAsFactors = FALSE,comment.char = "")
 #these lines are checking that an LCLid has more than 39000 values and filters every LCLid which is under this threshold
 #8500 = 1 year
-ind<- with(file2,table(file2$LCLid) > 15000)
+ind<- with(file2,table(file2$LCLid) > 8500)
 ind <- ind[ind == TRUE]
 ind <-rownames(ind)
 file2<- subset(file2, LCLid %in% ind)
 #in this lane its possible to change the start and enddate
-datalist3[[i]]<-file2[(file2[[3]] > "2011-11-29" & file2[[3]] <= "2014-02-28"),] 
+datalist3[[i]]<-file2[(file2[[3]] > "2012-3-1" & file2[[3]] <= "2013-03-1"),] 
 }
 df3 <<- do.call(rbind, datalist3)
 df3
@@ -81,7 +81,30 @@ mean(highKWs)
 df4<-na.omit(df3[,4])
 df4 <-sort(df4[1], decreasing = FALSE)
 ####################################################
+#get max electricity consumption
 test <-as.vector(df3[,4])
 test<-as.numeric(test)
 test <-sort(test, decreasing = TRUE)
 test2<-test[round(0.01 * length(test)) : length(test)]
+
+########################################################
+data <- vector()
+sumdata<-numeric()
+setwithLCLid<-as.set(df3[[1]])
+for(i in 1:2) {
+elementofset<-set(as.character(setwithLCLid)[i])
+getKWOfHouse<- subset(df3, LCLid %in% elementofset)
+data[i]<-getKWOfHouse[4]
+}
+lengthofdata<-length(data)
+for(i in 1:lengthofdata)
+{
+data1<-as.numeric(unlist(data[i]))
+data1<-na.omit(data1)
+sumdata<-sumdata+data1
+}
+und dann data1+data1 ist möglich
+
+
+
+
