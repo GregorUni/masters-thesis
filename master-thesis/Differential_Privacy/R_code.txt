@@ -9,6 +9,9 @@ library(lubridate)
 library(dplyr)
 library('pracma')
 library(stringr)
+library(ggplot2)
+library(scales)
+library(labeling)
 
 ########################################
 #this function filters the dataset by a start- and an enddate
@@ -18,7 +21,7 @@ k<-1
 datalist3 = list()
 datalist4 = list()
 #how many files are used for filtering(current its 20 files)
-for(i in 1:40) {
+for(i in 1:10) {
 nameoffile2<-paste("Power-Networks-LCL-June2015(withAcornGps)v2_",i,".csv", sep="")
 file2 <- read.table(file = nameoffile2,header=TRUE, sep = ",",stringsAsFactors = FALSE,comment.char = "")
 #these lines are checking that an LCLid has more than 39000 values and filters every LCLid which is under this threshold
@@ -35,8 +38,8 @@ elementofset<-set(as.character(setwithLCLid2)[j])
 getData<- subset(file2, LCLid %in% elementofset)
 
 if(any(str_detect(getData[[3]], "2013-01-01"))){
-if(any(str_detect(getData[[3]], "2014-01-01"))){
-datalist3[[k]]<-getData[(getData[[3]] > "2013-01-01" & getData[[3]] <= "2014-01-01"),]
+if(any(str_detect(getData[[3]], "2014-01-02"))){
+datalist3[[k]]<-getData[(getData[[3]] > "2013-01-02" & getData[[3]] <= "2014-01-01"),]
 k<-k+1
 }
 }
@@ -106,6 +109,8 @@ test2<-test[round(0.01 * length(test)) : length(test)]
 ########################################################
 data <- vector()
 sumdata<-numeric()
+l<-0
+lengthofvectors<-vector()
 setwithLCLid<-as.set(df3[[1]])
 for(i in 1:100) {
 elementofset<-set(as.character(setwithLCLid)[i])
@@ -118,19 +123,22 @@ for(i in 1:lengthofdata)
 data1<-as.numeric(unlist(data[i]))
 data1[is.na(data1)] <- 0
 if (isempty(sumdata)) {
+length(data1)<-17480
 sumdata<-data1
 }
-if(length(sumdata) != length(data1))
+if((length(sumdata)-length(data1)) <10)
 {
-n<-min(length(sumdata),length(data1))
-length(sumdata)<-n
-length(data1)<-n
-}
+length(data1)<-17480
 sumdata<-sumdata+data1
+length(sumdata)
+l<-l+1
+
 }
-und dann data1+data1 ist möglich
-
-
-file2 %>%
-    filter(DateTime >= as.Date('2012-01-01') & DateTime <= as.Date('2013-01-15'))
-
+lengthofvectors[i]<-length(data1)
+}
+#####################################################
+getTimeValues<-head(getKWOfHouse[[3]],17480)
+getTimeValues<-as.POSIXct(getTimeValues, format='%Y-%m-%d  %H:%M:%S')
+df = data.frame(getTimeValues,sumdata)
+ggplot(df, aes(x=getTimeValues, y=df[2])+geom_line()+ scale_x_datetime(labels = date_format("%Y-%m-%d  %H:%M:%S")))
+ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line()
