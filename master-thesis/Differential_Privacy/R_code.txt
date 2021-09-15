@@ -21,7 +21,7 @@ k<-1
 datalist3 = list()
 datalist4 = list()
 #how many files are used for filtering(current its 20 files)
-for(i in 1:10) {
+for(i in 1:40) {
 nameoffile2<-paste("Power-Networks-LCL-June2015(withAcornGps)v2_",i,".csv", sep="")
 file2 <- read.table(file = nameoffile2,header=TRUE, sep = ",",stringsAsFactors = FALSE,comment.char = "")
 #these lines are checking that an LCLid has more than 39000 values and filters every LCLid which is under this threshold
@@ -112,7 +112,7 @@ sumdata<-numeric()
 l<-0
 lengthofvectors<-vector()
 setwithLCLid<-as.set(df3[[1]])
-for(i in 1:100) {
+for(i in 1:1000) {
 elementofset<-set(as.character(setwithLCLid)[i])
 getKWOfHouse<- subset(df3, LCLid %in% elementofset)
 data[i]<-getKWOfHouse[4]
@@ -137,8 +137,35 @@ l<-l+1
 lengthofvectors[i]<-length(data1)
 }
 #####################################################
-getTimeValues<-head(getKWOfHouse[[3]],17480)
-getTimeValues<-as.POSIXct(getTimeValues, format='%Y-%m-%d  %H:%M:%S')
-df = data.frame(getTimeValues,sumdata)
-ggplot(df, aes(x=getTimeValues, y=df[2])+geom_line()+ scale_x_datetime(labels = date_format("%Y-%m-%d  %H:%M:%S")))
+#berechne durchschnittlichen verbrauch pro tag
+averagedata<-vector()
+sumdata2<-sumdata
+for(i in 1:364) {
+averagedata[i]<-mean(head(sumdata2,48))
+sumdata2<- sumdata2[-1:-48]
+}
+datevector<-vector()
+#getTimeValues<-head(getKWOfHouse[[3]],17480)
+#getTimeValues<-as.POSIXct(getTimeValues, format='%Y-%m-%d  %H:%M:%S')
+datevector<-1:364
+df = data.frame(datevector,averagedata)
 ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line()
+
+#####################################################
+#ein datenpunkt für alle 8 std
+
+averagedata<-vector()
+sumdata2<-sumdata
+for(i in 1:1092) {
+averagedata[i]<-mean(head(sumdata2,16))
+sumdata2<- sumdata2[-1:-16]
+}
+datevector<-1:1092
+df = data.frame(datevector,averagedata)
+ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line()
+
+####################################################
+17480
+standarddeviation<-vector()
+meanofsumdata<-mean(sumdata[1:17471])
+standarddeviation<-sd(sumdata[1:17471])
