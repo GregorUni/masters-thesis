@@ -21,7 +21,7 @@ k<-1
 datalist3 = list()
 datalist4 = list()
 #how many files are used for filtering(current its 20 files)
-for(i in 1:40) {
+for(i in 1:10) {
 nameoffile2<-paste("Power-Networks-LCL-June2015(withAcornGps)v2_",i,".csv", sep="")
 file2 <- read.table(file = nameoffile2,header=TRUE, sep = ",",stringsAsFactors = FALSE,comment.char = "")
 #these lines are checking that an LCLid has more than 39000 values and filters every LCLid which is under this threshold
@@ -109,10 +109,15 @@ test2<-test[round(0.01 * length(test)) : length(test)]
 ########################################################
 data <- vector()
 sumdata<-numeric()
+difference<-numeric()
+options(scipen = 999) #disabling scientific notation
+lengthOfTestCase<-5
 l<-0
+z<-0
+deviation<-numeric()
 lengthofvectors<-vector()
 setwithLCLid<-as.set(df3[[1]])
-for(i in 1:1000) {
+for(i in 1:lengthOfTestCase) {
 elementofset<-set(as.character(setwithLCLid)[i])
 getKWOfHouse<- subset(df3, LCLid %in% elementofset)
 data[i]<-getKWOfHouse[4]
@@ -135,6 +140,24 @@ l<-l+1
 
 }
 lengthofvectors[i]<-length(data1)
+}
+sumdata<-sumdata*(1/lengthOfTestCase)
+standarddeviationOfSumdata<-sd(sumdata[1:17471])
+for(i in 1:lengthOfTestCase)
+{
+elementofset<-set(as.character(setwithLCLid)[i])
+getKWOfHouse<- subset(df3, LCLid %in% elementofset)
+difference<-as.numeric(unlist(getKWOfHouse[4]))-sumdata
+
+for(j in 17471)
+{
+if(abs(difference[j]) < standarddeviationOfSumdata)
+{
+ z=z+1
+}
+}
+deviation[i]=z/17471
+
 }
 #####################################################
 #berechne durchschnittlichen verbrauch pro tag
@@ -167,5 +190,23 @@ ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line()
 ####################################################
 17480
 standarddeviation<-vector()
-meanofsumdata<-mean(sumdata[1:17471])
-standarddeviation<-sd(sumdata[1:17471])
+sumdata3<- sumdata*(1/962)
+meanofsumdata<-mean(sumdata3[1:17471])
+standarddeviation<-sd(sumdata3[1:17471])
+###################################################
+sumdata4<-sumdata3
+for(i in 1:364) {
+averagedata[i]<-mean(head(sumdata4,48))
+sumdata4<- sumdata4[-1:-48]
+}
+datevector<-vector()
+#getTimeValues<-head(getKWOfHouse[[3]],17480)
+#getTimeValues<-as.POSIXct(getTimeValues, format='%Y-%m-%d  %H:%M:%S')
+datevector<-1:364
+averageminusSD<-averagedata-standarddeviation
+averageplusSD<-averagedata+standarddeviation
+df = data.frame(datevector,averagedata,averageplusSD,averageminusSD)
+ggplot(data=df, aes(x=df[[1]]))+geom_line(aes(y = averagedata, colour = "averagedata")) + geom_line(aes(y = averageplusSD, colour = "averageplusSD")) + geom_line(aes(y = averageminusSD, colour = "averageminusSD"))
+#####################################################
+y<-dnorm(sumdata3, mean = averagedata, sd = standarddeviation)
+plot(sumdata3,y)
