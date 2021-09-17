@@ -107,57 +107,62 @@ test <-sort(test, decreasing = TRUE)
 test2<-test[round(0.01 * length(test)) : length(test)]
 
 ########################################################
-data <- vector()
-sumdata<-numeric()
-difference<-numeric()
+counter<<-1
+calcDeviation<-function(lengthOfTestCase)
+{
+data <<- vector()
+sumdata<<-numeric()
+difference<<-numeric()
 options(scipen = 999) #disabling scientific notation
-lengthOfTestCase<-5
-l<-0
-z<-0
-deviation<-numeric()
-lengthofvectors<-vector()
-setwithLCLid<-as.set(df3[[1]])
+l<<-0
+z<<-0
+deviation<<-numeric()
+lengthofvectors<<-vector()
+setwithLCLid<<-as.set(df3[[1]])
 for(i in 1:lengthOfTestCase) {
-elementofset<-set(as.character(setwithLCLid)[i])
-getKWOfHouse<- subset(df3, LCLid %in% elementofset)
-data[i]<-getKWOfHouse[4]
+elementofset<<-set(as.character(setwithLCLid)[i])
+getKWOfHouse<<- subset(df3, LCLid %in% elementofset)
+data[i]<<-getKWOfHouse[4]
 }
-lengthofdata<-length(data)
+lengthofdata<<-length(data)
 for(i in 1:lengthofdata)
 {
-data1<-as.numeric(unlist(data[i]))
-data1[is.na(data1)] <- 0
+data1<<-as.numeric(unlist(data[i]))
+data1[is.na(data1)] <<- 0
 if (isempty(sumdata)) {
-length(data1)<-17480
-sumdata<-data1
+length(data1)<<-17480
+sumdata<<-data1
 }
 if((length(sumdata)-length(data1)) <10)
 {
-length(data1)<-17480
-sumdata<-sumdata+data1
+length(data1)<<-17480
+sumdata<<-sumdata+data1
 length(sumdata)
 l<-l+1
 
 }
-lengthofvectors[i]<-length(data1)
+lengthofvectors[i]<<-length(data1)
 }
-sumdata<-sumdata*(1/lengthOfTestCase)
-standarddeviationOfSumdata<-sd(sumdata[1:17471])
+sumdata<<-sumdata*(1/lengthOfTestCase)
+standarddeviationOfSumdata<<-sd(sumdata[1:17471])
 for(i in 1:lengthOfTestCase)
 {
-elementofset<-set(as.character(setwithLCLid)[i])
-getKWOfHouse<- subset(df3, LCLid %in% elementofset)
-difference<-as.numeric(unlist(getKWOfHouse[4]))-sumdata
+elementofset<<-set(as.character(setwithLCLid)[i])
+getKWOfHouse<<- subset(df3, LCLid %in% elementofset)
+difference<<-as.numeric(unlist(getKWOfHouse[4]))-sumdata
 
 for(j in 17471)
 {
 if(abs(difference[j]) < standarddeviationOfSumdata)
 {
- z=z+1
+ z<<-z+1
 }
 }
-deviation[i]=z/17471
+deviation[i]<<-z/17471
 
+}
+getDiagram(counter)
+counter<<-counter+1
 }
 #####################################################
 #berechne durchschnittlichen verbrauch pro tag
@@ -190,11 +195,18 @@ ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line()
 ####################################################
 17480
 standarddeviation<-vector()
-sumdata3<- sumdata*(1/962)
+sumdata3<- sumdata
 meanofsumdata<-mean(sumdata3[1:17471])
 standarddeviation<-sd(sumdata3[1:17471])
 ###################################################
-sumdata4<-sumdata3
+diagramlist<-list()
+getDiagram<-function(counter)
+{
+standarddeviation<-vector()
+diagram<-vector()
+sumdata4<-sumdata
+averagedata<-vector()
+standarddeviation<-sd(sumdata[1:17471])
 for(i in 1:364) {
 averagedata[i]<-mean(head(sumdata4,48))
 sumdata4<- sumdata4[-1:-48]
@@ -206,7 +218,10 @@ datevector<-1:364
 averageminusSD<-averagedata-standarddeviation
 averageplusSD<-averagedata+standarddeviation
 df = data.frame(datevector,averagedata,averageplusSD,averageminusSD)
-ggplot(data=df, aes(x=df[[1]]))+geom_line(aes(y = averagedata, colour = "averagedata")) + geom_line(aes(y = averageplusSD, colour = "averageplusSD")) + geom_line(aes(y = averageminusSD, colour = "averageminusSD"))
+diagram<<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + expand_limits(x = 0, y = 0)
+diagramlist[[counter]]<<-diagram
+}
+ggplot(data=df, aes(x=df[[1]]))+geom_line(aes(y = averagedata, colour = "averagedata")) + geom_line(aes(y = averageplusSD, colour = "averageplusSD")) + geom_line(aes(y = averageminusSD, colour = "averageminusSD")) + expand_limits(x = 0, y = 0)
 #####################################################
 y<-dnorm(sumdata3, mean = averagedata, sd = standarddeviation)
 plot(sumdata3,y)
