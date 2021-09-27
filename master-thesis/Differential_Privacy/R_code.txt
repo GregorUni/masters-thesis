@@ -217,6 +217,140 @@ diagram<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + expand_limits(
 diagramlist[[counter]]<<-diagram
 }
 #####################################################
+data <- vector()
+sumdata<-numeric()
+difference<-numeric()
+deviation<-numeric()
+lengthofvectors<-vector()
+diagramlist<-list()
+standarddeviation<-vector()
+diagram<-vector()
+averagedata<-vector()
+datevector<-vector()
+standarddeviationOfHouses<-vector()
+sumOfallHouses<-vector()
+counter<<-1
+
+initTest<-function()
+{
+counter<<-1
+data <<- vector()
+sumdata<<-numeric()
+difference<<-numeric()
+deviation<<-numeric()
+lengthofvectors<<-vector()
+diagramlist<<-list()
+standarddeviation<<-vector()
+diagram<<-vector()
+averagedata<<-vector()
+datevector<<-vector()
+standarddeviationOfHouses<<-vector()
+sumOfallHouses<<-vector()
+}
+
+calcDeviation<-function(lengthOfTestCase)
+{
+lengthOfTestCase<-50 ## Diese Zeile muss wieder weg!
+options(scipen = 999) #disabling scientific notation
+l<<-0
+z<<-0
+setwithLCLid<<-as.set(df3[[1]])
+vectorOfLCid<-as.vector(as.character(setwithLCLid))
+random<-sample(vectorOfLCid, lengthOfTestCase)
+
+#stromverbrauch der einzelnen häuser aus dem datensatz ziehen
+#17471 sind die Anzahl aller Einträge in einem Jahr
+#berechne für jeden TimeStamp
+for(TimeStamp in 1:1000)
+{
+for(i in 1:lengthOfTestCase) {
+#nehme ein zufälliges Haus
+elementofset<<-random[i]
+#Bekomme von einem Haus den Stromverbrauch und speichere es in data[i]. es werden über alle häuser iteriert wobei i für ein Haus steht
+getKWOfHouse<<- subset(df3, LCLid %in% elementofset)
+data[i]<-getKWOfHouse[TimeStamp,4]
+}
+#berechne die Standardabweichung von data
+standarddeviationOfHouses[TimeStamp]<-sd(data[1:lengthOfTestCase])
+#errechne den Gesamtverbrauch von allen Häusern
+sumOfallHouses[TimeStamp]<-sum(as.numeric(data))*(1/lengthOfTestCase)
+#berechne für jedes Haus
+for(j in 1:lengthOfTestCase) {
+difference<<- as.numeric(data[j])-sumOfallHouses[TimeStamp]
+if(abs(difference) > standarddeviationOfHouses)
+{
+ z<<-z+1
+}
+deviation[j]<-z/17471
+}
+}
+
+
+lengthofdata<<-length(data)
+#summe aller stromverbräuche berechnen
+for(i in 1:lengthofdata)
+{
+data1<<-as.numeric(unlist(data[i]))
+data1[is.na(data1)] <<- 0
+if (isempty(sumdata)) {
+length(data1)<<-17480
+sumdata<<-data1
+}
+#vektoren auf einheitliche größe bringen
+if((length(sumdata)-length(data1)) <10)
+{
+length(data1)<<-17480
+#"globale summe" berechnen"
+sumdata<<-sumdata+data1
+length(sumdata)
+l<<-l+1
+
+}
+lengthofvectors[i]<<-length(data1)
+}
+sumdata<<-sumdata*(1/lengthOfTestCase)
+standarddeviationOfSumdata<<-sd(sumdata[1:17471])
+###differenz zwischen ergebis "globaler" summe und "lokale" summe berechnen
+for(i in 1:lengthOfTestCase)
+{
+elementofset<<-set(as.character(setwithLCLid)[i])
+getKWOfHouse<<- subset(df3, LCLid %in% elementofset)
+difference<<-as.numeric(unlist(getKWOfHouse[4]))-sumdata
+#die differenz mit der standard abweichung vergleichen und hochzählen wie oft die differenz größer ist als die standardabweichung
+for(j in 17471)
+{
+if(abs(difference[j]) > standarddeviationOfSumdata)
+{
+ z<<-z+1
+}
+}
+deviation[i]<<-z/17471
+
+}
+deviation
+#diagramme bilden
+getDiagram(counter)
+counter<<-counter+1
+}
+
+getDiagram<-function(counter)
+{
+sumdata4<<-sumdata
+standarddeviation<<-sd(sumdata[1:17471])
+for(i in 1:364) {
+averagedata[i]<<-mean(head(sumdata4,48))
+sumdata4<<- sumdata4[-1:-48]
+}
+#getTimeValues<<-head(getKWOfHouse[[3]],17480)
+#getTimeValues<<-as.POSIXct(getTimeValues, format='%Y-%m-%d  %H:%M:%S')
+datevector<<-1:364
+averageminusSD<<-averagedata-standarddeviation
+averageplusSD<<-averagedata+standarddeviation
+df <- data.frame(datevector,averagedata,averageplusSD,averageminusSD)
+diagram<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + expand_limits(x = 0, y = 0)
+diagramlist[[counter]]<<-diagram
+}
+#####################################################
 #berechne durchschnittlichen verbrauch pro tag
 averagedata<-vector()
 sumdata2<-sumdata
