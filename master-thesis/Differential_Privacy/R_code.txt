@@ -21,7 +21,7 @@ k<-1
 datalist3 = list()
 datalist4 = list()
 #how many files are used for filtering(current its 20 files)
-for(i in 10:20) {
+for(i in 1:10) {
 nameoffile2<-paste("Power-Networks-LCL-June2015(withAcornGps)v2_",i,".csv", sep="")
 file2 <- read.table(file = nameoffile2,header=TRUE, sep = ",",stringsAsFactors = FALSE,comment.char = "")
 #these lines are checking that an LCLid has more than 39000 values and filters every LCLid which is under this threshold
@@ -53,12 +53,14 @@ df3
 #define a set to get the number of LCLid 
 medianOfKWs <- vector()
 setwithLCLid<-as.set(df3[[1]])
+vectorOfLCid<-as.vector(as.character(setwithLCLid))
+random<-sample(vectorOfLCid, 50)
 #get number of LCLid
-lengthofset=length(setwithLCLid)
+lengthofset=length(random)
 #iterates over number of LCLid and takes one house and write all values in a .csv
 for(i in 1:lengthofset) {
 #iterate through different houses
-elementofset<-set(as.character(setwithLCLid)[i])
+elementofset<-random[i]
 getKW<- subset(df3, LCLid %in% elementofset)
 #get KW numbers
 getKW<-getKW[,4:4]
@@ -140,9 +142,13 @@ options(scipen = 999) #disabling scientific notation
 l<<-0
 z<<-0
 setwithLCLid<<-as.set(df3[[1]])
+vectorOfLCid<-as.vector(as.character(setwithLCLid))
+random<-sample(vectorOfLCid, lengthOfTestCase)
+
 #stromverbrauch der einzelnen häuser aus dem datensatz ziehen
 for(i in 1:lengthOfTestCase) {
-elementofset<<-set(as.character(setwithLCLid)[i])
+
+elementofset<<-random[i]
 getKWOfHouse<<- subset(df3, LCLid %in% elementofset)
 data[i]<-getKWOfHouse[4]
 }
