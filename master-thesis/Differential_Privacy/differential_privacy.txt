@@ -27,3 +27,5 @@ Man schaut sich z.b drei graphen an und vergleicht sie mit dem ergebnis. dann bi
 Und dann fügt man noch einen weiteren nutzer hinzu und schaut ob der auch in der standardabweichung bleibt bzw. inwiefern sich die kurve verändert.
 
 grpc
+
+also standardabweichung von dem ergebnis aller häuser ZU EINEM ZEITPUNKT und das mit dem Stromverbrauch EINES hauses vergleichen.

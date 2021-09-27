@@ -21,7 +21,7 @@ k<-1
 datalist3 = list()
 datalist4 = list()
 #how many files are used for filtering(current its 20 files)
-for(i in 1:10) {
+for(i in 10:20) {
 nameoffile2<-paste("Power-Networks-LCL-June2015(withAcornGps)v2_",i,".csv", sep="")
 file2 <- read.table(file = nameoffile2,header=TRUE, sep = ",",stringsAsFactors = FALSE,comment.char = "")
 #these lines are checking that an LCLid has more than 39000 values and filters every LCLid which is under this threshold
@@ -107,24 +107,47 @@ test <-sort(test, decreasing = TRUE)
 test2<-test[round(0.01 * length(test)) : length(test)]
 
 ########################################################
+data <- vector()
+sumdata<-numeric()
+difference<-numeric()
+deviation<-numeric()
+lengthofvectors<-vector()
+diagramlist<-list()
+standarddeviation<-vector()
+diagram<-vector()
+averagedata<-vector()
+datevector<-vector()
 counter<<-1
-calcDeviation<-function(lengthOfTestCase)
+
+initTest<-function()
 {
+counter<<-1
 data <<- vector()
 sumdata<<-numeric()
 difference<<-numeric()
+deviation<<-numeric()
+lengthofvectors<<-vector()
+diagramlist<<-list()
+standarddeviation<<-vector()
+diagram<<-vector()
+averagedata<<-vector()
+datevector<<-vector()
+}
+
+calcDeviation<-function(lengthOfTestCase)
+{
 options(scipen = 999) #disabling scientific notation
 l<<-0
 z<<-0
-deviation<<-numeric()
-lengthofvectors<<-vector()
 setwithLCLid<<-as.set(df3[[1]])
+#stromverbrauch der einzelnen häuser aus dem datensatz ziehen
 for(i in 1:lengthOfTestCase) {
 elementofset<<-set(as.character(setwithLCLid)[i])
 getKWOfHouse<<- subset(df3, LCLid %in% elementofset)
-data[i]<<-getKWOfHouse[4]
+data[i]<-getKWOfHouse[4]
 }
 lengthofdata<<-length(data)
+#summe aller stromverbräuche berechnen
 for(i in 1:lengthofdata)
 {
 data1<<-as.numeric(unlist(data[i]))
@@ -133,27 +156,30 @@ if (isempty(sumdata)) {
 length(data1)<<-17480
 sumdata<<-data1
 }
+#vektoren auf einheitliche größe bringen
 if((length(sumdata)-length(data1)) <10)
 {
 length(data1)<<-17480
+#"globale summe" berechnen"
 sumdata<<-sumdata+data1
 length(sumdata)
-l<-l+1
+l<<-l+1
 
 }
 lengthofvectors[i]<<-length(data1)
 }
 sumdata<<-sumdata*(1/lengthOfTestCase)
 standarddeviationOfSumdata<<-sd(sumdata[1:17471])
+###differenz zwischen ergebis "globaler" summe und "lokale" summe berechnen
 for(i in 1:lengthOfTestCase)
 {
 elementofset<<-set(as.character(setwithLCLid)[i])
 getKWOfHouse<<- subset(df3, LCLid %in% elementofset)
 difference<<-as.numeric(unlist(getKWOfHouse[4]))-sumdata
-
+#die differenz mit der standard abweichung vergleichen und hochzählen wie oft die differenz größer ist als die standardabweichung
 for(j in 17471)
 {
-if(abs(difference[j]) < standarddeviationOfSumdata)
+if(abs(difference[j]) > standarddeviationOfSumdata)
 {
  z<<-z+1
 }
@@ -161,8 +187,28 @@ if(abs(difference[j]) < standarddeviationOfSumdata)
 deviation[i]<<-z/17471
 
 }
+deviation
+#diagramme bilden
 getDiagram(counter)
 counter<<-counter+1
+}
+
+getDiagram<-function(counter)
+{
+sumdata4<<-sumdata
+standarddeviation<<-sd(sumdata[1:17471])
+for(i in 1:364) {
+averagedata[i]<<-mean(head(sumdata4,48))
+sumdata4<<- sumdata4[-1:-48]
+}
+#getTimeValues<<-head(getKWOfHouse[[3]],17480)
+#getTimeValues<<-as.POSIXct(getTimeValues, format='%Y-%m-%d  %H:%M:%S')
+datevector<<-1:364
+averageminusSD<<-averagedata-standarddeviation
+averageplusSD<<-averagedata+standarddeviation
+df <- data.frame(datevector,averagedata,averageplusSD,averageminusSD)
+diagram<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + expand_limits(x = 0, y = 0)
+diagramlist[[counter]]<<-diagram
 }
 #####################################################
 #berechne durchschnittlichen verbrauch pro tag
@@ -199,28 +245,7 @@ sumdata3<- sumdata
 meanofsumdata<-mean(sumdata3[1:17471])
 standarddeviation<-sd(sumdata3[1:17471])
 ###################################################
-diagramlist<-list()
-getDiagram<-function(counter)
-{
-standarddeviation<-vector()
-diagram<-vector()
-sumdata4<-sumdata
-averagedata<-vector()
-standarddeviation<-sd(sumdata[1:17471])
-for(i in 1:364) {
-averagedata[i]<-mean(head(sumdata4,48))
-sumdata4<- sumdata4[-1:-48]
-}
-datevector<-vector()
-#getTimeValues<-head(getKWOfHouse[[3]],17480)
-#getTimeValues<-as.POSIXct(getTimeValues, format='%Y-%m-%d  %H:%M:%S')
-datevector<-1:364
-averageminusSD<-averagedata-standarddeviation
-averageplusSD<-averagedata+standarddeviation
-df = data.frame(datevector,averagedata,averageplusSD,averageminusSD)
-diagram<<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + expand_limits(x = 0, y = 0)
-diagramlist[[counter]]<<-diagram
-}
+
 ggplot(data=df, aes(x=df[[1]]))+geom_line(aes(y = averagedata, colour = "averagedata")) + geom_line(aes(y = averageplusSD, colour = "averageplusSD")) + geom_line(aes(y = averageminusSD, colour = "averageminusSD")) + expand_limits(x = 0, y = 0)
 #####################################################
 y<-dnorm(sumdata3, mean = averagedata, sd = standarddeviation)
