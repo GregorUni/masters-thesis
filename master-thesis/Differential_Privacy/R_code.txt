@@ -250,7 +250,8 @@ sumOfallHouses<<-vector()
 
 calcDeviation<-function(lengthOfTestCase)
 {
-lengthOfTestCase<-50 ## Diese Zeile muss wieder weg!
+start_time <- Sys.time()
+lengthOfTestCase<-2 ## Diese Zeile muss wieder weg!
 options(scipen = 999) #disabling scientific notation
 l<<-0
 z<<-0
@@ -284,7 +285,8 @@ if(abs(difference) > standarddeviationOfHouses)
 deviation[j]<-z/17471
 }
 }
-
+end_time <- Sys.time()
+end_time - start_time
 
 lengthofdata<<-length(data)
 #summe aller stromverbräuche berechnen
