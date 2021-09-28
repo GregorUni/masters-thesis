@@ -229,6 +229,7 @@ averagedata<-vector()
 datevector<-vector()
 standarddeviationOfHouses<-vector()
 sumOfallHouses<-vector()
+z<-vector()
 counter<<-1
 
 initTest<-function()
@@ -246,6 +247,7 @@ averagedata<<-vector()
 datevector<<-vector()
 standarddeviationOfHouses<<-vector()
 sumOfallHouses<<-vector()
+z<<-vector()
 }
 
 calcDeviation<-function(lengthOfTestCase)
@@ -264,6 +266,8 @@ random<-sample(vectorOfLCid, lengthOfTestCase)
 #berechne für jeden TimeStamp
 for(TimeStamp in 1:1000)
 {
+Sys.sleep(0.001)
+print(TimeStamp)
 for(i in 1:lengthOfTestCase) {
 #nehme ein zufälliges Haus
 elementofset<<-random[i]
@@ -280,7 +284,11 @@ for(j in 1:lengthOfTestCase) {
 difference<<- as.numeric(data[j])-sumOfallHouses[TimeStamp]
 if(abs(difference) > standarddeviationOfHouses)
 {
- z<<-z+1
+if(is.na(z[j]))
+{
+z[j]<-0
+}
+ z[j]<-z[j]+1
 }
 deviation[j]<-z/17471
 }
