@@ -301,17 +301,17 @@ counter<<-counter+1
 
 getDiagram<-function(counter)
 {
-sumdata4<<-sumdata
-standarddeviation<<-sd(sumdata[1:17471])
+sumOfallHouses4<<-sumOfallHouses
+#364
 for(i in 1:364) {
-averagedata[i]<<-mean(head(sumdata4,48))
-sumdata4<<- sumdata4[-1:-48]
+averagedata[i]<<-mean(head(sumOfallHouses4,48))
+sumOfallHouses4<<- sumOfallHouses4[-1:-48]
 }
 #getTimeValues<<-head(getKWOfHouse[[3]],17480)
 #getTimeValues<<-as.POSIXct(getTimeValues, format='%Y-%m-%d  %H:%M:%S')
 datevector<<-1:364
-averageminusSD<<-averagedata-standarddeviation
-averageplusSD<<-averagedata+standarddeviation
+averageminusSD<<-averagedata-standarddeviationOfHouses
+averageplusSD<<-averagedata+standarddeviationOfHouses
 df <- data.frame(datevector,averagedata,averageplusSD,averageminusSD)
 diagram<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + expand_limits(x = 0, y = 0)
 diagramlist[[counter]]<<-diagram
