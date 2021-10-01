@@ -1,0 +1,41 @@
+syntax = "proto2";
+
+package DCnet;
+
+// The greeting service definition.
+service Greeter {
+    // Sends a greeting
+    rpc SayHello (HelloRequest) returns (HelloReply) {}
+
+    rpc SayHelloAgain (HelloRequest) returns (HelloReply) {}
+
+    rpc ClientHello (HelloReply) returns (HelloReply){}
+    
+  }
+
+  service DC_round {
+    rpc SendLocalSum(DC_net) returns (Acknowlegde)  {}
+  }
+
+  message Acknowlegde{
+    optional int32 MessageStatus = 1;
+  }
+  
+  message DC_net {
+    required int32 dc_net_identifier = 1;
+    optional int32 client_identifier = 2;
+    optional int32 transmissionBit = 3;
+    required string timestamp = 4;
+    optional int32 notification = 5;
+    required int32 localSum = 6;
+  }
+
+  // The request message containing the user's name.
+  message HelloRequest {
+    optional string name = 1;
+  }
+  
+  // The response message containing the greetings
+  message HelloReply {
+    optional string message = 1;
+  }
