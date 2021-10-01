@@ -1,0 +1,2 @@
+#Compile Proto
+protoc -I=. --python_out=. ./dc_net.proto

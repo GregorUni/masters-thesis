@@ -2,6 +2,7 @@ syntax = "proto2";
 
 package DCnet;
 
+//the message type to communicate in a dc_net
 message DC_net {
   required int32 dc_net_identifier = 1;
   required int32 client_identifier = 2;
@@ -9,4 +10,21 @@ message DC_net {
   required string timestamp = 4;
   optional int32 notification = 5;
   required int32 localSum = 6;
+}
+//Message status contains values for debugging and informations.
+message Acknowlegde{
+  optional int32 MessageStatus = 1;
+}
+// Electricity Provider returning a DC_Client for entry in a dc net
+message DC_Client{
+  optional int32 client_identifier = 1;
+}
+//service for a DC_round where every dc_client in a dc_net sends its localsum
+service DC_round {
+  rpc SendLocalSum(DC_net) returns (Acknowlegde)  {}
+}
+
+service addClientToDC_net
+{
+  rpc ClientRequest(DC_net) returns (DC_Client)  {}
 }
