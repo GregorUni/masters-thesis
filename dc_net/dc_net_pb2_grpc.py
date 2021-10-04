@@ -150,12 +150,23 @@ class DC_roundStub(object):
                 request_serializer=dc__net__pb2.DC_net.SerializeToString,
                 response_deserializer=dc__net__pb2.Acknowlegde.FromString,
                 )
+        self.addClientToDCnet = channel.unary_unary(
+                '/DCnet.DC_round/addClientToDCnet',
+                request_serializer=dc__net__pb2.DC_net.SerializeToString,
+                response_deserializer=dc__net__pb2.DC_net.FromString,
+                )
 
 
 class DC_roundServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def SendLocalSum(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def addClientToDCnet(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -168,6 +179,11 @@ def add_DC_roundServicer_to_server(servicer, server):
                     servicer.SendLocalSum,
                     request_deserializer=dc__net__pb2.DC_net.FromString,
                     response_serializer=dc__net__pb2.Acknowlegde.SerializeToString,
+            ),
+            'addClientToDCnet': grpc.unary_unary_rpc_method_handler(
+                    servicer.addClientToDCnet,
+                    request_deserializer=dc__net__pb2.DC_net.FromString,
+                    response_serializer=dc__net__pb2.DC_net.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -193,5 +209,22 @@ class DC_round(object):
         return grpc.experimental.unary_unary(request, target, '/DCnet.DC_round/SendLocalSum',
             dc__net__pb2.DC_net.SerializeToString,
             dc__net__pb2.Acknowlegde.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def addClientToDCnet(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/DCnet.DC_round/addClientToDCnet',
+            dc__net__pb2.DC_net.SerializeToString,
+            dc__net__pb2.DC_net.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

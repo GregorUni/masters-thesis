@@ -10,11 +10,15 @@ service Greeter {
     rpc SayHelloAgain (HelloRequest) returns (HelloReply) {}
 
     rpc ClientHello (HelloReply) returns (HelloReply){}
+
+
     
   }
 
   service DC_round {
     rpc SendLocalSum(DC_net) returns (Acknowlegde)  {}
+
+    rpc addClientToDCnet(DC_net) returns (DC_net) {}
   }
 
   message Acknowlegde{
@@ -22,12 +26,12 @@ service Greeter {
   }
   
   message DC_net {
-    required int32 dc_net_identifier = 1;
+    optional int32 dc_net_identifier = 1;
     optional int32 client_identifier = 2;
     optional int32 transmissionBit = 3;
-    required string timestamp = 4;
+    optional string timestamp = 4;
     optional int32 notification = 5;
-    required int32 localSum = 6;
+    optional int32 localSum = 6;
   }
 
   // The request message containing the user's name.
