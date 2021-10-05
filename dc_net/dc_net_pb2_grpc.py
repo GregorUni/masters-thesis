@@ -16,17 +16,17 @@ class GreeterStub(object):
             channel: A grpc.Channel.
         """
         self.SayHello = channel.unary_unary(
-                '/DCnet.Greeter/SayHello',
+                '/DCnetPackage.Greeter/SayHello',
                 request_serializer=dc__net__pb2.HelloRequest.SerializeToString,
                 response_deserializer=dc__net__pb2.HelloReply.FromString,
                 )
         self.SayHelloAgain = channel.unary_unary(
-                '/DCnet.Greeter/SayHelloAgain',
+                '/DCnetPackage.Greeter/SayHelloAgain',
                 request_serializer=dc__net__pb2.HelloRequest.SerializeToString,
                 response_deserializer=dc__net__pb2.HelloReply.FromString,
                 )
         self.ClientHello = channel.unary_unary(
-                '/DCnet.Greeter/ClientHello',
+                '/DCnetPackage.Greeter/ClientHello',
                 request_serializer=dc__net__pb2.HelloReply.SerializeToString,
                 response_deserializer=dc__net__pb2.HelloReply.FromString,
                 )
@@ -75,7 +75,7 @@ def add_GreeterServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'DCnet.Greeter', rpc_method_handlers)
+            'DCnetPackage.Greeter', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -95,7 +95,7 @@ class Greeter(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/DCnet.Greeter/SayHello',
+        return grpc.experimental.unary_unary(request, target, '/DCnetPackage.Greeter/SayHello',
             dc__net__pb2.HelloRequest.SerializeToString,
             dc__net__pb2.HelloReply.FromString,
             options, channel_credentials,
@@ -112,7 +112,7 @@ class Greeter(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/DCnet.Greeter/SayHelloAgain',
+        return grpc.experimental.unary_unary(request, target, '/DCnetPackage.Greeter/SayHelloAgain',
             dc__net__pb2.HelloRequest.SerializeToString,
             dc__net__pb2.HelloReply.FromString,
             options, channel_credentials,
@@ -129,7 +129,7 @@ class Greeter(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/DCnet.Greeter/ClientHello',
+        return grpc.experimental.unary_unary(request, target, '/DCnetPackage.Greeter/ClientHello',
             dc__net__pb2.HelloReply.SerializeToString,
             dc__net__pb2.HelloReply.FromString,
             options, channel_credentials,
@@ -146,12 +146,17 @@ class DC_roundStub(object):
             channel: A grpc.Channel.
         """
         self.SendLocalSum = channel.unary_unary(
-                '/DCnet.DC_round/SendLocalSum',
+                '/DCnetPackage.DC_round/SendLocalSum',
                 request_serializer=dc__net__pb2.DC_net.SerializeToString,
                 response_deserializer=dc__net__pb2.Acknowlegde.FromString,
                 )
         self.addClientToDCnet = channel.unary_unary(
-                '/DCnet.DC_round/addClientToDCnet',
+                '/DCnetPackage.DC_round/addClientToDCnet',
+                request_serializer=dc__net__pb2.DC_net.SerializeToString,
+                response_deserializer=dc__net__pb2.DC_net.FromString,
+                )
+        self.connectDCClients = channel.unary_unary(
+                '/DCnetPackage.DC_round/connectDCClients',
                 request_serializer=dc__net__pb2.DC_net.SerializeToString,
                 response_deserializer=dc__net__pb2.DC_net.FromString,
                 )
@@ -172,6 +177,12 @@ class DC_roundServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def connectDCClients(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_DC_roundServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -185,9 +196,14 @@ def add_DC_roundServicer_to_server(servicer, server):
                     request_deserializer=dc__net__pb2.DC_net.FromString,
                     response_serializer=dc__net__pb2.DC_net.SerializeToString,
             ),
+            'connectDCClients': grpc.unary_unary_rpc_method_handler(
+                    servicer.connectDCClients,
+                    request_deserializer=dc__net__pb2.DC_net.FromString,
+                    response_serializer=dc__net__pb2.DC_net.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'DCnet.DC_round', rpc_method_handlers)
+            'DCnetPackage.DC_round', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -206,7 +222,7 @@ class DC_round(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/DCnet.DC_round/SendLocalSum',
+        return grpc.experimental.unary_unary(request, target, '/DCnetPackage.DC_round/SendLocalSum',
             dc__net__pb2.DC_net.SerializeToString,
             dc__net__pb2.Acknowlegde.FromString,
             options, channel_credentials,
@@ -223,7 +239,24 @@ class DC_round(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/DCnet.DC_round/addClientToDCnet',
+        return grpc.experimental.unary_unary(request, target, '/DCnetPackage.DC_round/addClientToDCnet',
+            dc__net__pb2.DC_net.SerializeToString,
+            dc__net__pb2.DC_net.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def connectDCClients(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/DCnetPackage.DC_round/connectDCClients',
             dc__net__pb2.DC_net.SerializeToString,
             dc__net__pb2.DC_net.FromString,
             options, channel_credentials,

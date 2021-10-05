@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package DCnet;
+package DCnetPackage;
 
 // The greeting service definition.
 service Greeter {
@@ -19,6 +19,8 @@ service Greeter {
     rpc SendLocalSum(DC_net) returns (Acknowlegde)  {}
 
     rpc addClientToDCnet(DC_net) returns (DC_net) {}
+
+    rpc connectDCClients(DC_net) returns (DC_net) {}
   }
 
   message Acknowlegde{

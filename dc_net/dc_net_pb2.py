@@ -15,11 +15,11 @@ _sym_db = _symbol_database.Default()
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='dc_net.proto',
-  package='DCnet',
+  package='DCnetPackage',
   syntax='proto2',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0c\x64\x63_net.proto\x12\x05\x44\x43net\"$\n\x0b\x41\x63knowlegde\x12\x15\n\rMessageStatus\x18\x01 \x01(\x05\"\x92\x01\n\x06\x44\x43_net\x12\x19\n\x11\x64\x63_net_identifier\x18\x01 \x01(\x05\x12\x19\n\x11\x63lient_identifier\x18\x02 \x01(\x05\x12\x17\n\x0ftransmissionBit\x18\x03 \x01(\x05\x12\x11\n\ttimestamp\x18\x04 \x01(\t\x12\x14\n\x0cnotification\x18\x05 \x01(\x05\x12\x10\n\x08localSum\x18\x06 \x01(\x05\"\x1c\n\x0cHelloRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\nHelloReply\x12\x0f\n\x07message\x18\x01 \x01(\t2\xb1\x01\n\x07Greeter\x12\x34\n\x08SayHello\x12\x13.DCnet.HelloRequest\x1a\x11.DCnet.HelloReply\"\x00\x12\x39\n\rSayHelloAgain\x12\x13.DCnet.HelloRequest\x1a\x11.DCnet.HelloReply\"\x00\x12\x35\n\x0b\x43lientHello\x12\x11.DCnet.HelloReply\x1a\x11.DCnet.HelloReply\"\x00\x32s\n\x08\x44\x43_round\x12\x33\n\x0cSendLocalSum\x12\r.DCnet.DC_net\x1a\x12.DCnet.Acknowlegde\"\x00\x12\x32\n\x10\x61\x64\x64\x43lientToDCnet\x12\r.DCnet.DC_net\x1a\r.DCnet.DC_net\"\x00'
+  serialized_pb=b'\n\x0c\x64\x63_net.proto\x12\x0c\x44\x43netPackage\"$\n\x0b\x41\x63knowlegde\x12\x15\n\rMessageStatus\x18\x01 \x01(\x05\"\x92\x01\n\x06\x44\x43_net\x12\x19\n\x11\x64\x63_net_identifier\x18\x01 \x01(\x05\x12\x19\n\x11\x63lient_identifier\x18\x02 \x01(\x05\x12\x17\n\x0ftransmissionBit\x18\x03 \x01(\x05\x12\x11\n\ttimestamp\x18\x04 \x01(\t\x12\x14\n\x0cnotification\x18\x05 \x01(\x05\x12\x10\n\x08localSum\x18\x06 \x01(\x05\"\x1c\n\x0cHelloRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\nHelloReply\x12\x0f\n\x07message\x18\x01 \x01(\t2\xdb\x01\n\x07Greeter\x12\x42\n\x08SayHello\x12\x1a.DCnetPackage.HelloRequest\x1a\x18.DCnetPackage.HelloReply\"\x00\x12G\n\rSayHelloAgain\x12\x1a.DCnetPackage.HelloRequest\x1a\x18.DCnetPackage.HelloReply\"\x00\x12\x43\n\x0b\x43lientHello\x12\x18.DCnetPackage.HelloReply\x1a\x18.DCnetPackage.HelloReply\"\x00\x32\xd1\x01\n\x08\x44\x43_round\x12\x41\n\x0cSendLocalSum\x12\x14.DCnetPackage.DC_net\x1a\x19.DCnetPackage.Acknowlegde\"\x00\x12@\n\x10\x61\x64\x64\x43lientToDCnet\x12\x14.DCnetPackage.DC_net\x1a\x14.DCnetPackage.DC_net\"\x00\x12@\n\x10\x63onnectDCClients\x12\x14.DCnetPackage.DC_net\x1a\x14.DCnetPackage.DC_net\"\x00'
 )
 
 
@@ -27,14 +27,14 @@ DESCRIPTOR = _descriptor.FileDescriptor(
 
 _ACKNOWLEGDE = _descriptor.Descriptor(
   name='Acknowlegde',
-  full_name='DCnet.Acknowlegde',
+  full_name='DCnetPackage.Acknowlegde',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='MessageStatus', full_name='DCnet.Acknowlegde.MessageStatus', index=0,
+      name='MessageStatus', full_name='DCnetPackage.Acknowlegde.MessageStatus', index=0,
       number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -52,56 +52,56 @@ _ACKNOWLEGDE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=23,
-  serialized_end=59,
+  serialized_start=30,
+  serialized_end=66,
 )
 
 
 _DC_NET = _descriptor.Descriptor(
   name='DC_net',
-  full_name='DCnet.DC_net',
+  full_name='DCnetPackage.DC_net',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='dc_net_identifier', full_name='DCnet.DC_net.dc_net_identifier', index=0,
+      name='dc_net_identifier', full_name='DCnetPackage.DC_net.dc_net_identifier', index=0,
       number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='client_identifier', full_name='DCnet.DC_net.client_identifier', index=1,
+      name='client_identifier', full_name='DCnetPackage.DC_net.client_identifier', index=1,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='transmissionBit', full_name='DCnet.DC_net.transmissionBit', index=2,
+      name='transmissionBit', full_name='DCnetPackage.DC_net.transmissionBit', index=2,
       number=3, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='timestamp', full_name='DCnet.DC_net.timestamp', index=3,
+      name='timestamp', full_name='DCnetPackage.DC_net.timestamp', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='notification', full_name='DCnet.DC_net.notification', index=4,
+      name='notification', full_name='DCnetPackage.DC_net.notification', index=4,
       number=5, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='localSum', full_name='DCnet.DC_net.localSum', index=5,
+      name='localSum', full_name='DCnetPackage.DC_net.localSum', index=5,
       number=6, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -119,21 +119,21 @@ _DC_NET = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=62,
-  serialized_end=208,
+  serialized_start=69,
+  serialized_end=215,
 )
 
 
 _HELLOREQUEST = _descriptor.Descriptor(
   name='HelloRequest',
-  full_name='DCnet.HelloRequest',
+  full_name='DCnetPackage.HelloRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='name', full_name='DCnet.HelloRequest.name', index=0,
+      name='name', full_name='DCnetPackage.HelloRequest.name', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -151,21 +151,21 @@ _HELLOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=210,
-  serialized_end=238,
+  serialized_start=217,
+  serialized_end=245,
 )
 
 
 _HELLOREPLY = _descriptor.Descriptor(
   name='HelloReply',
-  full_name='DCnet.HelloReply',
+  full_name='DCnetPackage.HelloReply',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='message', full_name='DCnet.HelloReply.message', index=0,
+      name='message', full_name='DCnetPackage.HelloReply.message', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -183,8 +183,8 @@ _HELLOREPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=240,
-  serialized_end=269,
+  serialized_start=247,
+  serialized_end=276,
 )
 
 DESCRIPTOR.message_types_by_name['Acknowlegde'] = _ACKNOWLEGDE
@@ -196,28 +196,28 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 Acknowlegde = _reflection.GeneratedProtocolMessageType('Acknowlegde', (_message.Message,), {
   'DESCRIPTOR' : _ACKNOWLEGDE,
   '__module__' : 'dc_net_pb2'
-  # @@protoc_insertion_point(class_scope:DCnet.Acknowlegde)
+  # @@protoc_insertion_point(class_scope:DCnetPackage.Acknowlegde)
   })
 _sym_db.RegisterMessage(Acknowlegde)
 
 DC_net = _reflection.GeneratedProtocolMessageType('DC_net', (_message.Message,), {
   'DESCRIPTOR' : _DC_NET,
   '__module__' : 'dc_net_pb2'
-  # @@protoc_insertion_point(class_scope:DCnet.DC_net)
+  # @@protoc_insertion_point(class_scope:DCnetPackage.DC_net)
   })
 _sym_db.RegisterMessage(DC_net)
 
 HelloRequest = _reflection.GeneratedProtocolMessageType('HelloRequest', (_message.Message,), {
   'DESCRIPTOR' : _HELLOREQUEST,
   '__module__' : 'dc_net_pb2'
-  # @@protoc_insertion_point(class_scope:DCnet.HelloRequest)
+  # @@protoc_insertion_point(class_scope:DCnetPackage.HelloRequest)
   })
 _sym_db.RegisterMessage(HelloRequest)
 
 HelloReply = _reflection.GeneratedProtocolMessageType('HelloReply', (_message.Message,), {
   'DESCRIPTOR' : _HELLOREPLY,
   '__module__' : 'dc_net_pb2'
-  # @@protoc_insertion_point(class_scope:DCnet.HelloReply)
+  # @@protoc_insertion_point(class_scope:DCnetPackage.HelloReply)
   })
 _sym_db.RegisterMessage(HelloReply)
 
@@ -225,17 +225,17 @@ _sym_db.RegisterMessage(HelloReply)
 
 _GREETER = _descriptor.ServiceDescriptor(
   name='Greeter',
-  full_name='DCnet.Greeter',
+  full_name='DCnetPackage.Greeter',
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=272,
-  serialized_end=449,
+  serialized_start=279,
+  serialized_end=498,
   methods=[
   _descriptor.MethodDescriptor(
     name='SayHello',
-    full_name='DCnet.Greeter.SayHello',
+    full_name='DCnetPackage.Greeter.SayHello',
     index=0,
     containing_service=None,
     input_type=_HELLOREQUEST,
@@ -245,7 +245,7 @@ _GREETER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='SayHelloAgain',
-    full_name='DCnet.Greeter.SayHelloAgain',
+    full_name='DCnetPackage.Greeter.SayHelloAgain',
     index=1,
     containing_service=None,
     input_type=_HELLOREQUEST,
@@ -255,7 +255,7 @@ _GREETER = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='ClientHello',
-    full_name='DCnet.Greeter.ClientHello',
+    full_name='DCnetPackage.Greeter.ClientHello',
     index=2,
     containing_service=None,
     input_type=_HELLOREPLY,
@@ -271,17 +271,17 @@ DESCRIPTOR.services_by_name['Greeter'] = _GREETER
 
 _DC_ROUND = _descriptor.ServiceDescriptor(
   name='DC_round',
-  full_name='DCnet.DC_round',
+  full_name='DCnetPackage.DC_round',
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=451,
-  serialized_end=566,
+  serialized_start=501,
+  serialized_end=710,
   methods=[
   _descriptor.MethodDescriptor(
     name='SendLocalSum',
-    full_name='DCnet.DC_round.SendLocalSum',
+    full_name='DCnetPackage.DC_round.SendLocalSum',
     index=0,
     containing_service=None,
     input_type=_DC_NET,
@@ -291,8 +291,18 @@ _DC_ROUND = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='addClientToDCnet',
-    full_name='DCnet.DC_round.addClientToDCnet',
+    full_name='DCnetPackage.DC_round.addClientToDCnet',
     index=1,
+    containing_service=None,
+    input_type=_DC_NET,
+    output_type=_DC_NET,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='connectDCClients',
+    full_name='DCnetPackage.DC_round.connectDCClients',
+    index=2,
     containing_service=None,
     input_type=_DC_NET,
     output_type=_DC_NET,
