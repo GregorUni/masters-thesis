@@ -1,5 +1,6 @@
 from __future__ import print_function
 import logging
+from os import write
 
 import grpc
 import sys
@@ -21,6 +22,8 @@ def ClientHello(self, request, context):
 def addClientToDCnet():
     if(dc_net_identifier == 0 & client_identifier == 0):
         return dc_net_pb2.DC_net(dc_net_identifier=0,client_identifier=0)
+
+def 
 
 
 def init():
@@ -81,7 +84,8 @@ def run():
                 if(addNeighboor.dc_net_identifier != 0 or addNeighboor.client_identifier != 0):
                     print("in break")
                     break
-               
+
+        
         print("registered")
 
         

@@ -160,6 +160,16 @@ class DC_roundStub(object):
                 request_serializer=dc__net__pb2.DC_net.SerializeToString,
                 response_deserializer=dc__net__pb2.DC_net.FromString,
                 )
+        self.ExchangeSecretForDH = channel.unary_unary(
+                '/DCnetPackage.DC_round/ExchangeSecretForDH',
+                request_serializer=dc__net__pb2.Secret.SerializeToString,
+                response_deserializer=dc__net__pb2.Secret.FromString,
+                )
+        self.getDiffieHellman = channel.unary_unary(
+                '/DCnetPackage.DC_round/getDiffieHellman',
+                request_serializer=dc__net__pb2.Empty.SerializeToString,
+                response_deserializer=dc__net__pb2.DiffieHelman.FromString,
+                )
 
 
 class DC_roundServicer(object):
@@ -183,6 +193,18 @@ class DC_roundServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ExchangeSecretForDH(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def getDiffieHellman(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_DC_roundServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -200,6 +222,16 @@ def add_DC_roundServicer_to_server(servicer, server):
                     servicer.connectDCClients,
                     request_deserializer=dc__net__pb2.DC_net.FromString,
                     response_serializer=dc__net__pb2.DC_net.SerializeToString,
+            ),
+            'ExchangeSecretForDH': grpc.unary_unary_rpc_method_handler(
+                    servicer.ExchangeSecretForDH,
+                    request_deserializer=dc__net__pb2.Secret.FromString,
+                    response_serializer=dc__net__pb2.Secret.SerializeToString,
+            ),
+            'getDiffieHellman': grpc.unary_unary_rpc_method_handler(
+                    servicer.getDiffieHellman,
+                    request_deserializer=dc__net__pb2.Empty.FromString,
+                    response_serializer=dc__net__pb2.DiffieHelman.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -259,5 +291,39 @@ class DC_round(object):
         return grpc.experimental.unary_unary(request, target, '/DCnetPackage.DC_round/connectDCClients',
             dc__net__pb2.DC_net.SerializeToString,
             dc__net__pb2.DC_net.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ExchangeSecretForDH(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/DCnetPackage.DC_round/ExchangeSecretForDH',
+            dc__net__pb2.Secret.SerializeToString,
+            dc__net__pb2.Secret.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getDiffieHellman(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/DCnetPackage.DC_round/getDiffieHellman',
+            dc__net__pb2.Empty.SerializeToString,
+            dc__net__pb2.DiffieHelman.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -2,6 +2,7 @@ from concurrent import futures
 import logging
 
 import grpc
+import random
 from random import randrange
 
 import dc_net_pb2
@@ -12,6 +13,8 @@ import dc_net_pb2_grpc
 counter = 0
 clients = [] 
 clients = [0 for i in range(10)]
+p = 0
+g = 0
 
 
 
@@ -27,6 +30,26 @@ class Greeter(dc_net_pb2_grpc.GreeterServicer):
 
     def ClientHello(self, request, context):
         return dc_net_pb2.HelloRequest(message='Hello I am the CLient, %s!' % request.message)
+
+#stole it from https://stackoverflow.com/questions/15285534/isprime-function-for-python-language
+def is_prime(n):
+  if n == 2 or n == 3: return True
+  if n < 2 or n%2 == 0: return False
+  if n < 9: return True
+  if n%3 == 0: return False
+  r = int(n**0.5)
+  # since all primes > 3 are of the form 6n ± 1
+  # start with f=5 (which is prime)
+  # and test f, f+2 for being prime
+  # then loop by 6. 
+  f = 5
+  while f <= r:
+    print('\t',f)
+    if n % f == 0: return False
+    if n % (f+2) == 0: return False
+    f += 6
+  return True    
+
                 
 class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
 
@@ -83,7 +106,21 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         else:
             #if there is only one participant decline request, because there are no 2 clients that can be connected
             return dc_net_pb2.DC_net(dc_net_identifier=0,client_identifier=0)
+    
+    def getDiffieHellman(self, request, context):
+        global p
+        global g
+        #configure a public g and p
+        if(p == 0 or g == 0):
+            primes = [i for i in range(50000,100000) if is_prime(i)]
+            p = random.choice(primes)
+            #just a static number
+            g = 5728435
+        
+        return dc_net_pb2.DiffieHelman(p=p,g=g)
             
+            
+
 
         
 

@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto2',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0c\x64\x63_net.proto\x12\x0c\x44\x43netPackage\"$\n\x0b\x41\x63knowlegde\x12\x15\n\rMessageStatus\x18\x01 \x01(\x05\"\x92\x01\n\x06\x44\x43_net\x12\x19\n\x11\x64\x63_net_identifier\x18\x01 \x01(\x05\x12\x19\n\x11\x63lient_identifier\x18\x02 \x01(\x05\x12\x17\n\x0ftransmissionBit\x18\x03 \x01(\x05\x12\x11\n\ttimestamp\x18\x04 \x01(\t\x12\x14\n\x0cnotification\x18\x05 \x01(\x05\x12\x10\n\x08localSum\x18\x06 \x01(\x05\"\x1c\n\x0cHelloRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\nHelloReply\x12\x0f\n\x07message\x18\x01 \x01(\t2\xdb\x01\n\x07Greeter\x12\x42\n\x08SayHello\x12\x1a.DCnetPackage.HelloRequest\x1a\x18.DCnetPackage.HelloReply\"\x00\x12G\n\rSayHelloAgain\x12\x1a.DCnetPackage.HelloRequest\x1a\x18.DCnetPackage.HelloReply\"\x00\x12\x43\n\x0b\x43lientHello\x12\x18.DCnetPackage.HelloReply\x1a\x18.DCnetPackage.HelloReply\"\x00\x32\xd1\x01\n\x08\x44\x43_round\x12\x41\n\x0cSendLocalSum\x12\x14.DCnetPackage.DC_net\x1a\x19.DCnetPackage.Acknowlegde\"\x00\x12@\n\x10\x61\x64\x64\x43lientToDCnet\x12\x14.DCnetPackage.DC_net\x1a\x14.DCnetPackage.DC_net\"\x00\x12@\n\x10\x63onnectDCClients\x12\x14.DCnetPackage.DC_net\x1a\x14.DCnetPackage.DC_net\"\x00'
+  serialized_pb=b'\n\x0c\x64\x63_net.proto\x12\x0c\x44\x43netPackage\"$\n\x0b\x41\x63knowlegde\x12\x15\n\rMessageStatus\x18\x01 \x01(\x05\"\x92\x01\n\x06\x44\x43_net\x12\x19\n\x11\x64\x63_net_identifier\x18\x01 \x01(\x05\x12\x19\n\x11\x63lient_identifier\x18\x02 \x01(\x05\x12\x17\n\x0ftransmissionBit\x18\x03 \x01(\x05\x12\x11\n\ttimestamp\x18\x04 \x01(\t\x12\x14\n\x0cnotification\x18\x05 \x01(\x05\x12\x10\n\x08localSum\x18\x06 \x01(\x05\"\x1c\n\x0cHelloRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\nHelloReply\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x18\n\x06Secret\x12\x0e\n\x06secret\x18\x01 \x01(\x05\"$\n\x0c\x44iffieHelman\x12\t\n\x01p\x18\x01 \x01(\x05\x12\t\n\x01g\x18\x02 \x01(\x05\"\x07\n\x05\x45mpty2\xdb\x01\n\x07Greeter\x12\x42\n\x08SayHello\x12\x1a.DCnetPackage.HelloRequest\x1a\x18.DCnetPackage.HelloReply\"\x00\x12G\n\rSayHelloAgain\x12\x1a.DCnetPackage.HelloRequest\x1a\x18.DCnetPackage.HelloReply\"\x00\x12\x43\n\x0b\x43lientHello\x12\x18.DCnetPackage.HelloReply\x1a\x18.DCnetPackage.HelloReply\"\x00\x32\xdd\x02\n\x08\x44\x43_round\x12\x41\n\x0cSendLocalSum\x12\x14.DCnetPackage.DC_net\x1a\x19.DCnetPackage.Acknowlegde\"\x00\x12@\n\x10\x61\x64\x64\x43lientToDCnet\x12\x14.DCnetPackage.DC_net\x1a\x14.DCnetPackage.DC_net\"\x00\x12@\n\x10\x63onnectDCClients\x12\x14.DCnetPackage.DC_net\x1a\x14.DCnetPackage.DC_net\"\x00\x12\x43\n\x13\x45xchangeSecretForDH\x12\x14.DCnetPackage.Secret\x1a\x14.DCnetPackage.Secret\"\x00\x12\x45\n\x10getDiffieHellman\x12\x13.DCnetPackage.Empty\x1a\x1a.DCnetPackage.DiffieHelman\"\x00'
 )
 
 
@@ -187,10 +187,109 @@ _HELLOREPLY = _descriptor.Descriptor(
   serialized_end=276,
 )
 
+
+_SECRET = _descriptor.Descriptor(
+  name='Secret',
+  full_name='DCnetPackage.Secret',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='secret', full_name='DCnetPackage.Secret.secret', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=278,
+  serialized_end=302,
+)
+
+
+_DIFFIEHELMAN = _descriptor.Descriptor(
+  name='DiffieHelman',
+  full_name='DCnetPackage.DiffieHelman',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='p', full_name='DCnetPackage.DiffieHelman.p', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='g', full_name='DCnetPackage.DiffieHelman.g', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=304,
+  serialized_end=340,
+)
+
+
+_EMPTY = _descriptor.Descriptor(
+  name='Empty',
+  full_name='DCnetPackage.Empty',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=342,
+  serialized_end=349,
+)
+
 DESCRIPTOR.message_types_by_name['Acknowlegde'] = _ACKNOWLEGDE
 DESCRIPTOR.message_types_by_name['DC_net'] = _DC_NET
 DESCRIPTOR.message_types_by_name['HelloRequest'] = _HELLOREQUEST
 DESCRIPTOR.message_types_by_name['HelloReply'] = _HELLOREPLY
+DESCRIPTOR.message_types_by_name['Secret'] = _SECRET
+DESCRIPTOR.message_types_by_name['DiffieHelman'] = _DIFFIEHELMAN
+DESCRIPTOR.message_types_by_name['Empty'] = _EMPTY
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Acknowlegde = _reflection.GeneratedProtocolMessageType('Acknowlegde', (_message.Message,), {
@@ -221,6 +320,27 @@ HelloReply = _reflection.GeneratedProtocolMessageType('HelloReply', (_message.Me
   })
 _sym_db.RegisterMessage(HelloReply)
 
+Secret = _reflection.GeneratedProtocolMessageType('Secret', (_message.Message,), {
+  'DESCRIPTOR' : _SECRET,
+  '__module__' : 'dc_net_pb2'
+  # @@protoc_insertion_point(class_scope:DCnetPackage.Secret)
+  })
+_sym_db.RegisterMessage(Secret)
+
+DiffieHelman = _reflection.GeneratedProtocolMessageType('DiffieHelman', (_message.Message,), {
+  'DESCRIPTOR' : _DIFFIEHELMAN,
+  '__module__' : 'dc_net_pb2'
+  # @@protoc_insertion_point(class_scope:DCnetPackage.DiffieHelman)
+  })
+_sym_db.RegisterMessage(DiffieHelman)
+
+Empty = _reflection.GeneratedProtocolMessageType('Empty', (_message.Message,), {
+  'DESCRIPTOR' : _EMPTY,
+  '__module__' : 'dc_net_pb2'
+  # @@protoc_insertion_point(class_scope:DCnetPackage.Empty)
+  })
+_sym_db.RegisterMessage(Empty)
+
 
 
 _GREETER = _descriptor.ServiceDescriptor(
@@ -230,8 +350,8 @@ _GREETER = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=279,
-  serialized_end=498,
+  serialized_start=352,
+  serialized_end=571,
   methods=[
   _descriptor.MethodDescriptor(
     name='SayHello',
@@ -276,8 +396,8 @@ _DC_ROUND = _descriptor.ServiceDescriptor(
   index=1,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=501,
-  serialized_end=710,
+  serialized_start=574,
+  serialized_end=923,
   methods=[
   _descriptor.MethodDescriptor(
     name='SendLocalSum',
@@ -306,6 +426,26 @@ _DC_ROUND = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_DC_NET,
     output_type=_DC_NET,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='ExchangeSecretForDH',
+    full_name='DCnetPackage.DC_round.ExchangeSecretForDH',
+    index=3,
+    containing_service=None,
+    input_type=_SECRET,
+    output_type=_SECRET,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='getDiffieHellman',
+    full_name='DCnetPackage.DC_round.getDiffieHellman',
+    index=4,
+    containing_service=None,
+    input_type=_EMPTY,
+    output_type=_DIFFIEHELMAN,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

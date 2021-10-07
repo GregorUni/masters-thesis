@@ -1,4 +1,5 @@
 syntax = "proto2";
+//import "google/protobuf/empty.proto";
 
 package DCnetPackage;
 
@@ -21,6 +22,13 @@ service Greeter {
     rpc addClientToDCnet(DC_net) returns (DC_net) {}
 
     rpc connectDCClients(DC_net) returns (DC_net) {}
+
+    rpc ExchangeSecretForDH(Secret) returns (Secret) {}
+
+    rpc getDiffieHellman(Empty) returns (DiffieHelman) {
+
+    }
+    
   }
 
   message Acknowlegde{
@@ -45,3 +53,18 @@ service Greeter {
   message HelloReply {
     optional string message = 1;
   }
+
+  message Secret {
+    optional int32 secret = 1;
+  }
+
+  message DiffieHelman {
+    optional int32 p = 1;
+    optional int32 g = 2;
+  }
+
+  message Empty 
+  {
+
+  }
+  
