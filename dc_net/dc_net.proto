@@ -55,7 +55,10 @@ service Greeter {
   }
 
   message Secret {
-    optional int32 secret = 1;
+    optional int32 client_identifier = 1;
+    optional int32 secret = 2;
+    optional int32 neighboor = 3;
+
   }
 
   message DiffieHelman {

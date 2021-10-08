@@ -1,10 +1,10 @@
 from __future__ import print_function
 import logging
-from os import write
 
 import grpc
 import sys
 import time
+from random import randrange
 
 import dc_net_pb2
 import dc_net_pb2_grpc
@@ -23,7 +23,9 @@ def addClientToDCnet():
     if(dc_net_identifier == 0 & client_identifier == 0):
         return dc_net_pb2.DC_net(dc_net_identifier=0,client_identifier=0)
 
-def 
+def calculateOpenKey(prime,generator):
+    random=randrange(1,prime-1)
+    return pow(generator, random, prime)
 
 
 def init():
@@ -47,6 +49,7 @@ def run():
     # of the code.
     global client_identifier
     global dc_net_identifier
+    global counter
 
     with grpc.insecure_channel('localhost:50051') as channel:
         stub = dc_net_pb2_grpc.GreeterStub(channel)
@@ -84,8 +87,15 @@ def run():
                 if(addNeighboor.dc_net_identifier != 0 or addNeighboor.client_identifier != 0):
                     print("in break")
                     break
+        #save new neighboor
+        neighboor[counter] = addNeighboor.client_identifier
+        counter = counter+1
 
+        pg = DC_stub.getDiffieHellman(dc_net_pb2.Empty)
+        key = calculateOpenKey(pg.p,pg.g)
         
+        DC_stub.ExchangeSecretForDH(dc_net_pb2.Secret(client_identifier=client_identifier,secret=key,neighboor=neighboor[counter-1])
+
         print("registered")
 
         

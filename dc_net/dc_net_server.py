@@ -15,7 +15,8 @@ clients = []
 clients = [0 for i in range(10)]
 p = 0
 g = 0
-
+post = []
+post = [0 for i in range(3)]
 
 
 
@@ -49,6 +50,10 @@ def is_prime(n):
     if n % (f+2) == 0: return False
     f += 6
   return True    
+
+def initList():
+    return [0 for i in range(3)]
+
 
                 
 class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
@@ -114,12 +119,32 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         if(p == 0 or g == 0):
             primes = [i for i in range(50000,100000) if is_prime(i)]
             p = random.choice(primes)
-            #just a static number
-            g = 5728435
+            #just a static number smaller than primes
+            g = 72843
         
         return dc_net_pb2.DiffieHelman(p=p,g=g)
-            
-            
+
+    def ExchangeSecretForDH(self, request, context):
+        global post
+        clientID = request.client_identifier
+        openkey = request.secret
+        neighboor = request.neighboor
+
+        if(post[0] is 0):
+            post[0] = clientID
+            post[1] = openkey
+            return dc_net_pb2.Secret(secret=0)
+        if((post[2] is 0) and neighboor == post[0]):
+            post[2] = clientID
+            post[3] = openkey
+
+            return dc_net_pb2.Secret(secret=post[1])
+        else:
+            post = initList()
+            return dc_net_pb2.Secret(secret=post[2])
+
+
+
 
 
         
