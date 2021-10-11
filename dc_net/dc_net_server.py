@@ -16,8 +16,7 @@ clients = [0 for i in range(10)]
 p = 0
 g = 0
 post = []
-post = [0 for i in range(3)]
-
+post = [0 for i in range(4)]
 
 
 class Greeter(dc_net_pb2_grpc.GreeterServicer):
@@ -45,14 +44,13 @@ def is_prime(n):
   # then loop by 6. 
   f = 5
   while f <= r:
-    print('\t',f)
     if n % f == 0: return False
     if n % (f+2) == 0: return False
     f += 6
   return True    
 
 def initList():
-    return [0 for i in range(3)]
+    return [0 for i in range(4)]
 
 
                 
@@ -115,41 +113,47 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
     def getDiffieHellman(self, request, context):
         global p
         global g
+        print("hello2\n")
         #configure a public g and p
         if(p == 0 or g == 0):
-            primes = [i for i in range(50000,100000) if is_prime(i)]
+            primes = [i for i in range(80000,100000) if is_prime(i)]
             p = random.choice(primes)
             #just a static number smaller than primes
-            g = 72843
-        
+            g = 42843
+        print("hello3")
         return dc_net_pb2.DiffieHelman(p=p,g=g)
 
     def ExchangeSecretForDH(self, request, context):
         global post
+        print("hello")
         clientID = request.client_identifier
         openkey = request.secret
         neighboor = request.neighboor
 
         if(post[0] is 0):
             post[0] = clientID
+            print("post[0]" + str(post[0]))
             post[1] = openkey
+            print("post[1]" + str(post[1]))
             return dc_net_pb2.Secret(secret=0)
-        if((post[2] is 0) and neighboor == post[0]):
+            
+        if((post[2] is 0) and neighboor is post[0]):
             post[2] = clientID
+            print("post[2]" + str(post[2]))
             post[3] = openkey
-
+            print("post[3]" + str(post[3]))
             return dc_net_pb2.Secret(secret=post[1])
-        else:
+
+        if(neighboor is post[2]):  
+            secret=post[3]
+            print("secret" + str(secret))
             post = initList()
-            return dc_net_pb2.Secret(secret=post[2])
+            return dc_net_pb2.Secret(secret=secret)  
 
-
-
-
-
+        else:
+            print("else:")
+            return dc_net_pb2.Secret(secret=0)
         
-
-
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

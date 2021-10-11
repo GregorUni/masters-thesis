@@ -25,9 +25,9 @@ service Greeter {
 
     rpc ExchangeSecretForDH(Secret) returns (Secret) {}
 
-    rpc getDiffieHellman(Empty) returns (DiffieHelman) {
+    rpc getDiffieHellman(Empty) returns (DiffieHelman) {}
 
-    }
+    rpc ExchangePRNGSeed(Seed) returns (Seed){}
     
   }
 
@@ -53,7 +53,7 @@ service Greeter {
   message HelloReply {
     optional string message = 1;
   }
-
+//vllt noch in secretRequest und SecretResponse ändern
   message Secret {
     optional int32 client_identifier = 1;
     optional int32 secret = 2;
@@ -64,6 +64,10 @@ service Greeter {
   message DiffieHelman {
     optional int32 p = 1;
     optional int32 g = 2;
+  }
+
+  message Seed{
+    optional int32 PRNGSeed = 1;
   }
 
   message Empty 

@@ -27,6 +27,8 @@ def calculateOpenKey(prime,generator):
     random=randrange(1,prime-1)
     return pow(generator, random, prime)
 
+def calculatePrivateSessionKey(openKeyA,openKeyB,prime):
+    return pow(openKeyA, openKeyB, prime)
 
 def init():
     ####setting all values in the DC_net message to zero.
@@ -88,14 +90,30 @@ def run():
                     print("in break")
                     break
         #save new neighboor
-        neighboor[counter] = addNeighboor.client_identifier
+        neighboor.append(addNeighboor.client_identifier)
         counter = counter+1
-
-        pg = DC_stub.getDiffieHellman(dc_net_pb2.Empty)
-        key = calculateOpenKey(pg.p,pg.g)
         
-        DC_stub.ExchangeSecretForDH(dc_net_pb2.Secret(client_identifier=client_identifier,secret=key,neighboor=neighboor[counter-1])
+        pg = DC_stub.getDiffieHellman(dc_net_pb2.Empty())
+        print("pg.p " + str(pg.p))
+        print("pg.g "+ str(pg.g))
 
+        key = calculateOpenKey(pg.p,pg.g)
+        print("key")
+        print(key)
+        #give the last added neighboor into ExchangeSecretForDH
+        #print("neighboor pop"+ str(neighboor.pop()))
+        last_neighboor=neighboor[-1]
+        print(last_neighboor)
+        while(True):
+            neighboorKey= DC_stub.ExchangeSecretForDH(dc_net_pb2.Secret(client_identifier=client_identifier,secret=key,neighboor=last_neighboor))
+            if(neighboorKey.secret != 0):
+                print("break")
+                break
+            time.sleep(5)
+        
+        print("neighboorKey "+ str(neighboorKey))
+        sessionKey=calculatePrivateSessionKey(key,neighboorKey,pg.p)
+        print(sessionKey)
         print("registered")
 
         
