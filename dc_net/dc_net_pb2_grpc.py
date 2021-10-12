@@ -170,6 +170,11 @@ class DC_roundStub(object):
                 request_serializer=dc__net__pb2.Empty.SerializeToString,
                 response_deserializer=dc__net__pb2.DiffieHelman.FromString,
                 )
+        self.ExchangePRNGSeed = channel.unary_unary(
+                '/DCnetPackage.DC_round/ExchangePRNGSeed',
+                request_serializer=dc__net__pb2.Seed.SerializeToString,
+                response_deserializer=dc__net__pb2.Seed.FromString,
+                )
 
 
 class DC_roundServicer(object):
@@ -205,6 +210,12 @@ class DC_roundServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ExchangePRNGSeed(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_DC_roundServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -232,6 +243,11 @@ def add_DC_roundServicer_to_server(servicer, server):
                     servicer.getDiffieHellman,
                     request_deserializer=dc__net__pb2.Empty.FromString,
                     response_serializer=dc__net__pb2.DiffieHelman.SerializeToString,
+            ),
+            'ExchangePRNGSeed': grpc.unary_unary_rpc_method_handler(
+                    servicer.ExchangePRNGSeed,
+                    request_deserializer=dc__net__pb2.Seed.FromString,
+                    response_serializer=dc__net__pb2.Seed.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -325,5 +341,22 @@ class DC_round(object):
         return grpc.experimental.unary_unary(request, target, '/DCnetPackage.DC_round/getDiffieHellman',
             dc__net__pb2.Empty.SerializeToString,
             dc__net__pb2.DiffieHelman.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ExchangePRNGSeed(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/DCnetPackage.DC_round/ExchangePRNGSeed',
+            dc__net__pb2.Seed.SerializeToString,
+            dc__net__pb2.Seed.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

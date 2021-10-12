@@ -51,8 +51,8 @@ def is_prime(n):
     f += 6
   return True    
 
-def initList():
-    return [0 for i in range(4)]
+def initList(n):
+    return [0 for i in range(n)]
 
 
                 
@@ -115,19 +115,18 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
     def getDiffieHellman(self, request, context):
         global p
         global g
-        print("hello2\n")
+        print("getDiffieHellman")
         #configure a public g and p
         if(p == 0 or g == 0):
             primes = [i for i in range(80000,100000) if is_prime(i)]
             p = random.choice(primes)
             #just a static number smaller than primes
             g = 42843
-        print("hello3")
         return dc_net_pb2.DiffieHelman(p=p,g=g)
 
     def ExchangeSecretForDH(self, request, context):
         global post
-        print("hello")
+        print("ExchangeSecretForDH")
         clientID = request.client_identifier
         openkey = request.secret
         neighboor = request.neighboor
@@ -148,8 +147,7 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
 
         if(neighboor is post[2]):  
             secret=post[3]
-            print("secret" + str(secret))
-            post = initList()
+            post = initList(4)
             return dc_net_pb2.Secret(secret=secret)  
 
         else:
@@ -158,14 +156,21 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
     
     def ExchangePRNGSeed(self, request, context):
         global exchangeSeed
+        print("ExchangePRNGSeed")
         seed = request.PRNGSeed
         neighboor = request.neighboor
+        print("seed" +str(seed))
+        print("neighboor"+str(neighboor))
+        print("seed[0]"+ str(exchangeSeed[0]))
         client=request.client_identifier
         if(exchangeSeed[0] is 0):
             exchangeSeed[0] = client
             exchangeSeed[1] = seed
-        if(exchangeSeed[0] is neighboor):
             return dc_net_pb2.Seed(PRNGSeed=exchangeSeed[1])
+        if(exchangeSeed[0] is neighboor):
+            returnseed=exchangeSeed[1]
+            initList(2)
+            return dc_net_pb2.Seed(PRNGSeed=returnseed)
         else:
             return dc_net_pb2.Seed(PRNGSeed=0)
         

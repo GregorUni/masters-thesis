@@ -5,6 +5,7 @@ import grpc
 import sys
 import time
 from random import randrange
+import random
 
 import dc_net_pb2
 import dc_net_pb2_grpc
@@ -91,7 +92,7 @@ def run():
             #counter counts the neighboors in a DC_net
             if(counter == 0):
                 addNeighboor=DC_stub.connectDCClients(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier,client_identifier=client_identifier))
-                time.sleep(10)
+                time.sleep(5)
                 print("NeighboorID: ")
                 print(addNeighboor)
                 print(addNeighboor.dc_net_identifier)
@@ -128,7 +129,21 @@ def run():
         sessionKey=calculatePrivateSessionKey(neighboorKey.secret,a,pg.p)
         print("sessionKey" + str(sessionKey))
         print("registered")
+
         seed=getSeed()
+        print("seed")
+        print(seed)
+        while(True):
+            exchangedSeed=DC_stub.ExchangePRNGSeed(dc_net_pb2.Seed(client_identifier=client_identifier,PRNGSeed=seed,neighboor=last_neighboor))
+            if(exchangedSeed.PRNGSeed != 0):
+                print("exchangedSeedBreak")
+                break
+            time.sleep(2)
+        print("exchangedSeed")
+        print(exchangedSeed)
+        #irgendwie sowas
+        random.seed(10)
+        random.random()
         
         Seeds.append(last_neighboor)
         
