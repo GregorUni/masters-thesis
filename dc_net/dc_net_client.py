@@ -15,6 +15,9 @@ neighboor = [0 for i in range(10)]
 counter = 0
 dc_net_identifier = 0
 client_identifier = 0
+a = 0
+Seeds = []
+Seeds = [0 for i in range(10)]
 
 def ClientHello(self, request, context):
         return dc_net_pb2.HelloReply(message='Hello I am the CLient, %s!' % request.name)
@@ -23,8 +26,13 @@ def addClientToDCnet():
     if(dc_net_identifier == 0 & client_identifier == 0):
         return dc_net_pb2.DC_net(dc_net_identifier=0,client_identifier=0)
 
-def calculateOpenKey(prime,generator):
-    random=randrange(1,prime-1)
+def getSecret(prime):
+    return randrange(1,prime-1)
+
+def getSeed():
+    return randrange(1,100000)
+
+def calculateOpenKey(prime,generator,random):
     return pow(generator, random, prime)
 
 def calculatePrivateSessionKey(openKeyA,openKeyB,prime):
@@ -52,7 +60,8 @@ def run():
     global client_identifier
     global dc_net_identifier
     global counter
-
+    global a
+    global Seeds
     with grpc.insecure_channel('localhost:50051') as channel:
         stub = dc_net_pb2_grpc.GreeterStub(channel)
         response = stub.SayHello(dc_net_pb2.HelloRequest(name='you'))
@@ -96,25 +105,34 @@ def run():
         pg = DC_stub.getDiffieHellman(dc_net_pb2.Empty())
         print("pg.p " + str(pg.p))
         print("pg.g "+ str(pg.g))
+        if(a is 0):
+            a=getSecret(pg.p)
 
-        key = calculateOpenKey(pg.p,pg.g)
-        print("key")
-        print(key)
+        openKey = calculateOpenKey(pg.p,pg.g,a)
+        print("openKey")
+        print(openKey)
         #give the last added neighboor into ExchangeSecretForDH
         #print("neighboor pop"+ str(neighboor.pop()))
         last_neighboor=neighboor[-1]
         print(last_neighboor)
         while(True):
-            neighboorKey= DC_stub.ExchangeSecretForDH(dc_net_pb2.Secret(client_identifier=client_identifier,secret=key,neighboor=last_neighboor))
+            neighboorKey= DC_stub.ExchangeSecretForDH(dc_net_pb2.Secret(client_identifier=client_identifier,secret=openKey,neighboor=last_neighboor))
             if(neighboorKey.secret != 0):
                 print("break")
                 break
             time.sleep(5)
         
         print("neighboorKey "+ str(neighboorKey))
-        sessionKey=calculatePrivateSessionKey(key,neighboorKey,pg.p)
-        print(sessionKey)
+        print("key" + str(openKey))
+        print("prime" + str(pg.p))
+        sessionKey=calculatePrivateSessionKey(neighboorKey.secret,a,pg.p)
+        print("sessionKey" + str(sessionKey))
         print("registered")
+        seed=getSeed()
+        
+        Seeds.append(last_neighboor)
+        
+        
 
         
 #dc_net_pb2.DC_net(dc_net_identifier=1,client_identifier=1,

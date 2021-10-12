@@ -17,6 +17,8 @@ p = 0
 g = 0
 post = []
 post = [0 for i in range(4)]
+exchangeSeed = []
+exchangeSeed = [0 for i in range(2)]
 
 
 class Greeter(dc_net_pb2_grpc.GreeterServicer):
@@ -153,7 +155,21 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         else:
             print("else:")
             return dc_net_pb2.Secret(secret=0)
+    
+    def ExchangePRNGSeed(self, request, context):
+        global exchangeSeed
+        seed = request.PRNGSeed
+        neighboor = request.neighboor
+        client=request.client_identifier
+        if(exchangeSeed[0] is 0):
+            exchangeSeed[0] = client
+            exchangeSeed[1] = seed
+        if(exchangeSeed[0] is neighboor):
+            return dc_net_pb2.Seed(PRNGSeed=exchangeSeed[1])
+        else:
+            return dc_net_pb2.Seed(PRNGSeed=0)
         
+
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

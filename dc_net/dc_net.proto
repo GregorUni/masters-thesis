@@ -68,6 +68,8 @@ service Greeter {
 
   message Seed{
     optional int32 PRNGSeed = 1;
+    optional int32 client_identifier = 2;
+    optional int32 neighboor = 3;
   }
 
   message Empty 
