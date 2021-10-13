@@ -131,21 +131,35 @@ def run():
         print("registered")
 
         seed=getSeed()
+        encryptedSeed=seed ^ sessionKey
+        print("encryptedseed" + str(encryptedSeed))
         print("seed")
         print(seed)
         while(True):
-            exchangedSeed=DC_stub.ExchangePRNGSeed(dc_net_pb2.Seed(client_identifier=client_identifier,PRNGSeed=seed,neighboor=last_neighboor))
+            exchangedSeed=DC_stub.ExchangePRNGSeed(dc_net_pb2.Seed(client_identifier=client_identifier,PRNGSeed=encryptedSeed,neighboor=last_neighboor))
             if(exchangedSeed.PRNGSeed != 0):
+                decryptedSeed = exchangedSeed.PRNGSeed ^ sessionKey
+                print("decryptedSeed" + str(decryptedSeed))
+                print("seed" + str(seed))
+                if(decryptedSeed == seed):
+                    print("seedBranch" + str(seed))
+                    random.seed(seed)
+                if((decryptedSeed != seed)):
+                    seed=decryptedSeed
+                    print("decryptedSeed "+str(decryptedSeed))
+                    random.seed(seed)
                 print("exchangedSeedBreak")
                 break
             time.sleep(2)
-        print("exchangedSeed")
-        print(exchangedSeed)
-        #irgendwie sowas
-        random.seed(10)
-        random.random()
         
+        print("exchangedSeed")
+        print(seed)
         Seeds.append(last_neighboor)
+        Seeds.append(seed)
+        #irgendwie sowas
+        print(random.getrandbits(300))
+        
+        
         
         
 

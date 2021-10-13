@@ -145,7 +145,7 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
             print("post[3]" + str(post[3]))
             return dc_net_pb2.Secret(secret=post[1])
 
-        if(neighboor is post[2]):  
+        if(neighboor == post[2]):  
             secret=post[3]
             post = initList(4)
             return dc_net_pb2.Secret(secret=secret)  
@@ -167,7 +167,7 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
             exchangeSeed[0] = client
             exchangeSeed[1] = seed
             return dc_net_pb2.Seed(PRNGSeed=exchangeSeed[1])
-        if(exchangeSeed[0] is neighboor):
+        if(exchangeSeed[0] == neighboor):
             returnseed=exchangeSeed[1]
             initList(2)
             return dc_net_pb2.Seed(PRNGSeed=returnseed)
