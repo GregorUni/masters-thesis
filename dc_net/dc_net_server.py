@@ -178,7 +178,6 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    dc_net_pb2_grpc.add_GreeterServicer_to_server(Greeter(), server)
     dc_net_pb2_grpc.add_DC_roundServicer_to_server(Server_DCnet(),server)
     server.add_insecure_port('[::]:50051')
     server.start()

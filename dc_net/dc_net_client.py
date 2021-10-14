@@ -3,7 +3,7 @@ import logging
 
 import grpc
 import sys
-import time
+import time, sched
 from random import randrange
 import random
 
@@ -39,6 +39,24 @@ def calculateOpenKey(prime,generator,random):
 def calculatePrivateSessionKey(openKeyA,openKeyB,prime):
     return pow(openKeyA, openKeyB, prime)
 
+def roundFunction():
+    t = time.localtime()
+    current_time = time.strftime("%H:%M:%S", t)
+    print(current_time)
+    print(t.tm_sec)
+    #synchronize the clients so that they send the function at the same time
+    while((t.tm_sec % 10) != 9):
+        t = time.localtime()
+        print(t.tm_sec)
+
+        time.sleep(1)
+    
+    sendLocalSum()
+
+
+def sendLocalSum():
+    print("hello")
+
 def init():
     ####setting all values in the DC_net message to zero.
     #then asking the server automatically to join the dc_net
@@ -64,23 +82,10 @@ def run():
     global a
     global Seeds
     with grpc.insecure_channel('localhost:50051') as channel:
-        stub = dc_net_pb2_grpc.GreeterStub(channel)
-        response = stub.SayHello(dc_net_pb2.HelloRequest(name='you'))
-        print("Greeter client received: " + response.message)
-        #response = stub.SayHelloAgain(dc_net_pb2.HelloRequest(name='you'))
-        #print("Greeter client received: " + response.message)
-        #request = stub.ClientHello(dc_net_pb2.HelloReply(message='hi'))
-        #print(request.message)
         DC_stub = dc_net_pb2_grpc.DC_roundStub(channel)
-        #dc_request = DC_stub.SendLocalSum(dc_net_pb2.DC_net(dc_net_identifier=1,client_identifier=1,
-            #transmissionBit=1,timestamp='14 Uhr',notification=1,localSum=4))
-        #print(dc_request)
-        #print(client_identifier)
-        #print(dc_net_identifier)
-        # if client isnt registered in a dc_net 
+        
         if(client_identifier == 0):
             print("addClient")
-            #print(client_identifier)
             request=DC_stub.addClientToDCnet(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier,client_identifier=client_identifier))
 
         dc_net_identifier = request.dc_net_identifier
@@ -92,7 +97,7 @@ def run():
             #counter counts the neighboors in a DC_net
             if(counter == 0):
                 addNeighboor=DC_stub.connectDCClients(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier,client_identifier=client_identifier))
-                time.sleep(5)
+                time.sleep(2)
                 print("NeighboorID: ")
                 print(addNeighboor)
                 print(addNeighboor.dc_net_identifier)
@@ -121,7 +126,7 @@ def run():
             if(neighboorKey.secret != 0):
                 print("break")
                 break
-            time.sleep(5)
+            time.sleep(2)
         
         print("neighboorKey "+ str(neighboorKey))
         print("key" + str(openKey))
@@ -158,6 +163,10 @@ def run():
         Seeds.append(seed)
         #irgendwie sowas
         print(random.getrandbits(300))
+        #round function starts
+        if(client_identifier != 0):
+            print("roundFunction")
+            roundFunction()
         
         
         
