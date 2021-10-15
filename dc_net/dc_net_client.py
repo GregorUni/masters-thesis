@@ -6,6 +6,7 @@ import sys
 import time, sched
 from random import randrange
 import random
+import csv
 
 import dc_net_pb2
 import dc_net_pb2_grpc
@@ -47,14 +48,23 @@ def roundFunction():
     #synchronize the clients so that they send the function at the same time
     while((t.tm_sec % 10) != 9):
         t = time.localtime()
+        #hier würde ich einmal pro sekunde schauen, ob ein neuer client sich registrieren möchte
         print(t.tm_sec)
 
         time.sleep(1)
-    
+
     sendLocalSum()
 
 
 def sendLocalSum():
+    #get actual electricity data from csv
+    file = open('csv/strom_2.csv')
+    csvreader = csv.reader(file)
+    print(csvreader)
+    rows = []
+    for row in csvreader:
+        rows.append(row)
+    print(rows)
     print("hello")
 
 def init():
