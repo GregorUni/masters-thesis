@@ -1,12 +1,4 @@
-# file...... strom/strom_2.csv
-# date...... Mon Nov 16 14:33:49 2020
-# user...... gregor
-# host...... (null)
-# target.... triplex_meter 48
-# trigger... (none)
-# interval.. 1800
-# limit..... 0
-# timestamp,measured_real_energy,measured_power,measured_real_power,measured_demand,monthly_bill,price
+timestamp,measured_real_energy,measured_power,measured_real_power,measured_demand,monthly_bill,price
 2012-04-08 00:00:00 UTC,+0,+70-1.16317e-14d,+70,+70,+0,+30
 2012-04-08 00:30:00 UTC,+35,+37+0d,+37,+70,+1.05,+0.0651396
 2012-04-08 01:00:00 UTC,+53.5,+53+0d,+53,+70,+1.05121,+0.0651396

@@ -20,6 +20,8 @@ client_identifier = 0
 a = 0
 Seeds = []
 Seeds = [0 for i in range(10)]
+rows = []
+dataCounter = 1
 
 def ClientHello(self, request, context):
         return dc_net_pb2.HelloReply(message='Hello I am the CLient, %s!' % request.name)
@@ -40,7 +42,7 @@ def calculateOpenKey(prime,generator,random):
 def calculatePrivateSessionKey(openKeyA,openKeyB,prime):
     return pow(openKeyA, openKeyB, prime)
 
-def roundFunction():
+def roundFunction(randomNumber):
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
     print(current_time)
@@ -50,22 +52,33 @@ def roundFunction():
         t = time.localtime()
         #hier würde ich einmal pro sekunde schauen, ob ein neuer client sich registrieren möchte
         print(t.tm_sec)
-
         time.sleep(1)
 
-    sendLocalSum()
+    return LocalSum(randomNumber)
 
+def getElectricityData(n):
 
-def sendLocalSum():
+    if len(rows) == 0:
+        file = open('csv/strom_2.csv')
+        csvreader = csv.reader(file)
+        for row in csvreader:
+            rows.append(row)
+
+    tlist = list(zip(*rows))
+    #get column of electricity consumption
+    tlist=tlist[3]
+    #return nte element of column. casted to int to remove plus sign.
+    return int(tlist[n])
+
+        
+def LocalSum(randomNumber):
     #get actual electricity data from csv
-    file = open('csv/strom_2.csv')
-    csvreader = csv.reader(file)
-    print(csvreader)
-    rows = []
-    for row in csvreader:
-        rows.append(row)
-    print(rows)
-    print("hello")
+    global dataCounter
+    electricityConsumption=getElectricityData(dataCounter)
+    print(electricityConsumption)
+    dataCounter = dataCounter + 1
+    return electricityConsumption ^ randomNumber
+
 
 def init():
     ####setting all values in the DC_net message to zero.
@@ -172,11 +185,17 @@ def run():
         Seeds.append(last_neighboor)
         Seeds.append(seed)
         #irgendwie sowas
-        print(random.getrandbits(300))
+        randomNumber = random.getrandbits(300)
+        print(randomNumber)
         #round function starts
         if(client_identifier != 0):
             print("roundFunction")
-            roundFunction()
+            while(True):
+                #hier noch nach neuem Partner suchen
+                localSum = roundFunction(randomNumber)
+                print("localSum" + str(localSum))
+                randomNumber = random.getrandbits(300)
+                print(randomNumber)
         
         
         
