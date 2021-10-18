@@ -185,7 +185,7 @@ def run():
         Seeds.append(last_neighboor)
         Seeds.append(seed)
         #irgendwie sowas
-        randomNumber = random.getrandbits(300)
+        randomNumber = random.getrandbits(31)
         print(randomNumber)
         #round function starts
         if(client_identifier != 0):
@@ -193,6 +193,8 @@ def run():
             while(True):
                 #hier noch nach neuem Partner suchen
                 localSum = roundFunction(randomNumber)
+                t = str(time.localtime())
+                DC_stub.SendLocalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=t,localSum=localSum))
                 print("localSum" + str(localSum))
                 randomNumber = random.getrandbits(300)
                 print(randomNumber)

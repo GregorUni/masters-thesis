@@ -19,6 +19,7 @@ post = []
 post = [0 for i in range(4)]
 exchangeSeed = []
 exchangeSeed = [0 for i in range(2)]
+localSums = []
 
 
 class Greeter(dc_net_pb2_grpc.GreeterServicer):
@@ -59,14 +60,18 @@ def initList(n):
 class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
 
     def SendLocalSum(self, request, context):
-        print("Hello")
         localSum = request.localSum
-        print(localSum)
-        if localSum == 4:
-            return dc_net_pb2.Acknowlegde(MessageStatus=44)
-        else:
-            return dc_net_pb2.Acknowlegde(MessageStatus=1)
-    
+        if len(localSums) == 0:
+            localSums.append(localSum)
+        for i in localSums:
+            if( i < len(localSums)):
+                localSums[i+1] = localSums[i] + localSums[i+1]
+            else:
+                globalSum = localSums[i+1]
+                print(globalSum)
+
+        return dc_net_pb2.Acknowlegde(MessageStatus=0)        
+
     #if dc_net_identifier and client identifier are 0 then the client is not in the dc_net and needs to be added.
     # dc_net_identifier and client identifier cant be zero
     def addClientToDCnet(self, request, context):
