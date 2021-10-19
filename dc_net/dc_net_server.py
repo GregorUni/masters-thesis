@@ -4,6 +4,7 @@ import logging
 import grpc
 import random
 from random import randrange
+from operator import ixor
 
 import dc_net_pb2
 import dc_net_pb2_grpc
@@ -20,6 +21,7 @@ post = [0 for i in range(4)]
 exchangeSeed = []
 exchangeSeed = [0 for i in range(2)]
 localSums = []
+globalSums = []
 
 
 class Greeter(dc_net_pb2_grpc.GreeterServicer):
@@ -61,14 +63,14 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
 
     def SendLocalSum(self, request, context):
         localSum = request.localSum
-        if len(localSums) == 0:
-            localSums.append(localSum)
-        for i in localSums:
-            if( i < len(localSums)):
-                localSums[i+1] = localSums[i] + localSums[i+1]
-            else:
-                globalSum = localSums[i+1]
-                print(globalSum)
+        localSums.append(localSum)
+        print("counter "+ str(counter))
+        print(len(localSums))
+        if(len(localSums) is counter):
+            globalSum = sum(localSums)
+            print("globalSum "+ str(globalSum))
+            globalSums.append(globalSum)
+            localSums.clear()
 
         return dc_net_pb2.Acknowlegde(MessageStatus=0)        
 
@@ -174,7 +176,7 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
             return dc_net_pb2.Seed(PRNGSeed=exchangeSeed[1])
         if(exchangeSeed[0] == neighboor):
             returnseed=exchangeSeed[1]
-            initList(2)
+            exchangeSeed = initList(2)
             return dc_net_pb2.Seed(PRNGSeed=returnseed)
         else:
             return dc_net_pb2.Seed(PRNGSeed=0)

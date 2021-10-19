@@ -22,6 +22,7 @@ Seeds = []
 Seeds = [0 for i in range(10)]
 rows = []
 dataCounter = 1
+plus = True
 
 def ClientHello(self, request, context):
         return dc_net_pb2.HelloReply(message='Hello I am the CLient, %s!' % request.name)
@@ -51,7 +52,7 @@ def roundFunction(randomNumber):
     while((t.tm_sec % 10) != 9):
         t = time.localtime()
         #hier würde ich einmal pro sekunde schauen, ob ein neuer client sich registrieren möchte
-        print(t.tm_sec)
+        print("time " + str(t.tm_sec))
         time.sleep(1)
 
     return LocalSum(randomNumber)
@@ -75,9 +76,12 @@ def LocalSum(randomNumber):
     #get actual electricity data from csv
     global dataCounter
     electricityConsumption=getElectricityData(dataCounter)
-    print(electricityConsumption)
+    print("electricityConsumption "+str(electricityConsumption))
     dataCounter = dataCounter + 1
-    return electricityConsumption ^ randomNumber
+    if(plus is True):
+        return electricityConsumption + randomNumber
+    else:
+        return electricityConsumption - randomNumber
 
 
 def init():
@@ -104,6 +108,7 @@ def run():
     global counter
     global a
     global Seeds
+    global plus
     with grpc.insecure_channel('localhost:50051') as channel:
         DC_stub = dc_net_pb2_grpc.DC_roundStub(channel)
         
@@ -170,9 +175,11 @@ def run():
                 print("decryptedSeed" + str(decryptedSeed))
                 print("seed" + str(seed))
                 if(decryptedSeed == seed):
+                    plus = False
                     print("seedBranch" + str(seed))
                     random.seed(seed)
                 if((decryptedSeed != seed)):
+                    plus = True
                     seed=decryptedSeed
                     print("decryptedSeed "+str(decryptedSeed))
                     random.seed(seed)
@@ -185,7 +192,7 @@ def run():
         Seeds.append(last_neighboor)
         Seeds.append(seed)
         #irgendwie sowas
-        randomNumber = random.getrandbits(31)
+        randomNumber = random.getrandbits(15)
         print(randomNumber)
         #round function starts
         if(client_identifier != 0):
@@ -194,9 +201,10 @@ def run():
                 #hier noch nach neuem Partner suchen
                 localSum = roundFunction(randomNumber)
                 t = str(time.localtime())
-                DC_stub.SendLocalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=t,localSum=localSum))
                 print("localSum" + str(localSum))
-                randomNumber = random.getrandbits(300)
+                DC_stub.SendLocalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=t,localSum=localSum))
+                print("localsum sended")
+                randomNumber = random.getrandbits(15)
                 print(randomNumber)
         
         
