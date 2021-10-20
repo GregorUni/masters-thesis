@@ -40,6 +40,27 @@ def getSeed():
 def calculateOpenKey(prime,generator,random):
     return pow(generator, random, prime)
 
+def getNeighboor(DC_stub):
+    while(True):
+            #counter counts the neighboors in a DC_net
+            if(counter == 0):
+                addNeighboor=DC_stub.connectDCClients(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier,client_identifier=client_identifier))
+                time.sleep(2)
+                print("NeighboorID: ")
+                print(addNeighboor)
+                print(addNeighboor.dc_net_identifier)
+                if(addNeighboor.dc_net_identifier != 0 or addNeighboor.client_identifier != 0):
+                    print("in break")
+                    return addNeighboor
+
+def LookForNeighboorKey(DC_stub,last_neighboor,openKey):
+    while(True):
+            neighboorKey= DC_stub.ExchangeSecretForDH(dc_net_pb2.Secret(client_identifier=client_identifier,secret=openKey,neighboor=last_neighboor))
+            if(neighboorKey.secret != 0):
+                print("break")
+                return neighboorKey
+            time.sleep(2)
+
 def calculatePrivateSessionKey(openKeyA,openKeyB,prime):
     return pow(openKeyA, openKeyB, prime)
 
@@ -121,22 +142,14 @@ def run():
         print("clientID: ")
         print(client_identifier)
 
-        while(True):
-            #counter counts the neighboors in a DC_net
-            if(counter == 0):
-                addNeighboor=DC_stub.connectDCClients(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier,client_identifier=client_identifier))
-                time.sleep(2)
-                print("NeighboorID: ")
-                print(addNeighboor)
-                print(addNeighboor.dc_net_identifier)
-                if(addNeighboor.dc_net_identifier != 0 or addNeighboor.client_identifier != 0):
-                    print("in break")
-                    break
+        addNeighboor = getNeighboor(DC_stub)
         #save new neighboor
         neighboor.append(addNeighboor.client_identifier)
         counter = counter+1
         
+        #get server prime and generator
         pg = DC_stub.getDiffieHellman(dc_net_pb2.Empty())
+
         print("pg.p " + str(pg.p))
         print("pg.g "+ str(pg.g))
         if(a is 0):
@@ -149,17 +162,13 @@ def run():
         #print("neighboor pop"+ str(neighboor.pop()))
         last_neighboor=neighboor[-1]
         print(last_neighboor)
-        while(True):
-            neighboorKey= DC_stub.ExchangeSecretForDH(dc_net_pb2.Secret(client_identifier=client_identifier,secret=openKey,neighboor=last_neighboor))
-            if(neighboorKey.secret != 0):
-                print("break")
-                break
-            time.sleep(2)
+       
+        neighboorKey = LookForNeighboorKey(DC_stub,last_neighboor,openKey)
         
         print("neighboorKey "+ str(neighboorKey))
         print("key" + str(openKey))
         print("prime" + str(pg.p))
-        sessionKey=calculatePrivateSessionKey(neighboorKey.secret,a,pg.p)
+        sessionKey= calculatePrivateSessionKey(neighboorKey.secret,a,pg.p)
         print("sessionKey" + str(sessionKey))
         print("registered")
 
@@ -168,6 +177,7 @@ def run():
         print("encryptedseed" + str(encryptedSeed))
         print("seed")
         print(seed)
+        
         while(True):
             exchangedSeed=DC_stub.ExchangePRNGSeed(dc_net_pb2.Seed(client_identifier=client_identifier,PRNGSeed=encryptedSeed,neighboor=last_neighboor))
             if(exchangedSeed.PRNGSeed != 0):
@@ -189,20 +199,29 @@ def run():
         
         print("exchangedSeed")
         print(seed)
+
+        randomNumber = random.getrandbits(15)
+
         Seeds.append(last_neighboor)
         Seeds.append(seed)
-        #irgendwie sowas
-        randomNumber = random.getrandbits(15)
+        Seeds.append(randomNumber)
+        Seeds.append(plus)
+
         print(randomNumber)
         #round function starts
         if(client_identifier != 0):
             print("roundFunction")
             while(True):
-                #hier noch nach neuem Partner suchen
+                for(i in Seeds):
+                    
                 localSum = roundFunction(randomNumber)
                 t = str(time.localtime())
                 print("localSum" + str(localSum))
-                DC_stub.SendLocalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=t,localSum=localSum))
+                response=DC_stub.SendLocalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=t,localSum=localSum))
+                #nach neuem Partner suchen
+                if(response is 1):
+                    print("lookforneighboor")
+                    newNeighboor = LookForNeighboorKey(DC_stub,0,openKey)
                 print("localsum sended")
                 randomNumber = random.getrandbits(15)
                 print(randomNumber)
