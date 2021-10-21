@@ -96,10 +96,9 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
             if(counter <10):
             #client wants to join dc_net
             # first client gets identifier 1 and second client gets identifier 2
-                clients[counter] = counter +1
-                counter = counter +1
+                clients.append(counter +1)
             # this is implemented with only one dc_nets. if you want to run several dc_nets you need to implement a function for that.
-                return dc_net_pb2.DC_net(dc_net_identifier=1,client_identifier=counter)
+                return dc_net_pb2.DC_net(dc_net_identifier=1,client_identifier=len(clients))
             else:
                 # there can be only 10 clients in a dc net. if there are more than 10 decline request
                 return dc_net_pb2.DC_net(dc_net_identifier=0,client_identifier=0)

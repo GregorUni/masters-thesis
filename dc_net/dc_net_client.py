@@ -7,6 +7,7 @@ import time, sched
 from random import randrange
 import random
 import csv
+from collections import OrderedDict
 
 import dc_net_pb2
 import dc_net_pb2_grpc
@@ -23,6 +24,7 @@ Seeds = [0 for i in range(10)]
 rows = []
 dataCounter = 1
 plus = True
+myDict = {}
 
 def ClientHello(self, request, context):
         return dc_net_pb2.HelloReply(message='Hello I am the CLient, %s!' % request.name)
@@ -64,7 +66,7 @@ def LookForNeighboorKey(DC_stub,last_neighboor,openKey):
 def calculatePrivateSessionKey(openKeyA,openKeyB,prime):
     return pow(openKeyA, openKeyB, prime)
 
-def roundFunction(randomNumber):
+def roundFunction(randomNumber,operator):
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
     print(current_time)
@@ -76,7 +78,7 @@ def roundFunction(randomNumber):
         print("time " + str(t.tm_sec))
         time.sleep(1)
 
-    return LocalSum(randomNumber)
+    return LocalSum(randomNumber,operator)
 
 def getElectricityData(n):
 
@@ -93,13 +95,13 @@ def getElectricityData(n):
     return int(tlist[n])
 
         
-def LocalSum(randomNumber):
+def LocalSum(randomNumber,operator):
     #get actual electricity data from csv
     global dataCounter
     electricityConsumption=getElectricityData(dataCounter)
     print("electricityConsumption "+str(electricityConsumption))
     dataCounter = dataCounter + 1
-    if(plus is True):
+    if(operator is True):
         return electricityConsumption + randomNumber
     else:
         return electricityConsumption - randomNumber
@@ -130,6 +132,7 @@ def run():
     global a
     global Seeds
     global plus
+    global myDict
     with grpc.insecure_channel('localhost:50051') as channel:
         DC_stub = dc_net_pb2_grpc.DC_roundStub(channel)
         
@@ -202,26 +205,38 @@ def run():
 
         randomNumber = random.getrandbits(15)
 
-        Seeds.append(last_neighboor)
-        Seeds.append(seed)
-        Seeds.append(randomNumber)
-        Seeds.append(plus)
+        myDict[last_neighboor] = [randomNumber,plus]
+
+        #Seeds.append(last_neighboor)
+        #Seeds.append(seed)
+        #Seeds.append(randomNumber)
+        #Seeds.append(plus)
 
         print(randomNumber)
         #round function starts
         if(client_identifier != 0):
             print("roundFunction")
             while(True):
-                for(i in Seeds):
-                    
-                localSum = roundFunction(randomNumber)
+                #get all Clients in dictionary
+                localSum = 0
+                for key in myDict:
+                    print(key,myDict[key])
+                    #get all values from Clients
+                    #get saved random number
+                    rNumber = myDict[key][0]
+                    #get saved plus bool
+                    operator = myDict[key][1]
+                    localSum = localSum + roundFunction(rNumber,operator)
+
                 t = str(time.localtime())
                 print("localSum" + str(localSum))
                 response=DC_stub.SendLocalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=t,localSum=localSum))
                 #nach neuem Partner suchen
-                if(response is 1):
+                print("response "+ str(response))
+                if(response.MessageStatus == 1):
                     print("lookforneighboor")
                     newNeighboor = LookForNeighboorKey(DC_stub,0,openKey)
+                    print("newNeighboor" + str(newNeighboor))
                 print("localsum sended")
                 randomNumber = random.getrandbits(15)
                 print(randomNumber)
