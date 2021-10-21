@@ -44,16 +44,16 @@ def calculateOpenKey(prime,generator,random):
 
 def getNeighboor(DC_stub):
     while(True):
-            #counter counts the neighboors in a DC_net
-            if(counter == 0):
-                addNeighboor=DC_stub.connectDCClients(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier,client_identifier=client_identifier))
-                time.sleep(2)
-                print("NeighboorID: ")
-                print(addNeighboor)
-                print(addNeighboor.dc_net_identifier)
-                if(addNeighboor.dc_net_identifier != 0 or addNeighboor.client_identifier != 0):
-                    print("in break")
-                    return addNeighboor
+        #counter counts the neighboors in a DC_net
+        if(counter == 0):
+            addNeighboor=DC_stub.connectDCClients(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier,client_identifier=client_identifier))
+            time.sleep(2)
+            print("NeighboorID: ")
+            print(addNeighboor)
+            print(addNeighboor.dc_net_identifier)                
+            if(addNeighboor.dc_net_identifier != 0 or addNeighboor.client_identifier != 0):
+                print("in break")
+                return addNeighboor
 
 def LookForNeighboorKey(DC_stub,last_neighboor,openKey):
     while(True):

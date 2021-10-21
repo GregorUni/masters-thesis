@@ -13,7 +13,6 @@ import dc_net_pb2_grpc
 
 counter = 0
 clients = [] 
-clients = [0 for i in range(10)]
 p = 0
 g = 0
 post = []
@@ -90,13 +89,12 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
             return dc_net_pb2.Acknowlegde(MessageStatus=0)
         
         else:
-            global counter
             global clients 
             print("addClientToDCnet registering")
-            if(counter <10):
+            if(len(clients) <10):
             #client wants to join dc_net
             # first client gets identifier 1 and second client gets identifier 2
-                clients.append(counter +1)
+                clients.append(len(clients))
             # this is implemented with only one dc_nets. if you want to run several dc_nets you need to implement a function for that.
                 return dc_net_pb2.DC_net(dc_net_identifier=1,client_identifier=len(clients))
             else:
@@ -108,12 +106,16 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         clientID=request.client_identifier
         print("in function connect")
         #get length of clients over the counter variable
-        if(counter>1):
+        if(len(clients)>1):
             #give client a random neighboor
-            random=randrange(1,counter+1)
+            print("len(clients)+1")
+            print(len(clients)+1)
+            random=randrange(1,len(clients)+1)
+            print("random "+ str(random))
             print(clients[random-1])
             print(random)
-            if(clients[random-1] != clientID):
+            if(random != clientID):
+                    print("clients[random] ")
                     print(clients[random-1])
                     print(random)
                     #random is a new neighboor which is assigned randomly
@@ -196,6 +198,7 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
     
     def ExchangePRNGSeed(self, request, context):
         global exchangeSeed
+        global counter
         print("ExchangePRNGSeed")
         seed = request.PRNGSeed
         neighboor = request.neighboor
@@ -210,6 +213,11 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         if(exchangeSeed[0] == neighboor):
             returnseed=exchangeSeed[1]
             exchangeSeed = initList(2)
+            #increment user counter since a user is now "fully" registered
+            if(counter == 0):
+                counter = counter + 2
+            else:
+                counter = counter+1
             return dc_net_pb2.Seed(PRNGSeed=returnseed)
         else:
             return dc_net_pb2.Seed(PRNGSeed=0)
