@@ -16,7 +16,7 @@ clients = []
 p = 0
 g = 0
 post = []
-post = [0 for i in range(4)]
+post = [0 for i in range(5)]
 exchangeSeed = []
 exchangeSeed = [0 for i in range(2)]
 localSums = []
@@ -105,7 +105,7 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         dc_netID=request.dc_net_identifier
         clientID=request.client_identifier
         print("in function connect")
-        #get length of clients over the counter variable
+        #check if there are at least 2 clients in the dc_net
         if(len(clients)>1):
             #give client a random neighboor
             print("len(clients)+1")
@@ -151,20 +151,21 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         if(post[0] is 0):
             post[0] = neighboor
             print("post[0]" + str(post[0]))
-            post[1] = openkey
+            post[1] = clientID
+            post[2] = openkey
             print("post[1]" + str(post[1]))
             return dc_net_pb2.Secret(secret=0)
             
-        if((post[2] is 0) and clientID is post[0]):
-            post[2] = clientID
+        if((post[3] is 0) and clientID is post[0]):
+            post[3] = clientID
             print("post[2]" + str(post[2]))
-            post[3] = openkey
+            post[4] = openkey
             print("post[3]" + str(post[3]))
-            return dc_net_pb2.Secret(secret=post[1])
+            return dc_net_pb2.Secret(secret=post[2],client_identifier=post[1])
 
-        if(neighboor == post[2]):  
-            secret=post[3]
-            post = initList(4)
+        if(neighboor == post[3]):  
+            secret=post[4]
+            post = initList(5)
             return dc_net_pb2.Secret(secret=secret)  
 
         else:

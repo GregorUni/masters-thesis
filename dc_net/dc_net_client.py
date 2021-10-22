@@ -66,7 +66,7 @@ def LookForNeighboorKey(DC_stub,last_neighboor,openKey):
 def calculatePrivateSessionKey(openKeyA,openKeyB,prime):
     return pow(openKeyA, openKeyB, prime)
 
-def roundFunction(randomNumber,operator):
+def round():
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
     print(current_time)
@@ -78,7 +78,7 @@ def roundFunction(randomNumber,operator):
         print("time " + str(t.tm_sec))
         time.sleep(1)
 
-    return LocalSum(randomNumber,operator)
+    return 
 
 def getElectricityData(n):
 
@@ -95,10 +95,9 @@ def getElectricityData(n):
     return int(tlist[n])
 
         
-def LocalSum(randomNumber,operator):
+def LocalSum(randomNumber,operator,electricityConsumption):
     #get actual electricity data from csv
     global dataCounter
-    electricityConsumption=getElectricityData(dataCounter)
     print("electricityConsumption "+str(electricityConsumption))
     dataCounter = dataCounter + 1
     if(operator is True):
@@ -106,6 +105,23 @@ def LocalSum(randomNumber,operator):
     else:
         return electricityConsumption - randomNumber
 
+def PRNGSeed(DC_stub, encryptedSeed, last_neighboor, sessionKey , seed):
+    while(True):
+            exchangedSeed=DC_stub.ExchangePRNGSeed(dc_net_pb2.Seed(client_identifier=client_identifier,PRNGSeed=encryptedSeed,neighboor=last_neighboor))
+            if(exchangedSeed.PRNGSeed != 0):
+                decryptedSeed = exchangedSeed.PRNGSeed ^ sessionKey
+                print("decryptedSeed" + str(decryptedSeed))
+                print("seed" + str(seed))
+                if(decryptedSeed == seed):
+                    plus = False
+                    print("seedBranch" + str(seed))
+                if((decryptedSeed != seed)):
+                    plus = True
+                    seed=decryptedSeed
+                    print("decryptedSeed "+str(decryptedSeed))
+                print("exchangedSeedBreak")
+                return seed, plus
+            time.sleep(2)
 
 def init():
     ####setting all values in the DC_net message to zero.
@@ -180,32 +196,13 @@ def run():
         print("encryptedseed" + str(encryptedSeed))
         print("seed")
         print(seed)
-        
-        while(True):
-            exchangedSeed=DC_stub.ExchangePRNGSeed(dc_net_pb2.Seed(client_identifier=client_identifier,PRNGSeed=encryptedSeed,neighboor=last_neighboor))
-            if(exchangedSeed.PRNGSeed != 0):
-                decryptedSeed = exchangedSeed.PRNGSeed ^ sessionKey
-                print("decryptedSeed" + str(decryptedSeed))
-                print("seed" + str(seed))
-                if(decryptedSeed == seed):
-                    plus = False
-                    print("seedBranch" + str(seed))
-                    random.seed(seed)
-                if((decryptedSeed != seed)):
-                    plus = True
-                    seed=decryptedSeed
-                    print("decryptedSeed "+str(decryptedSeed))
-                    random.seed(seed)
-                print("exchangedSeedBreak")
-                break
-            time.sleep(2)
-        
-        print("exchangedSeed")
-        print(seed)
-
+        #plus[0] is the exchanged seed, plus[1] a bool which stands for a plus or minus in the keygraph
+        plus = PRNGSeed(DC_stub,encryptedSeed,last_neighboor,sessionKey,seed)
+        seed = plus[0]
+        random.seed(seed)
         randomNumber = random.getrandbits(15)
 
-        myDict[last_neighboor] = [randomNumber,plus]
+        myDict[last_neighboor] = [randomNumber,plus[1]]
 
         #Seeds.append(last_neighboor)
         #Seeds.append(seed)
@@ -217,8 +214,11 @@ def run():
         if(client_identifier != 0):
             print("roundFunction")
             while(True):
+                time.sleep(2)
                 #get all Clients in dictionary
                 localSum = 0
+                electricityConsumption=getElectricityData(dataCounter)
+
                 for key in myDict:
                     print(key,myDict[key])
                     #get all values from Clients
@@ -226,7 +226,9 @@ def run():
                     rNumber = myDict[key][0]
                     #get saved plus bool
                     operator = myDict[key][1]
-                    localSum = localSum + roundFunction(rNumber,operator)
+                    localSum = localSum + LocalSum(rNumber,operator,electricityConsumption)
+
+                round()
 
                 t = str(time.localtime())
                 print("localSum" + str(localSum))
@@ -237,9 +239,21 @@ def run():
                     print("lookforneighboor")
                     newNeighboor = LookForNeighboorKey(DC_stub,0,openKey)
                     print("newNeighboor" + str(newNeighboor))
+
+                    sessionKey= calculatePrivateSessionKey(newNeighboor.secret,a,pg.p)
+
+                    seed=getSeed()
+                    encryptedSeed=seed ^ sessionKey
+
+                    plus = PRNGSeed(DC_stub,encryptedSeed,newNeighboor.client_identifier,sessionKey,seed)
+
+                    seed = plus[0]
+                    random.seed(seed)
+                    randomNumber = random.getrandbits(15)
+
+                    myDict[newNeighboor.client_identifier] = [randomNumber,plus[1]]
+
                 print("localsum sended")
-                randomNumber = random.getrandbits(15)
-                print(randomNumber)
         
         
         
