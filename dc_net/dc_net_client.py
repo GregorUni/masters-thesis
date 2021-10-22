@@ -95,15 +95,13 @@ def getElectricityData(n):
     return int(tlist[n])
 
         
-def LocalSum(randomNumber,operator,electricityConsumption):
+def LocalSum(randomNumber,operator):
     #get actual electricity data from csv
-    global dataCounter
-    print("electricityConsumption "+str(electricityConsumption))
-    dataCounter = dataCounter + 1
+    
     if(operator is True):
-        return electricityConsumption + randomNumber
+        return 0 + randomNumber
     else:
-        return electricityConsumption - randomNumber
+        return 0 - randomNumber
 
 def PRNGSeed(DC_stub, encryptedSeed, last_neighboor, sessionKey , seed):
     while(True):
@@ -149,6 +147,7 @@ def run():
     global Seeds
     global plus
     global myDict
+    global dataCounter
     with grpc.insecure_channel('localhost:50051') as channel:
         DC_stub = dc_net_pb2_grpc.DC_roundStub(channel)
         
@@ -218,7 +217,9 @@ def run():
                 #get all Clients in dictionary
                 localSum = 0
                 electricityConsumption=getElectricityData(dataCounter)
+                dataCounter = dataCounter + 1
 
+                print("electricityConsumption "+str(electricityConsumption))
                 for key in myDict:
                     print(key,myDict[key])
                     #get all values from Clients
@@ -226,8 +227,13 @@ def run():
                     rNumber = myDict[key][0]
                     #get saved plus bool
                     operator = myDict[key][1]
-                    localSum = localSum + LocalSum(rNumber,operator,electricityConsumption)
-
+                    random.seed(rNumber)
+                    randomNumber = random.getrandbits(15)
+                    print("vorher myDict[key]" + str(myDict[key]))
+                    myDict[key] = [randomNumber,operator]
+                    print("myDict[key]" + str(myDict[key]))
+                    localSum = localSum + LocalSum(rNumber,operator)
+                localSum = localSum + electricityConsumption
                 round()
 
                 t = str(time.localtime())
@@ -243,7 +249,7 @@ def run():
                     sessionKey= calculatePrivateSessionKey(newNeighboor.secret,a,pg.p)
 
                     seed=getSeed()
-                    encryptedSeed=seed ^ sessionKey
+                    encryptedSeed= seed ^ sessionKey
 
                     plus = PRNGSeed(DC_stub,encryptedSeed,newNeighboor.client_identifier,sessionKey,seed)
 
