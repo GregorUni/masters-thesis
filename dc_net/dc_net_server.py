@@ -21,6 +21,7 @@ exchangeSeed = []
 exchangeSeed = [0 for i in range(2)]
 localSums = []
 globalSums = []
+dictionary = {}
 
 
 
@@ -62,8 +63,27 @@ def initList(n):
 class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
 
     def SendLocalSum(self, request, context):
+        global dictionary
+        clientID = request.client_identifier
         localSum = request.localSum
         localSums.append(localSum)
+        #goes only in if one client has double send a value
+        #so search for the client which has send no value and delete it
+        #check if dictionary is empty
+        if dictionary:
+            if(dictionary.get(clientID) == True):
+                for key in dictionary:
+                    if dictionary[key] == False:
+                        clients.remove[key]
+                        #send clientId (which is going to be deleted) to clients
+                        return dc_net_pb2.Acknowlegde(MessageStatus=key)
+
+        #check if client doesnt double send
+        # dictionary[clientID] == False) or 
+        if dictionary.get(clientID) is None:
+            dictionary[clientID] = [True]
+        print("localsum" + str(localSum))
+        print("")
         print("counter "+ str(counter))
         print(len(localSums))
         if(len(localSums) is counter):
@@ -71,12 +91,13 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
             print("globalSum "+ str(globalSum))
             globalSums.append(globalSum)
             localSums.clear()
+
         #if a new client wants to exchange Seeds notify neigboor
         print("client_identifier"+str(request.client_identifier))
         print("post[0] "+ str(post[0]))
         if(post[0] is request.client_identifier):
             print("1 is sended")
-            return dc_net_pb2.Acknowlegde(MessageStatus=1)
+            return dc_net_pb2.Acknowlegde(MessageStatus=-1)
 
         return dc_net_pb2.Acknowlegde(MessageStatus=0)        
 

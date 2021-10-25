@@ -8,6 +8,7 @@ from random import randrange
 import random
 import csv
 from collections import OrderedDict
+import os
 
 import dc_net_pb2
 import dc_net_pb2_grpc
@@ -151,118 +152,134 @@ def run():
     with grpc.insecure_channel('localhost:50051') as channel:
         DC_stub = dc_net_pb2_grpc.DC_roundStub(channel)
         
-        if(client_identifier == 0):
-            print("addClient")
-            request=DC_stub.addClientToDCnet(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier,client_identifier=client_identifier))
+        pid = os.fork()
 
-        dc_net_identifier = request.dc_net_identifier
-        client_identifier = request.client_identifier
-        print("clientID: ")
-        print(client_identifier)
+        if pid == 0:
+            print("I am the Child")
+            
 
-        addNeighboor = getNeighboor(DC_stub)
-        #save new neighboor
-        neighboor.append(addNeighboor.client_identifier)
-        counter = counter+1
+            if(client_identifier == 0):
+                print("addClient")
+                request=DC_stub.addClientToDCnet(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier,client_identifier=client_identifier))
+
+            dc_net_identifier = request.dc_net_identifier
+            client_identifier = request.client_identifier
+            print("clientID: ")
+            print(client_identifier)
+
+            addNeighboor = getNeighboor(DC_stub)
+            #save new neighboor
+            neighboor.append(addNeighboor.client_identifier)
+            counter = counter+1
+            
+            #get server prime and generator
+            pg = DC_stub.getDiffieHellman(dc_net_pb2.Empty())
+
+            print("pg.p " + str(pg.p))
+            print("pg.g "+ str(pg.g))
+            if(a is 0):
+                a=getSecret(pg.p)
+
+            openKey = calculateOpenKey(pg.p,pg.g,a)
+            print("openKey")
+            print(openKey)
+            #give the last added neighboor into ExchangeSecretForDH
+            #print("neighboor pop"+ str(neighboor.pop()))
+            last_neighboor=neighboor[-1]
+            print(last_neighboor)
         
-        #get server prime and generator
-        pg = DC_stub.getDiffieHellman(dc_net_pb2.Empty())
+            neighboorKey = LookForNeighboorKey(DC_stub,last_neighboor,openKey)
+            
+            print("neighboorKey "+ str(neighboorKey))
+            print("key" + str(openKey))
+            print("prime" + str(pg.p))
+            sessionKey= calculatePrivateSessionKey(neighboorKey.secret,a,pg.p)
+            print("sessionKey" + str(sessionKey))
+            print("registered")
 
-        print("pg.p " + str(pg.p))
-        print("pg.g "+ str(pg.g))
-        if(a is 0):
-            a=getSecret(pg.p)
+            seed=getSeed()
+            encryptedSeed=seed ^ sessionKey
+            print("encryptedseed" + str(encryptedSeed))
+            print("seed")
+            print(seed)
+            #plus[0] is the exchanged seed, plus[1] a bool which stands for a plus or minus in the keygraph
+            plus = PRNGSeed(DC_stub,encryptedSeed,last_neighboor,sessionKey,seed)
+            seed = plus[0]
+            random.seed(seed)
+            randomNumber = random.getrandbits(15)
 
-        openKey = calculateOpenKey(pg.p,pg.g,a)
-        print("openKey")
-        print(openKey)
-        #give the last added neighboor into ExchangeSecretForDH
-        #print("neighboor pop"+ str(neighboor.pop()))
-        last_neighboor=neighboor[-1]
-        print(last_neighboor)
-       
-        neighboorKey = LookForNeighboorKey(DC_stub,last_neighboor,openKey)
-        
-        print("neighboorKey "+ str(neighboorKey))
-        print("key" + str(openKey))
-        print("prime" + str(pg.p))
-        sessionKey= calculatePrivateSessionKey(neighboorKey.secret,a,pg.p)
-        print("sessionKey" + str(sessionKey))
-        print("registered")
+            myDict[last_neighboor] = [randomNumber,plus[1]]
 
-        seed=getSeed()
-        encryptedSeed=seed ^ sessionKey
-        print("encryptedseed" + str(encryptedSeed))
-        print("seed")
-        print(seed)
-        #plus[0] is the exchanged seed, plus[1] a bool which stands for a plus or minus in the keygraph
-        plus = PRNGSeed(DC_stub,encryptedSeed,last_neighboor,sessionKey,seed)
-        seed = plus[0]
-        random.seed(seed)
-        randomNumber = random.getrandbits(15)
+            #Seeds.append(last_neighboor)
+            #Seeds.append(seed)
+            #Seeds.append(randomNumber)
+            #Seeds.append(plus)
 
-        myDict[last_neighboor] = [randomNumber,plus[1]]
+            print(randomNumber)
+            #round function starts
+            if(client_identifier != 0):
+                print("roundFunction")
+                while(True):
+                    time.sleep(2)
+                    #get all Clients in dictionary
+                    localSum = 0
+                    electricityConsumption=getElectricityData(dataCounter)
+                    dataCounter = dataCounter + 1
 
-        #Seeds.append(last_neighboor)
-        #Seeds.append(seed)
-        #Seeds.append(randomNumber)
-        #Seeds.append(plus)
+                    print("electricityConsumption "+str(electricityConsumption))
+                    for key in myDict:
+                        print(key,myDict[key])
+                        #get all values from Clients
+                        #get saved random number
+                        rNumber = myDict[key][0]
+                        #get saved plus bool
+                        operator = myDict[key][1]
+                        random.seed(rNumber)
+                        randomNumber = random.getrandbits(15)
+                        print("vorher myDict[key]" + str(myDict[key]))
+                        myDict[key] = [randomNumber,operator]
+                        print("myDict[key]" + str(myDict[key]))
+                        localSum = localSum + LocalSum(rNumber,operator)
+                    
+                    localSum = localSum + electricityConsumption
+                    round()
 
-        print(randomNumber)
-        #round function starts
-        if(client_identifier != 0):
-            print("roundFunction")
-            while(True):
-                time.sleep(2)
-                #get all Clients in dictionary
-                localSum = 0
-                electricityConsumption=getElectricityData(dataCounter)
-                dataCounter = dataCounter + 1
+                    t = str(time.localtime())
+                    print("localSum" + str(localSum))
+                    response=DC_stub.SendLocalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=t,localSum=localSum))
+                    #nach neuem Partner suchen
+                    print("response "+ str(response))
+                    if(response.MessageStatus == -1):
+                        print("lookforneighboor")
+                        newNeighboor = LookForNeighboorKey(DC_stub,0,openKey)
+                        print("newNeighboor" + str(newNeighboor))
 
-                print("electricityConsumption "+str(electricityConsumption))
-                for key in myDict:
-                    print(key,myDict[key])
-                    #get all values from Clients
-                    #get saved random number
-                    rNumber = myDict[key][0]
-                    #get saved plus bool
-                    operator = myDict[key][1]
-                    random.seed(rNumber)
-                    randomNumber = random.getrandbits(15)
-                    print("vorher myDict[key]" + str(myDict[key]))
-                    myDict[key] = [randomNumber,operator]
-                    print("myDict[key]" + str(myDict[key]))
-                    localSum = localSum + LocalSum(rNumber,operator)
-                localSum = localSum + electricityConsumption
-                round()
+                        sessionKey= calculatePrivateSessionKey(newNeighboor.secret,a,pg.p)
 
-                t = str(time.localtime())
-                print("localSum" + str(localSum))
-                response=DC_stub.SendLocalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=t,localSum=localSum))
-                #nach neuem Partner suchen
-                print("response "+ str(response))
-                if(response.MessageStatus == 1):
-                    print("lookforneighboor")
-                    newNeighboor = LookForNeighboorKey(DC_stub,0,openKey)
-                    print("newNeighboor" + str(newNeighboor))
+                        seed=getSeed()
+                        encryptedSeed= seed ^ sessionKey
 
-                    sessionKey= calculatePrivateSessionKey(newNeighboor.secret,a,pg.p)
+                        plus = PRNGSeed(DC_stub,encryptedSeed,newNeighboor.client_identifier,sessionKey,seed)
 
-                    seed=getSeed()
-                    encryptedSeed= seed ^ sessionKey
+                        seed = plus[0]
+                        random.seed(seed)
+                        randomNumber = random.getrandbits(15)
 
-                    plus = PRNGSeed(DC_stub,encryptedSeed,newNeighboor.client_identifier,sessionKey,seed)
+                        myDict[newNeighboor.client_identifier] = [randomNumber,plus[1]]
+                        
+                    if(response.MessageStatus == client_identifier):
+                        sys.exit(-1)
 
-                    seed = plus[0]
-                    random.seed(seed)
-                    randomNumber = random.getrandbits(15)
+                    if(response.MessageStatus in myDict.keys()):
+                        myDict.pop(response.MessageStatus)
 
-                    myDict[newNeighboor.client_identifier] = [randomNumber,plus[1]]
-
-                print("localsum sended")
-        
-        
-        
+                    print("localsum sended")
+        else:
+            print("I am the dad")
+            status = os.waitpid(pid, 0)
+            print("child status " + str(status))
+            
+                
         
 
         

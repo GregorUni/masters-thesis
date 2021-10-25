@@ -28,6 +28,8 @@ service Greeter {
     rpc getDiffieHellman(Empty) returns (DiffieHelman) {}
 
     rpc ExchangePRNGSeed(Seed) returns (Seed){}
+
+    rpc deleteClient(DC_net) returns (Acknowlegde){}
     
   }
 
@@ -73,6 +75,7 @@ service Greeter {
   }
 
   message Empty 
+
   {
 
   }
