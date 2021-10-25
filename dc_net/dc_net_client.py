@@ -159,13 +159,13 @@ def run():
             
 
             if(client_identifier == 0):
-                print("addClient")
+                #print("addClient")
                 request=DC_stub.addClientToDCnet(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier,client_identifier=client_identifier))
 
             dc_net_identifier = request.dc_net_identifier
             client_identifier = request.client_identifier
-            print("clientID: ")
-            print(client_identifier)
+            #print("clientID: ")
+            #print(client_identifier)
 
             addNeighboor = getNeighboor(DC_stub)
             #save new neighboor
@@ -181,27 +181,27 @@ def run():
                 a=getSecret(pg.p)
 
             openKey = calculateOpenKey(pg.p,pg.g,a)
-            print("openKey")
-            print(openKey)
+            #print("openKey")
+            #print(openKey)
             #give the last added neighboor into ExchangeSecretForDH
             #print("neighboor pop"+ str(neighboor.pop()))
             last_neighboor=neighboor[-1]
-            print(last_neighboor)
+            #print(last_neighboor)
         
             neighboorKey = LookForNeighboorKey(DC_stub,last_neighboor,openKey)
             
-            print("neighboorKey "+ str(neighboorKey))
-            print("key" + str(openKey))
-            print("prime" + str(pg.p))
+            #print("neighboorKey "+ str(neighboorKey))
+            #print("key" + str(openKey))
+            #print("prime" + str(pg.p))
             sessionKey= calculatePrivateSessionKey(neighboorKey.secret,a,pg.p)
-            print("sessionKey" + str(sessionKey))
+            #print("sessionKey" + str(sessionKey))
             print("registered")
 
             seed=getSeed()
             encryptedSeed=seed ^ sessionKey
-            print("encryptedseed" + str(encryptedSeed))
-            print("seed")
-            print(seed)
+            #print("encryptedseed" + str(encryptedSeed))
+            #print("seed")
+            #print(seed)
             #plus[0] is the exchanged seed, plus[1] a bool which stands for a plus or minus in the keygraph
             plus = PRNGSeed(DC_stub,encryptedSeed,last_neighboor,sessionKey,seed)
             seed = plus[0]
@@ -210,20 +210,19 @@ def run():
 
             myDict[last_neighboor] = [randomNumber,plus[1]]
 
-            #Seeds.append(last_neighboor)
-            #Seeds.append(seed)
-            #Seeds.append(randomNumber)
-            #Seeds.append(plus)
-
-            print(randomNumber)
+            #print(randomNumber)
             #round function starts
             if(client_identifier != 0):
                 print("roundFunction")
                 while(True):
+                    print("time")
                     time.sleep(2)
                     #get all Clients in dictionary
+                    print("after time")
                     localSum = 0
+                    print("afterlocalsum")
                     electricityConsumption=getElectricityData(dataCounter)
+                    print("after electricity")
                     dataCounter = dataCounter + 1
 
                     print("electricityConsumption "+str(electricityConsumption))
@@ -246,10 +245,11 @@ def run():
 
                     t = str(time.localtime())
                     print("localSum" + str(localSum))
-                    response=DC_stub.SendLocalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=t,localSum=localSum))
+                    response = DC_stub.SendLocalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=t,localSum=localSum))
                     #nach neuem Partner suchen
+                    time.sleep(0.2)
                     print("response "+ str(response))
-                    if(response.MessageStatus == -1):
+                    if(response.MessageStatus == 9999):
                         print("lookforneighboor")
                         newNeighboor = LookForNeighboorKey(DC_stub,0,openKey)
                         print("newNeighboor" + str(newNeighboor))
@@ -277,7 +277,7 @@ def run():
         else:
             print("I am the dad")
             status = os.waitpid(pid, 0)
-            print("child status " + str(status))
+            #print("child status " + str(status))
             
                 
         

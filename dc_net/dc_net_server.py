@@ -67,37 +67,40 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         clientID = request.client_identifier
         localSum = request.localSum
         localSums.append(localSum)
-        #goes only in if one client has double send a value
-        #so search for the client which has send no value and delete it
-        #check if dictionary is empty
-        if dictionary:
-            if(dictionary.get(clientID) == True):
-                for key in dictionary:
-                    if dictionary[key] == False:
-                        clients.remove[key]
-                        #send clientId (which is going to be deleted) to clients
-                        return dc_net_pb2.Acknowlegde(MessageStatus=key)
+        
+        dictionary[clientID] = True
 
-        #check if client doesnt double send
-        # dictionary[clientID] == False) or 
-        if dictionary.get(clientID) is None:
-            dictionary[clientID] = [True]
         print("localsum" + str(localSum))
         print("")
         print("counter "+ str(counter))
         print(len(localSums))
         if(len(localSums) is counter):
+            
             globalSum = sum(localSums)
             print("globalSum "+ str(globalSum))
             globalSums.append(globalSum)
             localSums.clear()
+
+            for key in dictionary:
+                if dictionary[key] == False:
+                    print("DELEEEEEETTTTTIIIIIIIIINNNNNNNNNGGGGGGGG")
+            #        clients.remove[key]
+            #        #send clientId (which is going to be deleted) to clients
+            #        print("deleting"+ str(key))
+            #        return dc_net_pb2.Acknowlegde(MessageStatus=key)
+        
+        #if(all(value == True for value in dictionary.values())):
+        #    print("ich war hier")
+        #    for key in dictionary:
+        #        dictionary[key] = False
 
         #if a new client wants to exchange Seeds notify neigboor
         print("client_identifier"+str(request.client_identifier))
         print("post[0] "+ str(post[0]))
         if(post[0] is request.client_identifier):
             print("1 is sended")
-            return dc_net_pb2.Acknowlegde(MessageStatus=-1)
+
+            return dc_net_pb2.Acknowlegde(MessageStatus=9999)
 
         return dc_net_pb2.Acknowlegde(MessageStatus=0)        
 
