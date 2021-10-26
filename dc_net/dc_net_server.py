@@ -2,7 +2,7 @@ from concurrent import futures
 import logging
 
 import grpc
-import random
+import random, time
 from random import randrange
 from operator import ixor
 
@@ -22,6 +22,7 @@ exchangeSeed = [0 for i in range(2)]
 localSums = []
 globalSums = []
 dictionary = {}
+transmissionBitCounter = 0
 
 
 
@@ -66,11 +67,47 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         global dictionary
         global counter
         global clients
+        global transmissionBitCounter
+        #transmissionBitCounter=0
         clientID = request.client_identifier
         localSum = request.localSum
         localSums.append(localSum)
-        
+        transmissionBit=request.transmissionBit
+
+        #transmissionBitCounter = transmissionBitCounter + transmissionBit
         dictionary[clientID] = True
+        #time.sleep(2)
+        print("transmissionBiCounter "+str(transmissionBitCounter))
+        if(transmissionBitCounter < counter):
+            globalSum = sum(localSums)
+            print("globalSum "+ str(globalSum))
+            globalSums.append(globalSum)
+            localSums.clear()
+            for key in dictionary.copy():
+                #this code is only triggered if one client doesnt send his local sum in a round
+                #hence its deleted
+                if dictionary[key] == False:
+                    print("DELEEEEEETTTTTIIIIIIIIINNNNNNNNNGGGGGGGG")
+                    print("clients" +str(clients))
+                    clients.remove(key)
+                    counter = counter - 1
+                    #send clientId (which is going to be deleted) to clients
+                    print("deleting "+ str(key))
+                    dictionary.pop(key) 
+                    if(all(value == True for value in dictionary.values())):
+                        print("ich war hier")
+                    for i in dictionary.copy():
+                        dictionary[i] = False  
+                        print("dictionary"+str(dictionary))
+                    print("key "+str(key))
+                    removed = key
+                    print("removed " +str(removed))
+                    return dc_net_pb2.Acknowlegde(MessageStatus=removed)
+
+            if(all(value == True for value in dictionary.values())):
+                print("ich war hier")
+            for key in dictionary:
+                dictionary[key] = False    
 
         print(str(dictionary[clientID]))
         print("localsum" + str(localSum))
@@ -84,37 +121,14 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
             globalSums.append(globalSum)
             localSums.clear()
 
-            for key in dictionary.copy():
-                #this code is only triggered if one client doesnt send his local sum in a round
-                #hence its deleted
-                if dictionary[key] == False:
-                    print("DELEEEEEETTTTTIIIIIIIIINNNNNNNNNGGGGGGGG")
-                    print("clients" +str(clients))
-                    clients.remove(key)
-                    counter = counter - 1
-                    #send clientId (which is going to be deleted) to clients
-                    print("deleting "+ str(key))
-                    if(all(value == True for value in dictionary.values())):
-                        print("ich war hier")
-                    for key in dictionary.copy():
-                        dictionary[key] = False  
-                        dictionary.pop(key) 
-                    return dc_net_pb2.Acknowlegde(MessageStatus=key)
-
-            if(all(value == True for value in dictionary.values())):
-                print("ich war hier")
-            for key in dictionary:
-                dictionary[key] = False    
-
+            
 
         #if a new client wants to exchange Seeds notify neigboor
         print("client_identifier"+str(request.client_identifier))
         print("post[0] "+ str(post[0]))
         if(post[0] is request.client_identifier):
             print("1 is sended")
-
             return dc_net_pb2.Acknowlegde(MessageStatus=9999)
-
         return dc_net_pb2.Acknowlegde(MessageStatus=0)        
 
     #if dc_net_identifier and client identifier are 0 then the client is not in the dc_net and needs to be added.

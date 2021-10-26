@@ -221,6 +221,7 @@ def run():
                     print("after time")
                     localSum = 0
                     print("afterlocalsum")
+                    print("myDictFULL"+str(myDict))
                     electricityConsumption=getElectricityData(dataCounter)
                     print("after electricity")
                     dataCounter = dataCounter + 1
@@ -274,11 +275,12 @@ def run():
                     if(response.MessageStatus in myDict.keys()):
                         print("messageStatus"+str(response.MessageStatus))
                         myDict.pop(response.MessageStatus)
+                        print("dictionary"+str(myDict))
 
                     print("localsum sended")
         else:
             print("I am the dad")
-            status = os.waitpid(pid, 0)
+            #status = os.waitpid(pid, 0)
             #print("child status " + str(status))
             
                 
