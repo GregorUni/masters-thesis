@@ -216,7 +216,7 @@ def run():
                 print("roundFunction")
                 while(True):
                     print("time")
-                    time.sleep(2)
+                    time.sleep(3)
                     #get all Clients in dictionary
                     print("after time")
                     localSum = 0
@@ -247,7 +247,6 @@ def run():
                     print("localSum" + str(localSum))
                     response = DC_stub.SendLocalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=t,localSum=localSum))
                     #nach neuem Partner suchen
-                    time.sleep(0.2)
                     print("response "+ str(response))
                     if(response.MessageStatus == 9999):
                         print("lookforneighboor")
@@ -270,7 +269,10 @@ def run():
                     if(response.MessageStatus == client_identifier):
                         sys.exit(-1)
 
+                    print("messageStatus"+str(response.MessageStatus))
+
                     if(response.MessageStatus in myDict.keys()):
+                        print("messageStatus"+str(response.MessageStatus))
                         myDict.pop(response.MessageStatus)
 
                     print("localsum sended")

@@ -64,12 +64,15 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
 
     def SendLocalSum(self, request, context):
         global dictionary
+        global counter
+        global clients
         clientID = request.client_identifier
         localSum = request.localSum
         localSums.append(localSum)
         
         dictionary[clientID] = True
 
+        print(str(dictionary[clientID]))
         print("localsum" + str(localSum))
         print("")
         print("counter "+ str(counter))
@@ -81,18 +84,28 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
             globalSums.append(globalSum)
             localSums.clear()
 
-            for key in dictionary:
+            for key in dictionary.copy():
+                #this code is only triggered if one client doesnt send his local sum in a round
+                #hence its deleted
                 if dictionary[key] == False:
                     print("DELEEEEEETTTTTIIIIIIIIINNNNNNNNNGGGGGGGG")
-            #        clients.remove[key]
-            #        #send clientId (which is going to be deleted) to clients
-            #        print("deleting"+ str(key))
-            #        return dc_net_pb2.Acknowlegde(MessageStatus=key)
-        
-        #if(all(value == True for value in dictionary.values())):
-        #    print("ich war hier")
-        #    for key in dictionary:
-        #        dictionary[key] = False
+                    print("clients" +str(clients))
+                    clients.remove(key)
+                    counter = counter - 1
+                    #send clientId (which is going to be deleted) to clients
+                    print("deleting "+ str(key))
+                    if(all(value == True for value in dictionary.values())):
+                        print("ich war hier")
+                    for key in dictionary.copy():
+                        dictionary[key] = False  
+                        dictionary.pop(key) 
+                    return dc_net_pb2.Acknowlegde(MessageStatus=key)
+
+            if(all(value == True for value in dictionary.values())):
+                print("ich war hier")
+            for key in dictionary:
+                dictionary[key] = False    
+
 
         #if a new client wants to exchange Seeds notify neigboor
         print("client_identifier"+str(request.client_identifier))
@@ -118,9 +131,11 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
             if(len(clients) <10):
             #client wants to join dc_net
             # first client gets identifier 1 and second client gets identifier 2
-                clients.append(len(clients))
+                length = len(clients)+1
+                print("lengtH"+str(length))
+                clients.append(length)
             # this is implemented with only one dc_nets. if you want to run several dc_nets you need to implement a function for that.
-                return dc_net_pb2.DC_net(dc_net_identifier=1,client_identifier=len(clients))
+                return dc_net_pb2.DC_net(dc_net_identifier=1,client_identifier=length)
             else:
                 # there can be only 10 clients in a dc net. if there are more than 10 decline request
                 return dc_net_pb2.DC_net(dc_net_identifier=0,client_identifier=0)
