@@ -23,6 +23,7 @@ localSums = []
 globalSums = []
 dictionary = {}
 transmissionBitCounter = 0
+removed = 0
 
 
 
@@ -69,16 +70,20 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         global clients
         global transmissionBitCounter
         #transmissionBitCounter=0
+        global removed
+        removed = 0
         clientID = request.client_identifier
         localSum = request.localSum
         localSums.append(localSum)
-        transmissionBit=request.transmissionBit
+        #transmissionBit=request.transmissionBit
 
         #transmissionBitCounter = transmissionBitCounter + transmissionBit
         dictionary[clientID] = True
-        #time.sleep(2)
+        time.sleep(1)
         print("transmissionBiCounter "+str(transmissionBitCounter))
-        if(transmissionBitCounter < counter):
+        print("dictionary" +str(dictionary))
+        print(not all(value == True for value in dictionary.values()))
+        if(not all(value == True for value in dictionary.values())):
             globalSum = sum(localSums)
             print("globalSum "+ str(globalSum))
             globalSums.append(globalSum)
@@ -94,20 +99,24 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
                     #send clientId (which is going to be deleted) to clients
                     print("deleting "+ str(key))
                     dictionary.pop(key) 
-                    if(all(value == True for value in dictionary.values())):
-                        print("ich war hier")
-                    for i in dictionary.copy():
-                        dictionary[i] = False  
-                        print("dictionary"+str(dictionary))
+                    #if(all(value == True for value in dictionary.values())):
+                    #    print("ich war hier")
+                    #for i in dictionary.copy():
+                    #    dictionary[i] = False  
+                    print("dictionary"+str(dictionary))
                     print("key "+str(key))
                     removed = key
                     print("removed " +str(removed))
-                    return dc_net_pb2.Acknowlegde(MessageStatus=removed)
 
-            if(all(value == True for value in dictionary.values())):
-                print("ich war hier")
+        time.sleep(1)
+        if(all(value == True for value in dictionary.values())):
+            print("ich war hier")
             for key in dictionary:
                 dictionary[key] = False    
+
+        if removed > 0:
+            print("returned")
+            return dc_net_pb2.Acknowlegde(MessageStatus=removed)
 
         print(str(dictionary[clientID]))
         print("localsum" + str(localSum))
@@ -193,6 +202,10 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
             #just a static number smaller than primes
             g = 42843
         return dc_net_pb2.DiffieHelman(p=p,g=g)
+
+    def sync(self, request, context):
+        t=time.localtime()
+        print(t)
 
     def ExchangeSecretForDH(self, request, context):
         global post

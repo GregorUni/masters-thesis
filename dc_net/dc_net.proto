@@ -30,6 +30,8 @@ service Greeter {
     rpc ExchangePRNGSeed(Seed) returns (Seed){}
 
     rpc deleteClient(DC_net) returns (Acknowlegde){}
+
+    rpc sync(Acknowlegde) returns (Acknowlegde){}
     
   }
 
