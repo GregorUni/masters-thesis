@@ -175,6 +175,21 @@ class DC_roundStub(object):
                 request_serializer=dc__net__pb2.Seed.SerializeToString,
                 response_deserializer=dc__net__pb2.Seed.FromString,
                 )
+        self.deleteClient = channel.unary_unary(
+                '/DCnetPackage.DC_round/deleteClient',
+                request_serializer=dc__net__pb2.DC_net.SerializeToString,
+                response_deserializer=dc__net__pb2.Acknowlegde.FromString,
+                )
+        self.sync = channel.unary_unary(
+                '/DCnetPackage.DC_round/sync',
+                request_serializer=dc__net__pb2.Acknowlegde.SerializeToString,
+                response_deserializer=dc__net__pb2.Acknowlegde.FromString,
+                )
+        self.updateGlobalSum = channel.unary_unary(
+                '/DCnetPackage.DC_round/updateGlobalSum',
+                request_serializer=dc__net__pb2.DC_net.SerializeToString,
+                response_deserializer=dc__net__pb2.DC_net.FromString,
+                )
 
 
 class DC_roundServicer(object):
@@ -216,6 +231,24 @@ class DC_roundServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def deleteClient(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def sync(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def updateGlobalSum(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_DC_roundServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -248,6 +281,21 @@ def add_DC_roundServicer_to_server(servicer, server):
                     servicer.ExchangePRNGSeed,
                     request_deserializer=dc__net__pb2.Seed.FromString,
                     response_serializer=dc__net__pb2.Seed.SerializeToString,
+            ),
+            'deleteClient': grpc.unary_unary_rpc_method_handler(
+                    servicer.deleteClient,
+                    request_deserializer=dc__net__pb2.DC_net.FromString,
+                    response_serializer=dc__net__pb2.Acknowlegde.SerializeToString,
+            ),
+            'sync': grpc.unary_unary_rpc_method_handler(
+                    servicer.sync,
+                    request_deserializer=dc__net__pb2.Acknowlegde.FromString,
+                    response_serializer=dc__net__pb2.Acknowlegde.SerializeToString,
+            ),
+            'updateGlobalSum': grpc.unary_unary_rpc_method_handler(
+                    servicer.updateGlobalSum,
+                    request_deserializer=dc__net__pb2.DC_net.FromString,
+                    response_serializer=dc__net__pb2.DC_net.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -358,5 +406,56 @@ class DC_round(object):
         return grpc.experimental.unary_unary(request, target, '/DCnetPackage.DC_round/ExchangePRNGSeed',
             dc__net__pb2.Seed.SerializeToString,
             dc__net__pb2.Seed.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def deleteClient(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/DCnetPackage.DC_round/deleteClient',
+            dc__net__pb2.DC_net.SerializeToString,
+            dc__net__pb2.Acknowlegde.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def sync(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/DCnetPackage.DC_round/sync',
+            dc__net__pb2.Acknowlegde.SerializeToString,
+            dc__net__pb2.Acknowlegde.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def updateGlobalSum(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/DCnetPackage.DC_round/updateGlobalSum',
+            dc__net__pb2.DC_net.SerializeToString,
+            dc__net__pb2.DC_net.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

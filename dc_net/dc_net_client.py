@@ -220,6 +220,7 @@ def run():
                     #get all Clients in dictionary
                     print("after time")
                     localSum = 0
+                    localSumUpdate = 0
                     print("afterlocalsum")
                     print("myDictFULL"+str(myDict))
                     electricityConsumption=getElectricityData(dataCounter)
@@ -239,6 +240,7 @@ def run():
                         print("vorher myDict[key]" + str(myDict[key]))
                         myDict[key] = [randomNumber,operator]
                         print("myDict[key]" + str(myDict[key]))
+                        print("randomNumber"+str(randomNumber))
                         localSum = localSum + LocalSum(rNumber,operator)
                     
                     localSum = localSum + electricityConsumption
@@ -276,6 +278,25 @@ def run():
                         print("messageStatus"+str(response.MessageStatus))
                         myDict.pop(response.MessageStatus)
                         print("dictionary"+str(myDict))
+                        for key in myDict:
+                            print(key,myDict[key])
+                            #get all values from Clients
+                            #get saved random number
+                            rNumber = myDict[key][0]
+                            #get saved plus bool
+                            operator = myDict[key][1]
+                            #random.seed(rNumber)
+                            #randomNumber = random.getrandbits(15)
+                            print("vorher myDict[key]" + str(myDict[key]))
+                            myDict[key] = [randomNumber,operator]
+                            print("myDict[key]" + str(myDict[key]))
+                            print("randomNumber after Delete"+str(randomNumber))
+                            localSumUpdate = localSumUpdate + LocalSum(rNumber,operator)
+                            print("localSum")
+                        
+                        localSumUpdate = localSumUpdate + electricityConsumption + localSum
+                        timeUpdate = str(time.localtime())        
+                        DC_stub.updateGlobalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=timeUpdate,localSum=localSumUpdate))
 
                     print("localsum sended")
         else:

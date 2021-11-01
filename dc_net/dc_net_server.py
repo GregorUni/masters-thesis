@@ -140,6 +140,16 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
             return dc_net_pb2.Acknowlegde(MessageStatus=9999)
         return dc_net_pb2.Acknowlegde(MessageStatus=0)        
 
+
+    def updateGlobalSum(self, request, context):
+        clientID = request.client_identifier
+        localSum = request.localSum
+
+        lastGlobalSum = globalSums.pop()
+        lastGlobalSum = lastGlobalSum + localSum
+
+        return dc_net_pb2.Acknowlegde(MessageStatus=0)  
+
     #if dc_net_identifier and client identifier are 0 then the client is not in the dc_net and needs to be added.
     # dc_net_identifier and client identifier cant be zero
     def addClientToDCnet(self, request, context):
@@ -170,16 +180,16 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         #check if there are at least 2 clients in the dc_net
         if(len(clients)>1):
             #give client a random neighboor
-            print("len(clients)+1")
+            #print("len(clients)+1")
             print(len(clients)+1)
             random=randrange(1,len(clients)+1)
-            print("random "+ str(random))
-            print(clients[random-1])
-            print(random)
+            #print("random "+ str(random))
+            #print(clients[random-1])
+            #print(random)
             if(random != clientID):
-                    print("clients[random] ")
-                    print(clients[random-1])
-                    print(random)
+                    #print("clients[random] ")
+                    #print(clients[random-1])
+                    #print(random)
                     #random is a new neighboor which is assigned randomly
                     return dc_net_pb2.DC_net(dc_net_identifier=dc_netID,client_identifier=random)
             else: 
@@ -216,17 +226,17 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
 
         if(post[0] is 0):
             post[0] = neighboor
-            print("post[0]" + str(post[0]))
+            #print("post[0]" + str(post[0]))
             post[1] = clientID
             post[2] = openkey
-            print("post[1]" + str(post[1]))
+            #print("post[1]" + str(post[1]))
             return dc_net_pb2.Secret(secret=0)
             
         if((post[3] is 0) and clientID is post[0]):
             post[3] = clientID
-            print("post[2]" + str(post[2]))
+            #print("post[2]" + str(post[2]))
             post[4] = openkey
-            print("post[3]" + str(post[3]))
+            #print("post[3]" + str(post[3]))
             return dc_net_pb2.Secret(secret=post[2],client_identifier=post[1])
 
         if(neighboor == post[3]):  
@@ -235,7 +245,7 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
             return dc_net_pb2.Secret(secret=secret)  
 
         else:
-            print("else:")
+            #print("else:")
             return dc_net_pb2.Secret(secret=0)
 
 
@@ -269,9 +279,9 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         print("ExchangePRNGSeed")
         seed = request.PRNGSeed
         neighboor = request.neighboor
-        print("seed" +str(seed))
-        print("neighboor"+str(neighboor))
-        print("seed[0]"+ str(exchangeSeed[0]))
+        #print("seed" +str(seed))
+        #print("neighboor"+str(neighboor))
+        #print("seed[0]"+ str(exchangeSeed[0]))
         client=request.client_identifier
         if(exchangeSeed[0] is 0):
             exchangeSeed[0] = client

@@ -32,6 +32,8 @@ service Greeter {
     rpc deleteClient(DC_net) returns (Acknowlegde){}
 
     rpc sync(Acknowlegde) returns (Acknowlegde){}
+
+    rpc updateGlobalSum(DC_net) returns (Acknowlegde){}
     
   }
 
