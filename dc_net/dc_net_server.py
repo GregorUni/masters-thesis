@@ -146,7 +146,11 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         localSum = request.localSum
 
         lastGlobalSum = globalSums.pop()
+        print("errorGlobalSum" + str(lastGlobalSum))
+        
         lastGlobalSum = lastGlobalSum + localSum
+        globalSums.append(lastGlobalSum)
+        print("lastGlobalSum" + str(lastGlobalSum))
 
         return dc_net_pb2.Acknowlegde(MessageStatus=0)  
 
