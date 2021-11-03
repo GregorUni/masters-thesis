@@ -92,9 +92,10 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
                 #this code is only triggered if one client doesnt send his local sum in a round
                 #hence its deleted
                 if dictionary[key] == False:
-                    print("DELEEEEEETTTTTIIIIIIIIINNNNNNNNNGGGGGGGG")
+                    print("DELEEEEEETTTTTIIIIIIIIINNNNNNNNNGGGGGGGG" + str(key))
                     print("clients" +str(clients))
                     clients.remove(key)
+                    print(len(clients))
                     counter = counter - 1
                     #send clientId (which is going to be deleted) to clients
                     print("deleting "+ str(key))
@@ -185,6 +186,7 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         if(len(clients)>1):
             #give client a random neighboor
             #print("len(clients)+1")
+            print("CLIIIIIIIIIIIENNNTS"+str(clients))
             print(len(clients)+1)
             random=randrange(1,len(clients)+1)
             #print("random "+ str(random))

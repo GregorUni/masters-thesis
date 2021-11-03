@@ -26,6 +26,7 @@ rows = []
 dataCounter = 1
 plus = True
 myDict = {}
+messageCounter = 0
 
 def ClientHello(self, request, context):
         return dc_net_pb2.HelloReply(message='Hello I am the CLient, %s!' % request.name)
@@ -149,6 +150,8 @@ def run():
     # NOTE(gRPC Python Team): .close() is possible on a channel and should be
     # used in circumstances in which the with statement does not fit the needs
     # of the code.
+
+    #working in python 3.9
     global client_identifier
     global dc_net_identifier
     global counter
@@ -157,6 +160,7 @@ def run():
     global plus
     global myDict
     global dataCounter
+    global messageCounter
     with grpc.insecure_channel('localhost:50051') as channel:
         DC_stub = dc_net_pb2_grpc.DC_roundStub(channel)
         
@@ -172,8 +176,8 @@ def run():
 
             dc_net_identifier = request.dc_net_identifier
             client_identifier = request.client_identifier
-            #print("clientID: ")
-            #print(client_identifier)
+            print("clientID: ")
+            print(client_identifier)
 
             addNeighboor = getNeighboor(DC_stub)
             #save new neighboor
@@ -308,10 +312,36 @@ def run():
                         DC_stub.updateGlobalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=timeUpdate,localSum=localSumUpdate))
 
                     print("localsum sended")
+
+                    if(client_identifier == 3):
+                        messageCounter = messageCounter + 1
+                        print("messageCounter "+str(messageCounter))
+                        if(messageCounter == 3):
+                            print("failed succesfully")
+                            os._exit(2)
+
+
+
         else:
             print("I am the dad")
-            #status = os.waitpid(pid, 0)
-            #print("child status " + str(status))
+            while(True):
+                time.sleep(3)
+                #status = os.waitpid(pid,0)
+                status = os.wait()
+                print("child status " + str(status))
+                exit_code = status[1] >> 8
+                if exit_code is 2:
+                    time.sleep(11)
+                    run()
+                else:
+                    sys.exit(1)
+                #status = os.wait()
+
+                #print("ret"+ str(exit_code))
+
+            #print("ret"+ str(ret))
+            #code1=str((exit_code >> 8))
+            #print(code1)
             
                 
         
