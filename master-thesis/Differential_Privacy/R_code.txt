@@ -234,7 +234,6 @@ counter<<-1
 
 initTest<-function()
 {
-counter<<-1
 data <<- vector()
 sumdata<<-numeric()
 difference<<-numeric()
@@ -252,54 +251,55 @@ z<<-vector()
 
 calcDeviation<-function(lengthOfTestCase)
 {
-start_time <<- Sys.time()
 options(scipen = 999) #disabling scientific notation
 l<<-0
 z<<-0
 setwithLCLid<<-as.set(df3[[1]])
 vectorOfLCid<<-as.vector(as.character(setwithLCLid))
+#lengthOfTestCase<-2
 random<<-sample(vectorOfLCid, lengthOfTestCase)
 
 #stromverbrauch der einzelnen häuser aus dem datensatz ziehen
 #17471 sind die Anzahl aller Einträge in einem Jahr
 #berechne für jeden TimeStamp
-for(TimeStamp in 1:1000)
+for(TimeStamp in 1:100)
 {
-Sys.sleep(0.001)
-print(TimeStamp)
-for(i in 1:lengthOfTestCase) {
-#nehme ein zufälliges Haus
-elementofset<<-random[i]
-#Bekomme von einem Haus den Stromverbrauch und speichere es in data[i]. es werden über alle häuser iteriert wobei i für ein Haus steht
-getKWOfHouse<<- subset(df3, LCLid %in% elementofset)
-data[i]<<-getKWOfHouse[TimeStamp,4]
+    Sys.sleep(0.001)
+    print(TimeStamp)
+    for(i in 1:lengthOfTestCase) {
+        #nehme ein zufälliges Haus
+        elementofset<<-random[i]
+        #Bekomme von einem Haus den Stromverbrauch und speichere es in data[i]. es werden über alle häuser iteriert wobei i für ein Haus steht
+        getKWOfHouse<<- subset(df3, LCLid %in% elementofset)
+        data[i]<<-getKWOfHouse[TimeStamp,4]
+    }
+    #berechne die Standardabweichung von data
+    standarddeviationOfHouses[TimeStamp]<<-sd(data[1:lengthOfTestCase])
+    #errechne den Gesamtverbrauch von allen Häusern
+    sumOfallHouses[TimeStamp]<<-sum(as.numeric(data))*(1/lengthOfTestCase)
+    #berechne für jedes Haus
+    for(j in 1:lengthOfTestCase) {
+        difference<<- as.numeric(data[j])-sumOfallHouses[TimeStamp]
+        if(abs(difference) > standarddeviationOfHouses)
+        {
+            if(is.na(z[j]))
+            {
+                z[j]<<-0
+            }
+            z[j]<<-z[j]+1
+        }
+        deviation[j]<<-z[j]/17471
+    }
 }
-#berechne die Standardabweichung von data
-standarddeviationOfHouses[TimeStamp]<<-sd(data[1:lengthOfTestCase])
-#errechne den Gesamtverbrauch von allen Häusern
-sumOfallHouses[TimeStamp]<<-sum(as.numeric(data))*(1/lengthOfTestCase)
-#berechne für jedes Haus
-for(j in 1:lengthOfTestCase) {
-difference<<- as.numeric(data[j])-sumOfallHouses[TimeStamp]
-if(abs(difference) > standarddeviationOfHouses)
-{
-if(is.na(z[j]))
-{
-z[j]<<-0
-}
- z[j]<<-z[j]+1
-}
-deviation[j]<<-z[j]/17471
-}
-}
-end_time <<- Sys.time()
-time <<-end_time - start_time
+write.table(deviation, file = sprintf("deviationOf_%d_Houses.txt",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
+write.table(standarddeviationOfHouses, file = sprintf("standarddeviationOf_%d_Houses.txt",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
+write.table(sumOfallHouses, file = sprintf("SumOf_%d_Houses.txt",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
 
-getDiagram(counter)
+getDiagram(counter,lengthOfTestCase)
 counter<<-counter+1
 }
 
-getDiagram<-function(counter)
+getDiagram<-function(counter,lengthOfTestCase)
 {
 sumOfallHouses4<<-sumOfallHouses
 #364
@@ -313,10 +313,43 @@ datevector<<-1:364
 averageminusSD<<-averagedata-standarddeviationOfHouses
 averageplusSD<<-averagedata+standarddeviationOfHouses
 df <- data.frame(datevector,averagedata,averageplusSD,averageminusSD)
+write.table(averagedata, file = sprintf("averagedataOf_%d_Houses.txt",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
 diagram<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + expand_limits(x = 0, y = 0)
 diagramlist[[counter]]<<-diagram
 }
 #####################################################
+cat(sprintf("Test mit %d Häusern",lengthOfTestCase),file="results.txt",sep="\n",append=TRUE)
+cat("Abweichung eines Hauses vom Gesamtstromverbrauch",file="results.txt",sep="\n",append=TRUE)
+cat(deviation,file="results.txt",append=TRUE)
+cat(" ",file="results.txt",append=TRUE,sep="\n")
+cat("Standardabweichung von allen Häusern",file="results.txt",append=TRUE,sep="\n")
+cat(standarddeviationOfHouses,file="results.txt",append=TRUE)
+cat(" ",file="results.txt",append=TRUE,sep="\n")
+cat("normierter Stromverbrauch von allen Häusern",file="results.txt",append=TRUE,sep="\n")
+cat(sumOfallHouses,file="results.txt",append=TRUE)
+cat(" ",file="results.txt",append=TRUE,sep="\n")
+###########################
+getDiagramTest<-function(counter)
+{
+sumOfallHouses4<<-sumOfallHouses
+#364
+for(i in 1:100) {
+averagedata[i]<<-mean(head(sumOfallHouses4,1))
+sumOfallHouses4<<- sumOfallHouses4[-1:-1]
+}
+#getTimeValues<<-head(getKWOfHouse[[3]],17480)
+#getTimeValues<<-as.POSIXct(getTimeValues, format='%Y-%m-%d  %H:%M:%S')
+datevector<<-1:100
+averageminusSD<<-averagedata-standarddeviationOfHouses
+averageplusSD<<-averagedata+standarddeviationOfHouses
+df <- data.frame(datevector,averagedata,averageplusSD,averageminusSD)
+diagram<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + expand_limits(x = 0, y = 0)
+diagramlist[[counter]]<<-diagram
+}
+
+
+
+############################
 #berechne durchschnittlichen verbrauch pro tag
 averagedata<-vector()
 sumdata2<-sumdata

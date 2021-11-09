@@ -323,7 +323,7 @@ def run():
 
 
         else:
-            print("I am the dad")
+            print("Call me daddy")
             while(True):
                 time.sleep(3)
                 #status = os.waitpid(pid,0)
