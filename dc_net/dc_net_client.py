@@ -1,6 +1,8 @@
 from __future__ import print_function
 import logging
 
+from google.protobuf import symbol_database
+
 import grpc
 import sys
 import time, sched
@@ -221,8 +223,13 @@ def run():
             randomNumber = random.getrandbits(15)
 
             myDict[last_neighboor] = [randomNumber,plus[1]]
-
             #print(randomNumber)
+
+            timer = time.localtime()
+            current_time =time.strftime("%H:%M:%S", timer)
+            syncTime = DC_stub.sync(dc_net_pb2.TimeStamp(timestamp=current_time))
+
+            print(syncTime)
             #round function starts
             if(client_identifier != 0):
                 print("roundFunction")

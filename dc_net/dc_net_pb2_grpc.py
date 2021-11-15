@@ -182,13 +182,13 @@ class DC_roundStub(object):
                 )
         self.sync = channel.unary_unary(
                 '/DCnetPackage.DC_round/sync',
-                request_serializer=dc__net__pb2.Acknowlegde.SerializeToString,
+                request_serializer=dc__net__pb2.TimeStamp.SerializeToString,
                 response_deserializer=dc__net__pb2.Acknowlegde.FromString,
                 )
         self.updateGlobalSum = channel.unary_unary(
                 '/DCnetPackage.DC_round/updateGlobalSum',
                 request_serializer=dc__net__pb2.DC_net.SerializeToString,
-                response_deserializer=dc__net__pb2.DC_net.FromString,
+                response_deserializer=dc__net__pb2.Acknowlegde.FromString,
                 )
 
 
@@ -289,13 +289,13 @@ def add_DC_roundServicer_to_server(servicer, server):
             ),
             'sync': grpc.unary_unary_rpc_method_handler(
                     servicer.sync,
-                    request_deserializer=dc__net__pb2.Acknowlegde.FromString,
+                    request_deserializer=dc__net__pb2.TimeStamp.FromString,
                     response_serializer=dc__net__pb2.Acknowlegde.SerializeToString,
             ),
             'updateGlobalSum': grpc.unary_unary_rpc_method_handler(
                     servicer.updateGlobalSum,
                     request_deserializer=dc__net__pb2.DC_net.FromString,
-                    response_serializer=dc__net__pb2.DC_net.SerializeToString,
+                    response_serializer=dc__net__pb2.Acknowlegde.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -438,7 +438,7 @@ class DC_round(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/DCnetPackage.DC_round/sync',
-            dc__net__pb2.Acknowlegde.SerializeToString,
+            dc__net__pb2.TimeStamp.SerializeToString,
             dc__net__pb2.Acknowlegde.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -456,6 +456,6 @@ class DC_round(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/DCnetPackage.DC_round/updateGlobalSum',
             dc__net__pb2.DC_net.SerializeToString,
-            dc__net__pb2.DC_net.FromString,
+            dc__net__pb2.Acknowlegde.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -24,6 +24,7 @@ globalSums = []
 dictionary = {}
 transmissionBitCounter = 0
 removed = 0
+timeCheck = []
 
 
 
@@ -73,6 +74,7 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         global removed
         removed = 0
         clientID = request.client_identifier
+        timeStamp = request.timestamp
         localSum = request.localSum
         localSums.append(localSum)
         #transmissionBit=request.transmissionBit
@@ -154,6 +156,15 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         print("lastGlobalSum" + str(lastGlobalSum))
 
         return dc_net_pb2.Acknowlegde(MessageStatus=0)  
+    
+    def sync(self, request, context):
+        timeStamp = request.timestamp
+        print("test")
+        timeCheck.append(timeStamp)
+        time.sleep(3)
+        print("TIIIIMMMECHEECCKK"+str(timeCheck))
+
+        return dc_net_pb2.Acknowlegde(MessageStatus=0) 
 
     #if dc_net_identifier and client identifier are 0 then the client is not in the dc_net and needs to be added.
     # dc_net_identifier and client identifier cant be zero
@@ -219,9 +230,6 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
             g = 42843
         return dc_net_pb2.DiffieHelman(p=p,g=g)
 
-    def sync(self, request, context):
-        t=time.localtime()
-        print(t)
 
     def ExchangeSecretForDH(self, request, context):
         global post
