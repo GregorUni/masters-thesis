@@ -78,7 +78,6 @@ def round():
     #synchronize the clients so that they send the function at the same time
     while((t.tm_sec % 10) != 9):
         t = time.localtime()
-        #hier würde ich einmal pro sekunde schauen, ob ein neuer client sich registrieren möchte
         print("time " + str(t.tm_sec))
         time.sleep(1)
 
@@ -106,6 +105,16 @@ def LocalSum(randomNumber,operator):
         return 0 + randomNumber
     else:
         return 0 - randomNumber
+
+def start(timer):
+    second = time.localtime()
+
+    while(timer != second.tm_sec):
+        second = time.localtime()
+        time.sleep(1)
+        print("start")
+        print(timer)
+        print(second.tm_sec)
 
 def UpdateGlobalSum(randomNumber,operator):
     #basically the revert of LocalSum. This function is used to revert a errorneus LocalSum and to Update A errorneus globalsum correctly
@@ -224,12 +233,11 @@ def run():
 
             myDict[last_neighboor] = [randomNumber,plus[1]]
             #print(randomNumber)
-
-            timer = time.localtime()
-            current_time =time.strftime("%H:%M:%S", timer)
-            syncTime = DC_stub.sync(dc_net_pb2.TimeStamp(timestamp=current_time))
-
-            print(syncTime)
+            if(client_identifier == 1 or client_identifier == 2):
+                timer = time.localtime()
+                syncTime = DC_stub.sync(dc_net_pb2.TimeStamp(timestamp=timer.tm_sec))
+                start(syncTime.MessageStatus)
+            
             #round function starts
             if(client_identifier != 0):
                 print("roundFunction")
@@ -265,9 +273,10 @@ def run():
                     localSum = localSum + electricityConsumption
                     round()
 
-                    t = str(time.localtime())
-                    print("localSum" + str(localSum))
-                    response = DC_stub.SendLocalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=t,localSum=localSum))
+                    t = time.localtime()
+                    current_time = time.strftime("%H:%M:%S", t)
+                    print("current TIme"+current_time)
+                    response = DC_stub.SendLocalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=current_time,localSum=localSum))
                     #nach neuem Partner suchen
                     print("response "+ str(response))
                     if(response.MessageStatus == 9999):
@@ -315,8 +324,9 @@ def run():
                            # localSumUpdate = localSumUpdate + LocalSum(rNumber,operator)
                            # print("localSum")
                         localSumUpdate=UpdateGlobalSum(deletedElement[0],deletedElement[1])
-                        timeUpdate = str(time.localtime())        
-                        DC_stub.updateGlobalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=timeUpdate,localSum=localSumUpdate))
+                        t = time.localtime()
+                        current_time = time.strftime("%H:%M:%S", t)       
+                        DC_stub.updateGlobalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=current_time,localSum=localSumUpdate))
 
                     print("localsum sended")
 

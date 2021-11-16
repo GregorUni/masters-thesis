@@ -25,6 +25,7 @@ dictionary = {}
 transmissionBitCounter = 0
 removed = 0
 timeCheck = []
+countdown = 0
 
 
 
@@ -78,7 +79,8 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         localSum = request.localSum
         localSums.append(localSum)
         #transmissionBit=request.transmissionBit
-
+        print(timeStamp)
+        print("heeeeeeeeeeeellllllllllooooooooo")
         #transmissionBitCounter = transmissionBitCounter + transmissionBit
         dictionary[clientID] = True
         time.sleep(1)
@@ -88,7 +90,10 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         if(not all(value == True for value in dictionary.values())):
             globalSum = sum(localSums)
             print("globalSum "+ str(globalSum))
-            globalSums.append(globalSum)
+            print("TimeStamp"+ timeStamp)
+            globalSums.append(tuple([globalSum,timeStamp]))
+            print("GLOOOOOOOBALLL ")
+            print(globalSums)
             localSums.clear()
             for key in dictionary.copy():
                 #this code is only triggered if one client doesnt send his local sum in a round
@@ -112,6 +117,10 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
                     print("removed " +str(removed))
 
         time.sleep(1)
+        with open('globalSums.txt', 'w') as f:
+            for item in globalSums:
+                f.write("%s\n" % (item,))
+
         if(all(value == True for value in dictionary.values())):
             print("ich war hier")
             for key in dictionary:
@@ -130,7 +139,9 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
             
             globalSum = sum(localSums)
             print("globalSum "+ str(globalSum))
-            globalSums.append(globalSum)
+            globalSums.append(tuple([globalSum,timeStamp]))
+            print("glllllllooooooooooooooobaaaaaaaaaaal")
+            print(globalSums)
             localSums.clear()
 
             
@@ -147,24 +158,34 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
     def updateGlobalSum(self, request, context):
         clientID = request.client_identifier
         localSum = request.localSum
+        timestamp = request.timestamp
 
-        lastGlobalSum = globalSums.pop()
-        print("errorGlobalSum" + str(lastGlobalSum))
+        lastGlobalSum = list(globalSums.pop())
+        print("errorGlobalSum" + str(lastGlobalSum[0]))
         
-        lastGlobalSum = lastGlobalSum + localSum
-        globalSums.append(lastGlobalSum)
-        print("lastGlobalSum" + str(lastGlobalSum))
+        lastGlobalSum[0] = lastGlobalSum[0] + localSum
+        globalSums.append(tuple([lastGlobalSum[0],timestamp]))
+        print("corrected GlobalSum" + str(lastGlobalSum[0]))
 
         return dc_net_pb2.Acknowlegde(MessageStatus=0)  
     
     def sync(self, request, context):
+        global countdown
         timeStamp = request.timestamp
-        print("test")
         timeCheck.append(timeStamp)
-        time.sleep(3)
-        print("TIIIIMMMECHEECCKK"+str(timeCheck))
+        wU = True
+        while wU == True:
+            if(len(timeCheck) == 2):
+                countdown = timeCheck[-1]
+                if((countdown % 10) < 7):
+                    countdown = (countdown + 10) % 60
+                else: 
+                    countdown = (countdown + 14) % 60
 
-        return dc_net_pb2.Acknowlegde(MessageStatus=0) 
+                wU = False    
+
+
+        return dc_net_pb2.Acknowlegde(MessageStatus=countdown) 
 
     #if dc_net_identifier and client identifier are 0 then the client is not in the dc_net and needs to be added.
     # dc_net_identifier and client identifier cant be zero

@@ -79,7 +79,7 @@ service Greeter {
   }
 
   message TimeStamp{
-    optional string timestamp = 1;
+    optional int32 timestamp = 1;
   }
 
   message Empty 
