@@ -71,48 +71,37 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         global counter
         global clients
         global transmissionBitCounter
-        #transmissionBitCounter=0
         global removed
         removed = 0
         clientID = request.client_identifier
         timeStamp = request.timestamp
         localSum = request.localSum
         localSums.append(localSum)
-        #transmissionBit=request.transmissionBit
-        print(timeStamp)
-        print("heeeeeeeeeeeellllllllllooooooooo")
-        #transmissionBitCounter = transmissionBitCounter + transmissionBit
+
         dictionary[clientID] = True
         time.sleep(1)
-        print("transmissionBiCounter "+str(transmissionBitCounter))
-        print("dictionary" +str(dictionary))
         print(not all(value == True for value in dictionary.values()))
         if(not all(value == True for value in dictionary.values())):
             globalSum = sum(localSums)
             print("globalSum "+ str(globalSum))
             print("TimeStamp"+ timeStamp)
             globalSums.append(tuple([globalSum,timeStamp]))
-            print("GLOOOOOOOBALLL ")
             print(globalSums)
             localSums.clear()
             for key in dictionary.copy():
                 #this code is only triggered if one client doesnt send his local sum in a round
                 #hence its deleted
                 if dictionary[key] == False:
-                    print("DELEEEEEETTTTTIIIIIIIIINNNNNNNNNGGGGGGGG" + str(key))
-                    print("clients" +str(clients))
+                    print("Delete Client " + str(key))
                     clients.remove(key)
-                    print(len(clients))
                     counter = counter - 1
                     #send clientId (which is going to be deleted) to clients
-                    print("deleting "+ str(key))
                     dictionary.pop(key) 
                     #if(all(value == True for value in dictionary.values())):
                     #    print("ich war hier")
                     #for i in dictionary.copy():
                     #    dictionary[i] = False  
                     print("dictionary"+str(dictionary))
-                    print("key "+str(key))
                     removed = key
                     print("removed " +str(removed))
 
@@ -122,36 +111,28 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
                 f.write("%s\n" % (item,))
 
         if(all(value == True for value in dictionary.values())):
-            print("ich war hier")
             for key in dictionary:
                 dictionary[key] = False    
 
         if removed > 0:
-            print("returned")
             return dc_net_pb2.Acknowlegde(MessageStatus=removed)
 
-        print(str(dictionary[clientID]))
         print("localsum" + str(localSum))
-        print("")
-        print("counter "+ str(counter))
-        print(len(localSums))
         if(len(localSums) is counter):
             
             globalSum = sum(localSums)
             print("globalSum "+ str(globalSum))
             globalSums.append(tuple([globalSum,timeStamp]))
-            print("glllllllooooooooooooooobaaaaaaaaaaal")
             print(globalSums)
             localSums.clear()
 
             
 
         #if a new client wants to exchange Seeds notify neigboor
-        print("client_identifier"+str(request.client_identifier))
-        print("post[0] "+ str(post[0]))
+        print("client_identifier wants to join: "+str(request.client_identifier))
         if(post[0] is request.client_identifier):
-            print("1 is sended")
             return dc_net_pb2.Acknowlegde(MessageStatus=9999)
+        
         return dc_net_pb2.Acknowlegde(MessageStatus=0)        
 
 
@@ -202,7 +183,6 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
             #client wants to join dc_net
             # first client gets identifier 1 and second client gets identifier 2
                 length = len(clients)+1
-                print("lengtH"+str(length))
                 clients.append(length)
             # this is implemented with only one dc_nets. if you want to run several dc_nets you need to implement a function for that.
                 return dc_net_pb2.DC_net(dc_net_identifier=1,client_identifier=length)
@@ -213,21 +193,12 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
     def connectDCClients(self, request, context):
         dc_netID=request.dc_net_identifier
         clientID=request.client_identifier
-        print("in function connect")
+        print("connect Clients")
         #check if there are at least 2 clients in the dc_net
         if(len(clients)>1):
             #give client a random neighboor
-            #print("len(clients)+1")
-            print("CLIIIIIIIIIIIENNNTS"+str(clients))
-            print(len(clients)+1)
             random=randrange(1,len(clients)+1)
-            #print("random "+ str(random))
-            #print(clients[random-1])
-            #print(random)
             if(random != clientID):
-                    #print("clients[random] ")
-                    #print(clients[random-1])
-                    #print(random)
                     #random is a new neighboor which is assigned randomly
                     return dc_net_pb2.DC_net(dc_net_identifier=dc_netID,client_identifier=random)
             else: 
@@ -259,7 +230,7 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         openkey = request.secret
         neighboor = request.neighboor
 
-        if(post[0] is 0):
+        if(post[0] == 0):
             post[0] = neighboor
             #print("post[0]" + str(post[0]))
             post[1] = clientID
@@ -267,7 +238,7 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
             #print("post[1]" + str(post[1]))
             return dc_net_pb2.Secret(secret=0)
             
-        if((post[3] is 0) and clientID is post[0]):
+        if((post[3] == 0) and clientID == post[0]):
             post[3] = clientID
             #print("post[2]" + str(post[2]))
             post[4] = openkey
@@ -318,7 +289,7 @@ class Server_DCnet(dc_net_pb2_grpc.DC_roundServicer):
         #print("neighboor"+str(neighboor))
         #print("seed[0]"+ str(exchangeSeed[0]))
         client=request.client_identifier
-        if(exchangeSeed[0] is 0):
+        if(exchangeSeed[0] == 0):
             exchangeSeed[0] = client
             exchangeSeed[1] = seed
             return dc_net_pb2.Seed(PRNGSeed=exchangeSeed[1])
