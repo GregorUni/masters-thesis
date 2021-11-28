@@ -171,11 +171,14 @@ def run():
     global myDict
     global dataCounter
     global messageCounter
+    sys.settrace
+        
+    pid = os.fork()
     with grpc.insecure_channel('localhost:50051') as channel:
         DC_stub = dc_net_pb2_grpc.DC_roundStub(channel)
         sys.settrace
         
-        pid = os.fork()
+        
 
         if pid == 0:
             print("I am the Child")
