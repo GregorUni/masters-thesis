@@ -13,21 +13,28 @@
 ] {scrreprt}
 
 % You should select either american or british instead of english here:
-\usepackage[ngerman,english]{babel}
-\usepackage{fontspec}
-
+\usepackage[american]{babel}
+\usepackage{lmodern}
+%\usepackage{fontspec}
+\usepackage{afterpage}
+\usepackage{tabularx}
+\usepackage{mwe}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+\usepackage{subcaption}
 \usepackage[pdftex,
 citebordercolor={0.75 0.75 1},
 filebordercolor={0.75 0.75 1},
 linkbordercolor={0.75 0.75 1},
-% pagebordercolor={0.75 0.75 1},
+pagebordercolor={0.75 0.75 1},
 urlbordercolor={0.75 0.75 1},
 pdfborder={0.75 0.75 1},plainpages=false,pdfpagelabels=true]{hyperref}
-\hypersetup{%
-  pdftitle={Dein Titel},
-  pdfauthor={Otto Mustermann},
+\hypersetup{
+  pdftitle={Privacy-preserving Smart Metering Using DC-Nets},
+  pdfauthor={Gregor Garten},
   pdfkeywords={foo, bar},
 }
+\usepackage[acronym,nomain,toc]{glossaries}
 
 \input{preamble/packages.tex}
 \addbibresource{own.bib}
@@ -51,7 +58,7 @@ pdfborder={0.75 0.75 1},plainpages=false,pdfpagelabels=true]{hyperref}
 \input{content/01_disclaimer.tex}
 
 % NOTE: if you selected british or american above, change that here too
-\selectlanguage{english}
+\selectlanguage{american}
 
 \begin{abstract}
 \input{content/02_abstract.tex}
