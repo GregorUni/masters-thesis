@@ -137,11 +137,26 @@ smart meters)
 The cluster classification has already been explained for the NILM method and described in this paper at [ref].  The cluster classification has already been explained for the NILM method and described in this paper at [ref]. It can also be used as a metric to evaluate privacy. Here one would perform a cluster analysis with the battery method and once without. Then one looks at the number of clusters in both measurements and if fewer clusters are found with the battery method, then this is considered a privacy gain.
 \item Regression Analysis:\\
 In the regression analysis, first a cross-correlation and afterwards a simple linear regression is performed. More precisely, both power consumptions are "superimposed" at the point of their maximum cross-correlation. Subsequently, a linear regression is performed and the privacy is evaluated on the basis of the quality of the predictor.
-\item Residual Features:\\
 \end{enumerate}
 
 \subsection{Metering for Billing}
-
+In order to fully protect the privacy of a household, metering for billing procedures must also be applied. Otherwise, conclusions about electricity consumption can be drawn from the billing. A simple solution would be to increase the frequency of the billing period. But at the same time it is also in the interest of the customer to buy electricity as cheaply as possible. The customer can be offered better electricity contracts if the billing period is shorter. In addition, it cannot be guaranteed that the customer's privacy is not violated in more complex electricity contracts by other features, even if a higher billing period is used. In the following paragraph, different methods are explained that solve the problem for metering for billing.\\
+\\
+\textbf{Billing with a Trusted Third Party}
+\\
+\\
+The advantages and disadvantages of a TTP have already been explained in the upper section. The principle is similar to metering for operations. The smart meter sends its measurements to the TTP and the TTP calculates the bill over the time period specified in the electricity contract. The billing is then sent to the electricity provider. On paper, this approach is simple, but important practical questions often remain unanswered. For example, who pays the trusted third party? In this case, the trusted third party provides a service to the electricity provider. However, if the electricity provider pays for the service, then the trusted third party is no longer independent.\\
+\\
+\textbf{Billing with a Trusted Platform Module}
+\\
+\\
+Billing can also be implemented on the smart meter with a Trusted Platform Module. A TPM is a chip that is installed within the smart meter and thus additional security features can be used on the smart meter. The TPM contains a cryptographic processor that can generate random numbers, generate RSA keys, generate SHA-1 hashes and it has
+an encryption-decryption-signature engine. In addition, the TPM can be used to prove that nothing has been tampered with the smart meter afterwards. A secured smart meter can therefore perform correct billings at the customers side and the electricity provider can trust the smart meter. However, the TPM is installed by the electricity provider and it only guarantees the validity of the billing. If the electricity provider decides to send additional sensitive information within the calculations in the TPM, the TPM has no advantage for the end user.(Privacy-Aware Smart Metering)\\
+\\
+\textbf{Billing Secured via Cryptography}
+\\
+\\
+hi
 \todo{write state}
 
 \cleardoublepage
