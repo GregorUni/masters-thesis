@@ -156,7 +156,16 @@ an encryption-decryption-signature engine. In addition, the TPM can be used to p
 \textbf{Billing Secured via Cryptography}
 \\
 \\
-hi
+Lastly, there is the cryptographic commitment method.
+With this approach, no other participant needs to be trusted. A smart meter can use a cryptographic commitment to prove that each bill was calculated correctly. So with cryptographic commitments, billing can be done on the customer side.\\
+Lastly, there is the cryptographic commitment method.
+With this approach, no other participant needs to be trusted. A smart meter can use a cryptographic commitment to prove that each bill was calculated correctly. So with cryptographic commitments, billing can be done on the customer side. A commitment is a cryptographic application and works as follows. Both sides agree on the same commitment procedure. Then it is possible that one side can generate a c=(x,r) as an obligation. Here x would be the calculation and r would be a random number. If one wants to check the commitment for correctness, then there is an Open(c,x,r) function that returns True(if correct) or False(if incorrect).
+Cryptographic commitments are mathematically constructed so that it is easy to compute a c=(x,r), but hard to find an x /= x' with an r' such that open(c,x',r') returns True. In this use case, the following procedure is often used. [pedersen] \\
+Commit(x, r) · Commit(y, s) = Commit(x+y, r+s)\\
+$Commit(x, r){k}$ = Commit(x · k, r · k)\\
+The special feature of the method of [pedersen] is that at the same time non-homomorphic properties are satisfied. Without going into exact technical details, cryptographic commitments work as follows in a smart grid.
+The smart meter generates a cryptographic commitment for each measurement. Via a public key infrastructure, the smart meter and the electricity provider receive cryptographic keys. With these keys, the smart meter can sign its commitments and then send them to the electricity provider. The electricity provider checks the commitments for correctness and if all data is correct, the electricity provider sends back a list with electricity prices and the corresponding time stamps. The meter now knows at each point in time how much electricity was consumed and what the price was. By exploiting the homomorphic properties of the procedure, the smart meter can now calculate the electricity prices. The electricity price in this case would be the variable k.So the smart meter creates new cryptographic obligations with the electricity price calculated on the consumption and sends these new obligations to the electricity provider. The electricity provider can verify the correctness by performing the same calculations as the smart meter. If the results with the Open(c,x,r) method return true, then the calculations were performed correctly by the smart meter.
+This method is suitable for simple electricity tariffs when only a factor on the electricity consumption needs to be calculated. If an electricity contract is more complex with different conditions such as a higher electricity price if a certain electricity consumption is exceeded, then this approach can no longer be implemented.
 \todo{write state}
 
 \cleardoublepage
