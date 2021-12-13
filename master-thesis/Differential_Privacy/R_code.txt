@@ -21,7 +21,7 @@ k<-1
 datalist3 = list()
 datalist4 = list()
 #how many files are used for filtering(current its 20 files)
-for(i in 1:10) {
+for(i in 1:30) {
 nameoffile2<-paste("Power-Networks-LCL-June2015(withAcornGps)v2_",i,".csv", sep="")
 file2 <- read.table(file = nameoffile2,header=TRUE, sep = ",",stringsAsFactors = FALSE,comment.char = "")
 #these lines are checking that an LCLid has more than 39000 values and filters every LCLid which is under this threshold
@@ -39,7 +39,7 @@ getData<- subset(file2, LCLid %in% elementofset)
 
 if(any(str_detect(getData[[3]], "2013-01-01"))){
 if(any(str_detect(getData[[3]], "2014-01-02"))){
-datalist3[[k]]<-getData[(getData[[3]] > "2013-01-02" & getData[[3]] <= "2014-01-01"),]
+datalist3[[k]]<-getData[(getData[[3]] > "2013-01-01" & getData[[3]] <= "2014-01-01"),]
 k<-k+1
 }
 }
@@ -262,7 +262,7 @@ random<<-sample(vectorOfLCid, lengthOfTestCase)
 #stromverbrauch der einzelnen häuser aus dem datensatz ziehen
 #17471 sind die Anzahl aller Einträge in einem Jahr
 #berechne für jeden TimeStamp
-for(TimeStamp in 1:100)
+for(TimeStamp in 1:17471)
 {
     Sys.sleep(0.001)
     print(TimeStamp)
@@ -272,6 +272,10 @@ for(TimeStamp in 1:100)
         #Bekomme von einem Haus den Stromverbrauch und speichere es in data[i]. es werden über alle häuser iteriert wobei i für ein Haus steht
         getKWOfHouse<<- subset(df3, LCLid %in% elementofset)
         data[i]<<-getKWOfHouse[TimeStamp,4]
+        if(is.na(data[i]))
+        {
+        	data[i]<<-0
+        }
     }
     #berechne die Standardabweichung von data
     standarddeviationOfHouses[TimeStamp]<<-sd(data[1:lengthOfTestCase])
@@ -279,6 +283,10 @@ for(TimeStamp in 1:100)
     sumOfallHouses[TimeStamp]<<-sum(as.numeric(data))*(1/lengthOfTestCase)
     #berechne für jedes Haus
     for(j in 1:lengthOfTestCase) {
+    	if(is.na(sumOfallHouses[TimeStamp]))
+    	{
+    		sumOfallHouses[TimeStamp]<<-0
+    	}
         difference<<- as.numeric(data[j])-sumOfallHouses[TimeStamp]
         if(abs(difference) > standarddeviationOfHouses)
         {
@@ -302,16 +310,19 @@ counter<<-counter+1
 getDiagram<-function(counter,lengthOfTestCase)
 {
 sumOfallHouses4<<-sumOfallHouses
+yearlyStandardDeviation<<-standarddeviationOfHouses
 #364
 for(i in 1:364) {
 averagedata[i]<<-mean(head(sumOfallHouses4,48))
+yearlyStandardDeviationForDiagram<<-mean(head(yearlyStandardDeviation,48))
 sumOfallHouses4<<- sumOfallHouses4[-1:-48]
+yearlyStandardDeviation<<-yearlyStandardDeviation[-1:-48]
 }
 #getTimeValues<<-head(getKWOfHouse[[3]],17480)
 #getTimeValues<<-as.POSIXct(getTimeValues, format='%Y-%m-%d  %H:%M:%S')
 datevector<<-1:364
-averageminusSD<<-averagedata-standarddeviationOfHouses
-averageplusSD<<-averagedata+standarddeviationOfHouses
+averageminusSD<<-averagedata-yearlyStandardDeviationForDiagram
+averageplusSD<<-averagedata+yearlyStandardDeviationForDiagram
 df <- data.frame(datevector,averagedata,averageplusSD,averageminusSD)
 write.table(averagedata, file = sprintf("averagedataOf_%d_Houses.txt",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
 diagram<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + expand_limits(x = 0, y = 0)
@@ -389,3 +400,7 @@ ggplot(data=df, aes(x=df[[1]]))+geom_line(aes(y = averagedata, colour = "average
 #####################################################
 y<-dnorm(sumdata3, mean = averagedata, sd = standarddeviation)
 plot(sumdata3,y)
+##################################################
+hi<-ggplot_build(diagramlist[[2]])
+hi$plot$labels$y<-"Average Energy Consumption in KWH/hh (per half hour)"
+hi$plot$labels$x<-"Time in Days"
