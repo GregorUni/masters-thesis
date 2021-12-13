@@ -1,6 +1,8 @@
 from __future__ import print_function
 import logging
 
+from google.protobuf import symbol_database
+
 import grpc
 import sys
 import time, sched
@@ -12,6 +14,8 @@ import os
 
 import dc_net_pb2
 import dc_net_pb2_grpc
+
+GRPC_ENABLE_FORK_SUPPORT=1
 
 neighboor = []
 neighboor = [0 for i in range(10)]
@@ -51,17 +55,14 @@ def getNeighboor(DC_stub):
             addNeighboor=DC_stub.connectDCClients(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier,client_identifier=client_identifier))
             time.sleep(2)
             print("NeighboorID: ")
-            print(addNeighboor)
-            print(addNeighboor.dc_net_identifier)                
+            print(addNeighboor)               
             if(addNeighboor.dc_net_identifier != 0 or addNeighboor.client_identifier != 0):
-                print("in break")
                 return addNeighboor
 
 def LookForNeighboorKey(DC_stub,last_neighboor,openKey):
     while(True):
             neighboorKey= DC_stub.ExchangeSecretForDH(dc_net_pb2.Secret(client_identifier=client_identifier,secret=openKey,neighboor=last_neighboor))
             if(neighboorKey.secret != 0):
-                print("break")
                 return neighboorKey
             time.sleep(2)
 
@@ -76,8 +77,7 @@ def round():
     #synchronize the clients so that they send the function at the same time
     while((t.tm_sec % 10) != 9):
         t = time.localtime()
-        #hier würde ich einmal pro sekunde schauen, ob ein neuer client sich registrieren möchte
-        print("time " + str(t.tm_sec))
+        #print("time " + str(t.tm_sec))
         time.sleep(1)
 
     return 
@@ -105,6 +105,16 @@ def LocalSum(randomNumber,operator):
     else:
         return 0 - randomNumber
 
+def start(timer):
+    second = time.localtime()
+    print("sync Clients")
+    while(timer != second.tm_sec):
+        second = time.localtime()
+        time.sleep(1)
+        #print("start")
+        #print(timer)
+        #print(second.tm_sec)
+
 def UpdateGlobalSum(randomNumber,operator):
     #basically the revert of LocalSum. This function is used to revert a errorneus LocalSum and to Update A errorneus globalsum correctly
     
@@ -114,20 +124,20 @@ def UpdateGlobalSum(randomNumber,operator):
         return 0 + randomNumber        
 
 def PRNGSeed(DC_stub, encryptedSeed, last_neighboor, sessionKey , seed):
+    print("generate Seed")
     while(True):
             exchangedSeed=DC_stub.ExchangePRNGSeed(dc_net_pb2.Seed(client_identifier=client_identifier,PRNGSeed=encryptedSeed,neighboor=last_neighboor))
             if(exchangedSeed.PRNGSeed != 0):
                 decryptedSeed = exchangedSeed.PRNGSeed ^ sessionKey
-                print("decryptedSeed" + str(decryptedSeed))
-                print("seed" + str(seed))
+                #print("decryptedSeed" + str(decryptedSeed))
+                #print("seed" + str(seed))
                 if(decryptedSeed == seed):
                     plus = False
-                    print("seedBranch" + str(seed))
+                    print("Seed" + str(seed))
                 if((decryptedSeed != seed)):
                     plus = True
                     seed=decryptedSeed
-                    print("decryptedSeed "+str(decryptedSeed))
-                print("exchangedSeedBreak")
+                    print("Exchanged Seed "+str(decryptedSeed))
                 return seed, plus
             time.sleep(2)
 
@@ -161,10 +171,14 @@ def run():
     global myDict
     global dataCounter
     global messageCounter
+    sys.settrace
+        
+    pid = os.fork()
     with grpc.insecure_channel('localhost:50051') as channel:
         DC_stub = dc_net_pb2_grpc.DC_roundStub(channel)
+        sys.settrace
         
-        pid = os.fork()
+        
 
         if pid == 0:
             print("I am the Child")
@@ -185,13 +199,12 @@ def run():
             counter = counter+1
             
             #get server prime and generator
+            print("get server prime and generator")
             pg = DC_stub.getDiffieHellman(dc_net_pb2.Empty())
 
-            print("pg.p " + str(pg.p))
-            print("pg.g "+ str(pg.g))
-            if(a is 0):
+            if(a == 0):
                 a=getSecret(pg.p)
-
+            print("calculate OpenKey")
             openKey = calculateOpenKey(pg.p,pg.g,a)
             #print("openKey")
             #print(openKey)
@@ -199,12 +212,14 @@ def run():
             #print("neighboor pop"+ str(neighboor.pop()))
             last_neighboor=neighboor[-1]
             #print(last_neighboor)
-        
+            
             neighboorKey = LookForNeighboorKey(DC_stub,last_neighboor,openKey)
             
-            #print("neighboorKey "+ str(neighboorKey))
+            print("neighboorKey "+ str(neighboorKey))
             #print("key" + str(openKey))
             #print("prime" + str(pg.p))
+            
+            #print("calculate Secret")
             sessionKey= calculatePrivateSessionKey(neighboorKey.secret,a,pg.p)
             #print("sessionKey" + str(sessionKey))
             print("registered")
@@ -221,22 +236,23 @@ def run():
             randomNumber = random.getrandbits(15)
 
             myDict[last_neighboor] = [randomNumber,plus[1]]
-
             #print(randomNumber)
+            if(client_identifier == 1 or client_identifier == 2):
+                timer = time.localtime()
+                syncTime = DC_stub.sync(dc_net_pb2.TimeStamp(timestamp=timer.tm_sec))
+                start(int(syncTime.MessageStatus))
+            
             #round function starts
             if(client_identifier != 0):
-                print("roundFunction")
+                #print("roundFunction")
                 while(True):
                     print("time")
                     time.sleep(3)
                     #get all Clients in dictionary
-                    print("after time")
                     localSum = 0
                     localSumUpdate = 0
-                    print("afterlocalsum")
                     print("myDictFULL"+str(myDict))
                     electricityConsumption=getElectricityData(dataCounter)
-                    print("after electricity")
                     dataCounter = dataCounter + 1
 
                     print("electricityConsumption "+str(electricityConsumption))
@@ -249,20 +265,19 @@ def run():
                         operator = myDict[key][1]
                         random.seed(rNumber)
                         randomNumber = random.getrandbits(15)
-                        print("vorher myDict[key]" + str(myDict[key]))
                         myDict[key] = [randomNumber,operator]
-                        print("myDict[key]" + str(myDict[key]))
-                        print("randomNumber"+str(randomNumber))
+                        #print("myDict[key]" + str(myDict[key]))
+                        #print("randomNumber"+str(randomNumber))
                         localSum = localSum + LocalSum(randomNumber,operator)
                     
                     localSum = localSum + electricityConsumption
                     round()
 
-                    t = str(time.localtime())
-                    print("localSum" + str(localSum))
-                    response = DC_stub.SendLocalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=t,localSum=localSum))
+                    t = time.localtime()
+                    current_time = time.strftime("%H:%M:%S", t)
+                    print("current TIme"+current_time)
+                    response = DC_stub.SendLocalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=current_time,localSum=localSum))
                     #nach neuem Partner suchen
-                    print("response "+ str(response))
                     if(response.MessageStatus == 9999):
                         print("lookforneighboor")
                         newNeighboor = LookForNeighboorKey(DC_stub,0,openKey)
@@ -284,34 +299,21 @@ def run():
                     if(response.MessageStatus == client_identifier):
                         sys.exit(-1)
 
-                    print("messageStatus"+str(response.MessageStatus))
+                    #print("messageStatus"+str(response.MessageStatus))
 
                     if(response.MessageStatus in myDict.keys()):
-                        print("messageStatus"+str(response.MessageStatus))
+                        #print("messageStatus"+str(response.MessageStatus))
 
                         deletedElement = myDict.pop(response.MessageStatus)
-                        print("deletedElement"+ str(deletedElement))
+                        print("delete Element: "+ str(deletedElement))
                         print("dictionary"+str(myDict))
-                        #for key in myDict:
-                         #   print(key,myDict[key])
-                            #get all values from Clients
-                            #get saved random number
-                          #  rNumber = myDict[key][0]
-                            #get saved plus bool
-                           # operator = myDict[key][1]
-                            #random.seed(rNumber)
-                            #randomNumber = random.getrandbits(15)
-                            #print("vorher myDict[key]" + str(myDict[key]))
-                           # #myDict[key] = [randomNumber,operator]
-                           # print("myDict[key]" + str(myDict[key]))
-                           # print("randomNumber after Delete"+str(randomNumber))
-                           # localSumUpdate = localSumUpdate + LocalSum(rNumber,operator)
-                           # print("localSum")
+                        
                         localSumUpdate=UpdateGlobalSum(deletedElement[0],deletedElement[1])
-                        timeUpdate = str(time.localtime())        
-                        DC_stub.updateGlobalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=timeUpdate,localSum=localSumUpdate))
+                        t = time.localtime()
+                        current_time = time.strftime("%H:%M:%S", t)       
+                        DC_stub.updateGlobalSum(dc_net_pb2.DC_net(dc_net_identifier=dc_net_identifier, client_identifier=client_identifier, transmissionBit=1,timestamp=current_time,localSum=localSumUpdate))
 
-                    print("localsum sended")
+                    
 
                     if(client_identifier == 3):
                         messageCounter = messageCounter + 1
@@ -326,11 +328,11 @@ def run():
             print("Call me daddy")
             while(True):
                 time.sleep(3)
-                #status = os.waitpid(pid,0)
-                status = os.wait()
+                status = os.waitpid(pid,0)
+                #status = os.wait()
                 print("child status " + str(status))
                 exit_code = status[1] >> 8
-                if exit_code is 2:
+                if exit_code == 2:
                     time.sleep(11)
                     run()
                 else:

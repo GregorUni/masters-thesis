@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto2',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0c\x64\x63_net.proto\x12\x0c\x44\x43netPackage\"$\n\x0b\x41\x63knowlegde\x12\x15\n\rMessageStatus\x18\x01 \x01(\x05\"\x92\x01\n\x06\x44\x43_net\x12\x19\n\x11\x64\x63_net_identifier\x18\x01 \x01(\x05\x12\x19\n\x11\x63lient_identifier\x18\x02 \x01(\x05\x12\x17\n\x0ftransmissionBit\x18\x03 \x01(\x05\x12\x11\n\ttimestamp\x18\x04 \x01(\t\x12\x14\n\x0cnotification\x18\x05 \x01(\x05\x12\x10\n\x08localSum\x18\x06 \x01(\x05\"\x1c\n\x0cHelloRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\nHelloReply\x12\x0f\n\x07message\x18\x01 \x01(\t\"F\n\x06Secret\x12\x19\n\x11\x63lient_identifier\x18\x01 \x01(\x05\x12\x0e\n\x06secret\x18\x02 \x01(\x05\x12\x11\n\tneighboor\x18\x03 \x01(\x05\"$\n\x0c\x44iffieHelman\x12\t\n\x01p\x18\x01 \x01(\x05\x12\t\n\x01g\x18\x02 \x01(\x05\"F\n\x04Seed\x12\x10\n\x08PRNGSeed\x18\x01 \x01(\x05\x12\x19\n\x11\x63lient_identifier\x18\x02 \x01(\x05\x12\x11\n\tneighboor\x18\x03 \x01(\x05\"\x07\n\x05\x45mpty2\xdb\x01\n\x07Greeter\x12\x42\n\x08SayHello\x12\x1a.DCnetPackage.HelloRequest\x1a\x18.DCnetPackage.HelloReply\"\x00\x12G\n\rSayHelloAgain\x12\x1a.DCnetPackage.HelloRequest\x1a\x18.DCnetPackage.HelloReply\"\x00\x12\x43\n\x0b\x43lientHello\x12\x18.DCnetPackage.HelloReply\x1a\x18.DCnetPackage.HelloReply\"\x00\x32\xdf\x04\n\x08\x44\x43_round\x12\x41\n\x0cSendLocalSum\x12\x14.DCnetPackage.DC_net\x1a\x19.DCnetPackage.Acknowlegde\"\x00\x12@\n\x10\x61\x64\x64\x43lientToDCnet\x12\x14.DCnetPackage.DC_net\x1a\x14.DCnetPackage.DC_net\"\x00\x12@\n\x10\x63onnectDCClients\x12\x14.DCnetPackage.DC_net\x1a\x14.DCnetPackage.DC_net\"\x00\x12\x43\n\x13\x45xchangeSecretForDH\x12\x14.DCnetPackage.Secret\x1a\x14.DCnetPackage.Secret\"\x00\x12\x45\n\x10getDiffieHellman\x12\x13.DCnetPackage.Empty\x1a\x1a.DCnetPackage.DiffieHelman\"\x00\x12<\n\x10\x45xchangePRNGSeed\x12\x12.DCnetPackage.Seed\x1a\x12.DCnetPackage.Seed\"\x00\x12\x41\n\x0c\x64\x65leteClient\x12\x14.DCnetPackage.DC_net\x1a\x19.DCnetPackage.Acknowlegde\"\x00\x12>\n\x04sync\x12\x19.DCnetPackage.Acknowlegde\x1a\x19.DCnetPackage.Acknowlegde\"\x00\x12?\n\x0fupdateGlobalSum\x12\x14.DCnetPackage.DC_net\x1a\x14.DCnetPackage.DC_net\"\x00'
+  serialized_pb=b'\n\x0c\x64\x63_net.proto\x12\x0c\x44\x43netPackage\"$\n\x0b\x41\x63knowlegde\x12\x15\n\rMessageStatus\x18\x01 \x01(\x05\"\x92\x01\n\x06\x44\x43_net\x12\x19\n\x11\x64\x63_net_identifier\x18\x01 \x01(\x05\x12\x19\n\x11\x63lient_identifier\x18\x02 \x01(\x05\x12\x17\n\x0ftransmissionBit\x18\x03 \x01(\x05\x12\x11\n\ttimestamp\x18\x04 \x01(\t\x12\x14\n\x0cnotification\x18\x05 \x01(\x05\x12\x10\n\x08localSum\x18\x06 \x01(\x05\"\x1c\n\x0cHelloRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\nHelloReply\x12\x0f\n\x07message\x18\x01 \x01(\t\"F\n\x06Secret\x12\x19\n\x11\x63lient_identifier\x18\x01 \x01(\x05\x12\x0e\n\x06secret\x18\x02 \x01(\x05\x12\x11\n\tneighboor\x18\x03 \x01(\x05\"$\n\x0c\x44iffieHelman\x12\t\n\x01p\x18\x01 \x01(\x05\x12\t\n\x01g\x18\x02 \x01(\x05\"F\n\x04Seed\x12\x10\n\x08PRNGSeed\x18\x01 \x01(\x05\x12\x19\n\x11\x63lient_identifier\x18\x02 \x01(\x05\x12\x11\n\tneighboor\x18\x03 \x01(\x05\"\x1e\n\tTimeStamp\x12\x11\n\ttimestamp\x18\x01 \x01(\x05\"\x07\n\x05\x45mpty2\xdb\x01\n\x07Greeter\x12\x42\n\x08SayHello\x12\x1a.DCnetPackage.HelloRequest\x1a\x18.DCnetPackage.HelloReply\"\x00\x12G\n\rSayHelloAgain\x12\x1a.DCnetPackage.HelloRequest\x1a\x18.DCnetPackage.HelloReply\"\x00\x12\x43\n\x0b\x43lientHello\x12\x18.DCnetPackage.HelloReply\x1a\x18.DCnetPackage.HelloReply\"\x00\x32\xe2\x04\n\x08\x44\x43_round\x12\x41\n\x0cSendLocalSum\x12\x14.DCnetPackage.DC_net\x1a\x19.DCnetPackage.Acknowlegde\"\x00\x12@\n\x10\x61\x64\x64\x43lientToDCnet\x12\x14.DCnetPackage.DC_net\x1a\x14.DCnetPackage.DC_net\"\x00\x12@\n\x10\x63onnectDCClients\x12\x14.DCnetPackage.DC_net\x1a\x14.DCnetPackage.DC_net\"\x00\x12\x43\n\x13\x45xchangeSecretForDH\x12\x14.DCnetPackage.Secret\x1a\x14.DCnetPackage.Secret\"\x00\x12\x45\n\x10getDiffieHellman\x12\x13.DCnetPackage.Empty\x1a\x1a.DCnetPackage.DiffieHelman\"\x00\x12<\n\x10\x45xchangePRNGSeed\x12\x12.DCnetPackage.Seed\x1a\x12.DCnetPackage.Seed\"\x00\x12\x41\n\x0c\x64\x65leteClient\x12\x14.DCnetPackage.DC_net\x1a\x19.DCnetPackage.Acknowlegde\"\x00\x12<\n\x04sync\x12\x17.DCnetPackage.TimeStamp\x1a\x19.DCnetPackage.Acknowlegde\"\x00\x12\x44\n\x0fupdateGlobalSum\x12\x14.DCnetPackage.DC_net\x1a\x19.DCnetPackage.Acknowlegde\"\x00'
 )
 
 
@@ -319,6 +319,38 @@ _SEED = _descriptor.Descriptor(
 )
 
 
+_TIMESTAMP = _descriptor.Descriptor(
+  name='TimeStamp',
+  full_name='DCnetPackage.TimeStamp',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='timestamp', full_name='DCnetPackage.TimeStamp.timestamp', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=460,
+  serialized_end=490,
+)
+
+
 _EMPTY = _descriptor.Descriptor(
   name='Empty',
   full_name='DCnetPackage.Empty',
@@ -339,8 +371,8 @@ _EMPTY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=460,
-  serialized_end=467,
+  serialized_start=492,
+  serialized_end=499,
 )
 
 DESCRIPTOR.message_types_by_name['Acknowlegde'] = _ACKNOWLEGDE
@@ -350,6 +382,7 @@ DESCRIPTOR.message_types_by_name['HelloReply'] = _HELLOREPLY
 DESCRIPTOR.message_types_by_name['Secret'] = _SECRET
 DESCRIPTOR.message_types_by_name['DiffieHelman'] = _DIFFIEHELMAN
 DESCRIPTOR.message_types_by_name['Seed'] = _SEED
+DESCRIPTOR.message_types_by_name['TimeStamp'] = _TIMESTAMP
 DESCRIPTOR.message_types_by_name['Empty'] = _EMPTY
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -402,6 +435,13 @@ Seed = _reflection.GeneratedProtocolMessageType('Seed', (_message.Message,), {
   })
 _sym_db.RegisterMessage(Seed)
 
+TimeStamp = _reflection.GeneratedProtocolMessageType('TimeStamp', (_message.Message,), {
+  'DESCRIPTOR' : _TIMESTAMP,
+  '__module__' : 'dc_net_pb2'
+  # @@protoc_insertion_point(class_scope:DCnetPackage.TimeStamp)
+  })
+_sym_db.RegisterMessage(TimeStamp)
+
 Empty = _reflection.GeneratedProtocolMessageType('Empty', (_message.Message,), {
   'DESCRIPTOR' : _EMPTY,
   '__module__' : 'dc_net_pb2'
@@ -418,8 +458,8 @@ _GREETER = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=470,
-  serialized_end=689,
+  serialized_start=502,
+  serialized_end=721,
   methods=[
   _descriptor.MethodDescriptor(
     name='SayHello',
@@ -464,8 +504,8 @@ _DC_ROUND = _descriptor.ServiceDescriptor(
   index=1,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=692,
-  serialized_end=1299,
+  serialized_start=724,
+  serialized_end=1334,
   methods=[
   _descriptor.MethodDescriptor(
     name='SendLocalSum',
@@ -542,7 +582,7 @@ _DC_ROUND = _descriptor.ServiceDescriptor(
     full_name='DCnetPackage.DC_round.sync',
     index=7,
     containing_service=None,
-    input_type=_ACKNOWLEGDE,
+    input_type=_TIMESTAMP,
     output_type=_ACKNOWLEGDE,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
@@ -553,7 +593,7 @@ _DC_ROUND = _descriptor.ServiceDescriptor(
     index=8,
     containing_service=None,
     input_type=_DC_NET,
-    output_type=_DC_NET,
+    output_type=_ACKNOWLEGDE,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

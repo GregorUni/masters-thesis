@@ -31,7 +31,7 @@ service Greeter {
 
     rpc deleteClient(DC_net) returns (Acknowlegde){}
 
-    rpc sync(Acknowlegde) returns (Acknowlegde){}
+    rpc sync(TimeStamp) returns (Acknowlegde){}
 
     rpc updateGlobalSum(DC_net) returns (Acknowlegde){}
     
@@ -78,8 +78,11 @@ service Greeter {
     optional int32 neighboor = 3;
   }
 
-  message Empty 
+  message TimeStamp{
+    optional int32 timestamp = 1;
+  }
 
+  message Empty 
   {
 
   }
