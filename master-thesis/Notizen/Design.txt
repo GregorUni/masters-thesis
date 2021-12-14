@@ -184,7 +184,7 @@ Wie umgehen mit Bit overflows also wenn addiert wird von 9+2 auf 11?
 
 
 Zeitstempel für jede Nachricht mitsenden, falls internetausfall vorhanden ist.
-
+##########################################################################################
 Zeitsynchronisation:
 siehe 3.2.6
 //////////////////////////////// Bottom-Up Approach
