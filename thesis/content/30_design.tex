@@ -28,14 +28,18 @@ This chapter outlines the conceptual solution of this thesis to achieve privacy-
 This paragraph will discuss the technical guideline published by the BSI (Federal Office for Information Security). The BSI is the entity of the German federal government that deals with digital security issues and issues recommendations as well as mandatory security guidelines for critical infrastructures. Among other things, technical guidelines are published in which security standards are defined for different IT systems. The technical guideline BSI-TR-03109 defines minimum requirements for the functionality, security and interoperability of smart meters in Germany.  The technical guideline BSI-TR-03109 defines minimum requirements for functionality, security and interoperability that individual components of smart meters in Germany must fulfill. The guideline as a whole consists of 6 different documents, which are shown in Figure 3.1. Based on the guidelines, it is possible to have devices certified by test centers. Unless otherwise described, all information are derived from the technical guideline.\\
 \\
 \textbf{Actors on the SMGW}
+%hier ein kleiner text
 \\
 \\
-Consumer: The consumer is the person who uses electrical energy, gas, water
+\begin{enumerate}
+\item Consumer: \\
+The consumer is the person who uses electrical energy, gas, water
 or heat. In addition, the consumer is the owner of the measurements processed and stored in the SMGW. In order to interact with the SMGW, the consumer uses a communication device. All necessary data can be retrieved and displayed through it.\\
-SMGW administrator:
+\item SMGW administrator:\\
 A Smart Meter Gateway Administrator (GWA) a trusted entity and each SMGW is assigned a GWA. The GWA handles the configuration, monitoring and control of SMGWs and it is even possible to perform updates of SMGWs via the GWA.\\
-Authorized external entities:\\
+\item Authorized external entities:\\
 External market participants (EMT) are all other authorized participants in the energy network that can establish a communication connection with the SMGW.These include power grid providers and electricity suppliers. The SMGW ignores all other communication requests that do not come from the GWA or EMTs in order to prevent attacks.\\
+\end{enumerate}
 There are several other actors such as Controllable Local Systems, service technicians and meters. However, these actors do not play a major role in the protocol that is proposed here.
 \begin{figure}[tbp]
   \centering
@@ -57,6 +61,12 @@ The WAN is the only communication interface with which the SMGW can communicate 
 \item Home Area Network (HAN):\\
 In HAN, an SMGW interacts with Controllable Local Systems (e.g., photovoltaic systems). In addition, users and service technicians can use the HAN interface to display information about power consumption through functions offered by the SMGW.
 \end{enumerate}
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=1\textwidth]{images/Messwertverarbeitung.png}
+  \caption[Short description]{An example of a NILM analysis.}
+  \label{fig:Appliance_Model}
+\end{figure}
 \textbf{Functionality of the smart meter gateway}
 \\
 \\
@@ -84,9 +94,68 @@ A GWA is able to force a communication link with the SMGW. This is done via a da
 \section{Adversary Model}
 It has already been explained in this chapter which participants in the power grid interact with each other. Now in particular it will be discussed which motives the different participants have and which malicious motives can be pursued by the participants or by attackers.  \\
 \\
-The smart meter attempts to achieve the 3 security objectives of confidentiality, integrity and availability. The 3 security goals are often summarized as CIA.
-\subsection{Customer Motives}
-The most important goal for the customer is the guarantee of anonymity through the smart meter. Possible attacks on the electricity consumption penetrate deeply into the private sphere of each customer. Therefore, no conclusions may be drawn from the electricity consumption of a customer.
+The smart meter attempts to achieve the 3 security objectives of confidentiality, integrity and availability. The 3 security goals are often summarized as CIA. Another important security goal for this work is anonymity. The 4 definitions are essential for the understanding of this work. Therefore, the terms are explained below.
+\begin{enumerate}
+\item Confidentiality: \\
+It is not possible for an unauthorized party to gain information about the content of the data sent.
+\item Integrity:\\
+It is not possible for an unauthorized party to modify the content of data without data without this being noticed.
+\item Availability: \\
+It is not possible for an unauthorized party to interfere with the functionality of a service.
+\item Anonymity:\\
+Verbergen der Identität vor dem Kommunikationspartner???
+Vllt wer hat die Daten gesendet, wer hat den Stromverbrauch gesendet?
+\end{enumerate}
+ 
+ 
+All available attacks will aim at bypassing these security targets to get information about the customer. 
+\subsection{Customer's Motives}
+For the costumer, all the security goals defined above are important. But by far the most important is the security goal of anonymity through the smart meter. Possible attacks on the electricity consumption penetrate deeply into the private sphere of each customer. Therefore, no conclusions may be drawn from the electricity consumption of a customer.\\
+On the other hand, unethical customers may try to steal electricity to save energy costs. The smart meter is located in or on the customer's house. An unethical customer could attempt to tamper directly with the smart meter's hardware or software. The attempts could look like this, a Costumer could try to reduce the recorded electricity consumption at the Smart meter or the Smart meter could be manipulated to measure less electricity when electricity prices are high and more electricity when electricity prices are low.
+\subsection{Electricity Provider's Motives}
+For the electricity provider, the authenticity of the billing is the most important security objective because From the electricity provider's point of view, the customer is not trustworthy in the calculation of the bill. In addition, the customer has access to the smart meter at almost any time in an environment trusted by the customer. Unlike analog meters, smart meters cannot be mechanically attacked. But if a customer manages to change the software of the smart meter, the billing can be manipulated at the same time. On the other hand, the electricity provider can also be an overly intrusive electricity provider. In the paragraph [Ref NILM] it was explained how a behavioral analysis can be created from the electricity consumption. This sensitive information could be used to gain an additional source of income. In [SSRN] it was listed which questions could be answered by a Nilm analysis. Quote: "On what days and during what times do you watch TV? How much home time do you spend in front of your computer?" or "Are any of the appliances in your household failing or operating below optimal efficiency? Do you own (and so presumably like) lots of gadgets?". Advertising companies would certainly pay money for this kind of information in order to be able to advertise more accurately.
+\subsection{Eavesdropping}
+Eavesdropping may be the weakest type of attack, but successful eavesdropping on the communications of the smart meter could be useful to e.g. intruders. However, curious neighbors might also have an interest in the behavior inside the house. Turning on/off lights implies that someone is at home or leaving the house. Therefore, eavesdropping on electricity consumption could provide information about when is a suitable time to break in. To prevent eavesdropping, smart meter communication is encrypted to maintain confidentiality. Cryptographic algorithms such as AES are widely used today and have been analyzed for weaknesses over the years by a number of researchers. Hence, a successful attack on encrypted data to extract information is extremely unlikely.
+\subsection{Active Attackers}
+In Germany, the smart grid is one of the critical infrastructures. This means that the failure of the smart grid could lead to a significant compromise of public safety or other serious consequences. Such systems are threatened by active attackers. The objective of active attackers may not necessarily be to analyze a user's electricity consumption. They may want to disable availability through e.g. denial of service attacks. These attacks could leave major damage to the power grid and are definitely a realistic threat [quelle]. But this thesis focuses on smart meters and the anonymization of electricity consumption. That's why it is assumed that the active attacker does not carry out system-wide attacks on the power grid. Rather, it is assumed that the attacker attempts to take control in the proposed DC network. Among other things, it is assumed that the attacker has the theoretical ability to take over one or more SMGW and send messages through the SMGW. In addition, if the attacker has taken over an SMGW, it can perform all operations that are possible through the proposed DC network. In the next section, the conceptual solution of the DC-Net is proposed and how the DC-Net could be implemented in the technical guideline of the BSI. It also describes which attacks on the DC-Net are possible with the defined attacker model.
+\section{A Privacy-Preserving Aggregation Scheme Using DC-Nets}
+In [Cha3-85, Cha8-85, Chau-88], David Chaum proposes a protocol which he calls DC network. The DC network offers the possibility to achieve both sender anonymity and receiver anonymity in communication networks. The operation of the DC network is explained in the following.
+\subsection{DC Networks}
+The DC network uses the property that any finite alphabet can be numerated( e.g a=0, b=1 etc). If an numerated alphabet from 0 is given, then this alphabet forms an abelian group (modulo alphabet size). Because of the abelian group, simple mathematical operations like addition can be performed on the numerated letters in the alphabet.
+In addition, a DC network assumes that messages are always sent that are of equal length. A participant in a DC network uses one or more keys with which it superposes the messages and one generated key is then communicated to exactly one participant. 
+More precisely, each participant adds locally all key characters it generates. Then, the received keys from other participants are locally subtracted and finally, all meaningful characters (the message) that should be sent are added (modulo alphabet size). The result of the operation is distributed in the communication network and is called local superposition. 
+The distributed superpositions are added together globally and the result is transmitted back to all participants. Thereby only the meaningful messages remain. If a participant does not want to send a meaningful message, the participant sends an empty message. The message consists only of zeros and is superposed with the key. The empty message reflects the neutral element in this structure. If all participants have sent only empty messages, the global result is a message only containing 0. If one of all participants have sent a meaningful message, the global superposition is the message. If more than one participant sent a meaningful message, then the result is the overlay of all sent messages and a single message from the overlay cannot be recovered. In the last case one speaks also of a collision. In order to solve this problem, the collision resolution algorithm with averaging can be used in a DC network. 
+Exchanging keys to calculate the local sum can be very tedious. In addition, a different key must be exchanged for each message round. Otherwise it would be very easy to calculate the key from previously sent empty messages. Therefore, so-called pseudo-random number generators are commonly used. The participants share the initial values of the pseudo-random number generators with each other when they join the DC network. This can be done in the same way as the exchange of keys (e.g. a cryptographic key exchange procedure). Due to the deterministic property of PRNGs, the same sequence of numbers is always generated from an initial value. This in turn means that the initial value must remain secret and must not be revealed to any other participant, since otherwise the secret keys can be found out from the initial value. The consequence would be the loss of anonymity. The security of the DC network depends largely on how secure the PRNGs are. Therefore, the PRNGs that are used must be cryptographically secure.\\
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[scale=1]{images/Schlüsselgraph.png}
+  \caption[Short description]{An example of a NILM analysis.}
+  \label{fig:Appliance_Model}
+\end{figure}
+The principle of the DC network is illustrated graphically in figure 3.3 using a simple example. Figure 3.3 is also called the key graph of a DC network and shows 4 participants in a DC network that are connected to each other along a communication link. The outer participants have only one partner, the inner participants are connected to 2 partners. Each participant now exchanges keys with its direct partners. The outer partners need to exchange only one key and the inner ones exchange keys with two direct partners.
+The mathematical operation indicates whether the participant adds or subtracts the exchanged key with the partner. In the example given in the figure, the user Petra would subtract the exchanged key with Rüdiger from the message and would have formed her local superposition. Rudiger would have to add the exchanged key with Petra to his message. He would also have to subtract the key he exchanged with Sabine from the result to calculate his local superposition. 
+
+%peusodzufallsgeneratoren
+\subsection{DC Network Protocol in a German Smart Grid}
+The DC network is a scheme that can be used to achieve sender anonymity and receiver anonymity. Considering the use case of the thesis, the receiver anonymity does not have to be implemented. The aim is to anonymize the electricity consumption and send it to the electricity provider. In this case, the electricity provider is a public recipient and known to all participants. Therefore, the identity of the electricity provider does not need to be protected. Unlike in a normal DC network, the participants do not want to communicate with each other, they only want to send their electricity consumption to the electricity provider. The only exception is when joining the DC network, there the customers have to perform a key exchange once to configure the initial value for the PRNG as explained in 3.3.2.\\
+\\
+\textbf{Protocol Header}
+\\
+\\\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=1\textwidth]{images/Header.png}
+  \caption[Short description]{An example of a NILM analysis.}
+  \label{fig:Appliance_Model}
+\end{figure}Each frame in the DC netz protocol has the following structure.
+As first field there is a Protocol Identifier field. The purpose of the Protocol Identifier field is to ensure that the application of the DC net protocol is recognized by all participants and that the SMGWs as well as the electricity provider can react correctly to the frames. This is followed by the DC Network Identifier field. The DC network identifier field offers the electricity provider the possibility to operate several DC networks in different regions and to distinguish DC networks. In addition, each SMGW is given a unique identifier so that the SMGWs can be distinguished. If the network needs to perform error correction, SMGWs can be notified by the identification number from the power supplier. Although the SMGWs can be identified by the field, the electricity provider still cannot draw any conclusions about electricity consumption from the local superposition. The transmission bit indicates that an SMGW has sent a message and it is used for error correction procedures. The timestamp field indicates when a message was sent. This allows the electricity provider to classify messages by round and not charge for messages from different rounds. The second to last field is the notification field. The field is used for error codes. The electricity provider can thus send notifications to the SMGWs to start error correction procedures. In the last field, the Data field, only the local superpositions are sent.\\
+\\
+\textbf{Protocol Initialization}
+\\
+\\
+For the Protocol Initialization it is assumed that the electricity provider wants to create a completely new DC network. First, a DC Net Identifier is assigned from the electricity provider to the empty DC Net. At least 2 SMGWs have to enter the DC Net. A DC Net with only one participant is not operational and cannot offer anonymity. According to the Technical guideline TR-03109 from BSI, SMGWs are only allowed to communicate with authorized participants in the smart grid and all foreign requests are ignored. These are EMTs, GWAs and the electricity provider. In order for the DC grid to become operational, the participants in the grid must therefore exchange an initial value with the SMGWs to configure the PRNGs. There is a communication barrier that does not allow SMGWs to communicate with SMGWs. With the limited communication capabilities, the SMGWs rely on the power provider. The SMGWs can use a key exchange protocol to transmit the initial value. 
+%Thus, all participants receive a local superposition from each participant. The next step is that all local sums are added up. The result is called global superposition. 
+
+
 
 \todo{write design}
 

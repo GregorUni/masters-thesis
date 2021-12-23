@@ -20,7 +20,7 @@ Notizen für Design:
 /////////////////////Top-down Approach
 Es gibt eine .pdf vom BSI in der Informationen zum Sicherheitsmodul gefunden werden können. Also welche kryptografische Operationen werden unterstützt.
 
-HEADER: |DC-Net Identifier|Client-Identifier|Übertragungsbit|Zeitstempel|Benachrichtigungen|Daten(lokale Summe) |
+HEADER:Protokoll-ID |DC-Net Identifier|Client-Identifier|Übertragungsbit|Zeitstempel|Benachrichtigungen|Daten(lokale Summe) |
 DC-Net Identifier: eineindeutiger Identifier, der angibt in welchem DC-Netz sich ein SGMW befindet
 Client-Identifier: eineindeutiger CLient Identifier, jeder Client bekommt in einem DC-Netz einen eineindeutigen Identifier
 Zeitstempel: Ist ein Zeitstempel, der angibt für welche generation die daten (lokale summe) bestimmt sind.
