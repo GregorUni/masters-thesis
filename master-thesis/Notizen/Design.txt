@@ -101,6 +101,8 @@ Der faulty client kann durch den Internetausfall nicht rechtzeitig die lokale su
 also es ist wahrscheinlich besser einfach so den stromverbrauch nachzusenden ohne dc-netz.
 oder den stromverbrauch gar nicht senden.
 
+Normale DC Netz operation
+
 Durchführung: Bisher wurden technische Schritte erklärt um ein DC-Netz in das bereits operierende Stromnetz zu implementieren. Wie sieht eine typische Operation im Stromnetz aus?
 Am besten wäre es, wenn es eine synchronisierte Uhrzeit gibt in der alle DC-Netze(in einer Region) gleichzeitig senden und überlagern. Aus den DC-Netzen werden mehrere Teil-Stromverbräuche gesendet, die an den Stromanbieter weitergeleitet werden. Der Stromanbieter muss nur alle Teilverbräuche (lokale Summen) addieren und bekommt somit den Gesamtverbrauch des Stromnetzes. Diese Daten sind komplett anonym und gibt nur die Auskunft über den Gesamtverbrauches eines kleinen DC-Netzes aus. In der Technischen Richtlinie wird auch erwähnt, wie die Zähler Zeit synchronisieren, also ist eine Zeitgleiche sendung von Nachrichten durchaus umsetzbar.
 
