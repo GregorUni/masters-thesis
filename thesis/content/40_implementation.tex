@@ -19,9 +19,16 @@
 % Faden zu verlieren. Vollständige Quellprogramme haben in einer Arbeit
 % nichts zu suchen, auch nicht im Anhang, sondern gehören auf Rechner,
 % auf denen man sie sich ansehen kann.
-
-\ldots implementation \ldots
-
+The conceptual approach of the DC network was presented in Chapter 3. Nevertheless, smart grids are a real-world system and it must be shown that the theoretical solution can be implemented in a practical environment. This chapter deals with the implementation of the introduced protocol. It is described which technical tools were used and at which implementation steps problems occurred.
+\section{Aufbau der praktischen Umsetzung}
+A DC network was implemented with the same requirements as defined in chapter 3. For technical reasons, however, the exact same structure could not be implemented. If there are any deviations from the defined protocol, then these will be described and explained in this chapter.
+4 Raspberrypis are used to realise the design, where 3 Raspberrypis simulate the SMGW and 1 Raspberrypi represents the electricity provider.  In the following, the Raspberrpis that represent the SMGW are called clients and the Raspberrypi that represents the power provider is simply referred to as the power provider. All clients have a communication link via Lan to the power provider. However, the clients do not have a physical connection to each other. As suggested in the protocol, the only way for the clients to communicate is through the power provider. After the clients join the DC network, the clients build their local sum and send it periodically to the power provider. The electricity provider adds up the local totals and stores the global total in an external text file. In a smart grid, electricity consumption is sent to the electricity provider every 15-60 minutes. Since the implementation is a demo, the sending interval is 10 seconds. In addition, the demo was implemented in such a way that after 4 messages a client fails and a corrective action must be taken. After that the client can re-enter the DC network.\\
+\\
+\textbf{gRPC Remote Procedure Calls - GRPC}
+%hier ein kleiner text
+\\
+\\
+GRPC is an open source remote procedure call (RPC) system developed by google since 2015. GRPC relies on a client-server structure. The goal of grpc is that distributed applications and services can be implemented as easily as possible. With GRPC, so-called services can be defined. Each service allows to declare different functions that can communicate via a self-selected message format. Therefore on the client the functions are implemented, while the server runs the interface and processes the client requests. 
 \todo{write implementation}
 
 \cleardoublepage
