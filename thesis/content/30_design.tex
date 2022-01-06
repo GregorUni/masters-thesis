@@ -30,7 +30,7 @@ This paragraph will discuss the technical guideline published by the BSI (Federa
 \textbf{Stakeholder in the Smart Grid}
 %hier ein kleiner text
 \\
-\begin{enumerate}
+
 \item Consumer: \\
 The consumer is the person who uses electrical energy, gas, water
 or heat. In addition, the consumer is the owner of the measurements processed and stored in the SMGW. In order to interact with the SMGW, the consumer uses a communication device. All necessary data can be retrieved and displayed through it.\\
@@ -45,12 +45,48 @@ There are several other actors such as Controllable Local Systems, service techn
   \includegraphics[width=1\textwidth]{images/BSI-TR-03109.png}
   \caption[Short description]{An example of a NILM analysis.}
   \label{fig:Appliance_Model}
+\end{figure}\\
+\\
+\textbf{Stakeholder Motives}
+\\
+\\
+It has already been explained in this chapter which participants in the power grid interact with each other. Now in particular it will be discussed which motives the different participants have and which malicious motives can be pursued by the participants or by attackers.  \\
+\\
+The smart meter attempts to achieve the 3 security objectives of confidentiality, integrity and availability. The 3 security goals are often summarized as CIA. Another important security goal for this work is anonymity. The 4 definitions are essential for the understanding of this work. Therefore, the terms are explained below.
+\begin{enumerate}
+\item Confidentiality: \\
+It is not possible for an unauthorized party to gain information about the content of the data sent.
+\item Integrity:\\
+It is not possible for an unauthorized party to modify the content of data without data without this being noticed.
+\item Availability: \\
+It is not possible for an unauthorized party to interfere with the functionality of a service.
+\item Anonymity:\\
+Verbergen der Identität vor dem Kommunikationspartner???
+Vllt wer hat die Daten gesendet, wer hat den Stromverbrauch gesendet?
+\end{enumerate}
+ 
+ 
+All available attacks will aim at bypassing these security targets to get information about the customer. 
+\\
+\\
+\textbf{Customer's Motives}
+\\
+\\
+For the costumer, all the security goals defined above are important. But by far the most important is the security goal of anonymity through the smart meter. Possible attacks on the electricity consumption penetrate deeply into the private sphere of each customer. Therefore, no conclusions may be drawn from the electricity consumption of a customer.\\
+On the other hand, unethical customers may try to steal electricity to save energy costs. The smart meter is located in or on the customer's house. An unethical customer could attempt to tamper directly with the smart meter's hardware or software. The attempts could look like this, a Costumer could try to reduce the recorded electricity consumption at the Smart meter or the Smart meter could be manipulated to measure less electricity when electricity prices are high and more electricity when electricity prices are low.
+\\
+\\
+\textbf{Electricity Provider's Motives}
+\\
+\\
+For the electricity provider, the authenticity of the billing is the most important security objective because From the electricity provider's point of view, the customer is not trustworthy in the calculation of the bill. In addition, the customer has access to the smart meter at almost any time in an environment trusted by the customer. Unlike analog meters, smart meters cannot be mechanically attacked. But if a customer manages to change the software of the smart meter, the billing can be manipulated at the same time. On the other hand, the electricity provider can also be an overly intrusive electricity provider. In the paragraph [Ref NILM] it was explained how a behavioral analysis can be created from the electricity consumption. This sensitive information could be used to gain an additional source of income. In [SSRN] it was listed which questions could be answered by a Nilm analysis. Quote: "On what days and during what times do you watch TV? How much home time do you spend in front of your computer?" or "Are any of the appliances in your household failing or operating below optimal efficiency? Do you own (and so presumably like) lots of gadgets?". Advertising companies would certainly pay money for this kind of information in order to be able to advertise more accurately. For this reason, it is presumed that the electricity provider is considered an honest-but-curious adversary. 
+\subsection{Interfaces and functions of the Smart Meter Gateway}
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/Smart_Meter_Interfaces.png}
+  \caption[Short description]{An example of a NILM analysis.}
+  \label{fig:Appliance_Model}
 \end{figure}
-\\
-\\
-\textbf{Interfaces and functions of the Smart Meter Gateway}
-\\
-\\
 A smart meter or as described in the technical guideline a smart meter gateway(SMGW) must provide 3 different physical interfaces.
 \begin{enumerate}
 \item Local Metrological Network (LMN):\\
@@ -90,29 +126,6 @@ In order for the cost electricity consumption to be calculated correctly, it is 
 \item Wake-Up Service:\\
 A GWA is able to force a communication link with the SMGW. This is done via a data packet signed by the GWA. The SMGW then establishes a fixed preconfigured communication connection to the GWA. This enables the GWA to execute administration commands on the SGMW. 
 \end{enumerate}
-\section{Adversary Model}
-It has already been explained in this chapter which participants in the power grid interact with each other. Now in particular it will be discussed which motives the different participants have and which malicious motives can be pursued by the participants or by attackers.  \\
-\\
-The smart meter attempts to achieve the 3 security objectives of confidentiality, integrity and availability. The 3 security goals are often summarized as CIA. Another important security goal for this work is anonymity. The 4 definitions are essential for the understanding of this work. Therefore, the terms are explained below.
-\begin{enumerate}
-\item Confidentiality: \\
-It is not possible for an unauthorized party to gain information about the content of the data sent.
-\item Integrity:\\
-It is not possible for an unauthorized party to modify the content of data without data without this being noticed.
-\item Availability: \\
-It is not possible for an unauthorized party to interfere with the functionality of a service.
-\item Anonymity:\\
-Verbergen der Identität vor dem Kommunikationspartner???
-Vllt wer hat die Daten gesendet, wer hat den Stromverbrauch gesendet?
-\end{enumerate}
- 
- 
-All available attacks will aim at bypassing these security targets to get information about the customer. 
-\subsection{Customer's Motives}
-For the costumer, all the security goals defined above are important. But by far the most important is the security goal of anonymity through the smart meter. Possible attacks on the electricity consumption penetrate deeply into the private sphere of each customer. Therefore, no conclusions may be drawn from the electricity consumption of a customer.\\
-On the other hand, unethical customers may try to steal electricity to save energy costs. The smart meter is located in or on the customer's house. An unethical customer could attempt to tamper directly with the smart meter's hardware or software. The attempts could look like this, a Costumer could try to reduce the recorded electricity consumption at the Smart meter or the Smart meter could be manipulated to measure less electricity when electricity prices are high and more electricity when electricity prices are low.
-\subsection{Electricity Provider's Motives}
-For the electricity provider, the authenticity of the billing is the most important security objective because From the electricity provider's point of view, the customer is not trustworthy in the calculation of the bill. In addition, the customer has access to the smart meter at almost any time in an environment trusted by the customer. Unlike analog meters, smart meters cannot be mechanically attacked. But if a customer manages to change the software of the smart meter, the billing can be manipulated at the same time. On the other hand, the electricity provider can also be an overly intrusive electricity provider. In the paragraph [Ref NILM] it was explained how a behavioral analysis can be created from the electricity consumption. This sensitive information could be used to gain an additional source of income. In [SSRN] it was listed which questions could be answered by a Nilm analysis. Quote: "On what days and during what times do you watch TV? How much home time do you spend in front of your computer?" or "Are any of the appliances in your household failing or operating below optimal efficiency? Do you own (and so presumably like) lots of gadgets?". Advertising companies would certainly pay money for this kind of information in order to be able to advertise more accurately. For this reason, it is presumed that the electricity provider is considered an honest-but-curious adversary. 
 \subsection{Eavesdropping}
 Eavesdropping may be the weakest type of attack, but successful eavesdropping on the communications of the smart meter could be useful to e.g. intruders. However, curious neighbors might also have an interest in the behavior inside the house. Turning on/off lights implies that someone is at home or leaving the house. Therefore, eavesdropping on electricity consumption could provide information about when is a suitable time to break in. To prevent eavesdropping, smart meter communication is encrypted to maintain confidentiality. Cryptographic algorithms such as AES are widely used today and have been analyzed for weaknesses over the years by a number of researchers. Hence, a successful attack on encrypted data to extract information is extremely unlikely.
 \subsection{Active Attackers}

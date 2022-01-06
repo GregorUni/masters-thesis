@@ -1,4 +1,4 @@
-\chapter{Technical Background}
+\chapter{Background}
 \label{sec:state}
 
 % Hier werden zwei wesentliche Aufgaben erledigt:
@@ -46,14 +46,27 @@ The original energy network was mainly considered as a transmission system to se
 Instead of a few electricity producers (e.g. nuclear power plants, coal-fired power plants), which were responsible for a large part of the electricity generation, there are now many smaller producers (e.g. wind turbines). %However, renewable power generation is often dependent on external environmental influences. Therefore, smart meters have been widely introduced in households to ensure that the smart grid is stable despite fluctuations in power generation.
 However, renewable power generation is often dependent on external environmental factors. In order for the smart grid to be stable despite fluctuations in power generation, smart meters have been introduced.
 This enables the electricity provider to receive the electricity consumption of a household every 15 minutes. It offers the possibility to get more easily the current electricity demand from the consumers. Previously, the current electricity demand was simulated from load forecasting models. If the demand should increase spontaneously, peaker plants, mainly consisting of coal-fired power plants, would be turned on to quickly meet this demand. This is costly and environmentally unfriendly. 
-Since then, structural changes have been made to optimize the energy grid and make it more intelligent by exchanging information in near-real-time. This allows the demand to be matched to the available supply. The fundamental component of the smart grid are the smart meters, which were already mentioned. They which will be discussed in more detail in the next section.(Quelle:Smart Grid Communications)(Privacy Survey2013)
-
-\section{Smart Meter}
+Since then, structural changes have been made to optimize the energy grid and make it more intelligent by exchanging information in near-real-time. This allows the demand to be matched to the available supply. The fundamental component of the smart grid are the smart meters, which were already mentioned. They which will be discussed in more detail in the next section.(Quelle:Smart Grid Communications)(Privacy Survey2013)\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/Smart_Grid.png}
+  \caption[Short description]{An example of a NILM analysis.}
+  \label{fig:Appliance_Model}
+\end{figure}
+\\
+\\
+\textbf{Smart Meter}
+\\
+\\
 Smart meters are the key component in a smart grid. A smart meter is an electricity meter that has an interface to the Internet. It enables two-way communication between the control center and the meter. This is also called Advanced Metering Infrastructure (AMI). Two-way communication improves the quality of the power grid and makes it possible to offer services that would not be feasible without a smart meter. For example it's now practicable to detect power outages.%hier nochmal was ändern.
 As a result, the power grid operator can detect power failures on its own. Previously, the operator was dependent on customer calls to detect power outages. Another new feature is detailed monitoring of power flows at the smart meter. Before, power flows could only be measured up to substations. This new function enables electricity network operators to quickly detect changes in consumption behavior and react to them without having to use peaker plants, which are costly and environmentally unfriendly. Depending on the setting, smart meters can send electricity consumption to the electricity provider at least every 15 minutes. In combination with the consumption of all users and the current electricity supply, a better price can be achieved. This is also called real-time pricing. So not only can the customer be offered a better electricity contract, in addition the meters no longer have to be read at home by a technician from the electricity provider. This makes billing easier for customers and electricity providers. Furthermore, customers can also check their current electricity consumption via the interfaces provided by the smart meter in order to analyze their own behavior and to reduce their consumption. (Privacy-Aware Smart Metering)
 %Thus, the end user can analyze his own consumption behavior in order to reduce his own electricity consumption.
 \section{Smart Meter Privacy}
-The main advantage of the smart grid is the communication between the consumers and the energy suppliers. It is precisely this communication that solves a lot of structural problems in today's energy system. However, sending user information every 15 minutes allows for new methods that can be used to create accurate behavioral analyses in one's own home. Sending private electricity consumption data is therefore very sensitive information and must to be protected. This is not an easy task, because on the one hand the electricity consumption must be protected and anonymized, and on the other hand the billing and costs must be clearly assignable to a person. In the following paragraphs, we will describe how simple behavioral analyses are generated by electricity consumption. Subsequently, solutions to Metering for Billing and Metering for Operations will be presented, which have been discussed in the scientific community so far.(Privacy-Aware Smart Metering) 
+The main advantage of the smart grid is the communication between the consumers and the energy suppliers. It is precisely this communication that solves a lot of structural problems in today's energy system. However, sending user information every 15 minutes allows for new methods that can be used to create accurate behavioral analyses in one's own home. Sending private electricity consumption data is therefore very sensitive information and must to be protected. This is not an easy task, because on the one hand the electricity consumption must be protected and anonymized, and on the other hand the billing and costs must be clearly assignable to a person. In the following paragraphs, we will describe how simple behavioral analyses are generated by electricity consumption. Subsequently, solutions to Metering for Billing and Metering for Operations will be presented, which have been discussed in the scientific community so far.(Privacy-Aware Smart Metering) \begin{figure}[htbp!]
+  \centering
+  \includegraphics[width=0.9\textwidth]{images/Appliance_Model.png}
+  \caption[Short description]{An example of a NILM analysis.}
+  \label{fig:Appliance_Model}
+\end{figure}
 \subsection{Non-intrusive load monitoring} 
 
 Interpreting power consumption with the intent of identifying devices in the home is called non-intrusive load monitoring (NILM). George Hart and Fred Schweppe were the first to develop non-intrusive load monitors in 1985 and connect them to electricity meters. They were able to record the current power consumption up to every 5 seconds. Then they did the following steps to identify appliances in a household:
@@ -65,29 +78,40 @@ The events of steeply rising or steeply falling edges are saved. These events ar
 Essentially, a cluster analysis is then applied to the diagram and each  cluster represents a household appliance.
 \item Appliance Model Construction\\
 Since different household appliances have been determined by the clusters, appliance models can now be constructed. In this step, different states in which an appliance can be in, are found based on the different power consumption. An example of how the result of a appliance model looks like can be seen in Figure 2.1.
-
-
-\begin{figure}[tbp]
-  \centering
-  \includegraphics[width=1\textwidth]{images/Appliance_Model.png}
-  \caption[Short description]{An example of a NILM analysis.}
-  \label{fig:Appliance_Model}
-\end{figure}
 \item Behavior Analysis:\\
 Once the majority of the household appliances have been identified, the behaviors of people in the household can be analyzed. In real time, it is possible to track the use of devices, since individual signals can be identified as they occur and do not need to be reconstructed anymore.
 At this point, several approaches can be taken to provide behavioral analysis. A common approach is to track how long a device has been in use and create statistics on how each device has been used. A daily analysis can be viewed in Figure 2.2.
 \item Appliance Saving:\\
 The last approach is to name the household appliances found(washing machine, etc.) and store them in a database. So that in the case of a further household analysis, it is possible to fall back on appliances that have already been found.
 \end{enumerate}
-The founder of NILM G. W. Hart himself said in 1989: ``Specifically, I recommend that legal restrictions be enacted or clarified so that electric power usage is considered as private as any phone conversation.''(Residential Energy Monitoring)
-Hence, there is a need for a privacy-preserving solution for smart meters.
-Although the original NILM approach measured power consumption every 5 seconds, there are now methods to identify household appliances when power consumption is measured every 15 minutes.(A Neuron Nets Based)
-\begin{figure}[tbp]
+The founder of NILM G. W. Hart himself said in 1989: ``Specifically, I recommend that legal restrictions be enacted or clarified so that electric power usage is considered as private as any phone conversation.''(Residential Energy Monitoring)\begin{figure}[tbp]
   \centering
   \includegraphics[width=1\textwidth]{images/nilm.png}
   \caption[Short description]{An example day of a NILM analysis.}
   \label{fig:Nilm}
 \end{figure}
+\\
+\\
+\textbf{High Resolution Analysis}
+\\
+\\
+Since then, research in the field of intrusive monitoring has continued. It was investigated both how much information can be extracted from the household through electricity consumption when electricity consumption was measured particularly frequently. Furthermore, it was investigated whether assumptions can be made about the behavior in the household even at low resolution.
+For example, in the paper(Multimedia Content), the movie being watched could be determined by the power consumption of an LED television. The power consumption of TVs is strongly influenced by blacklighting activities.
+In the paper, the power consumption of the TV was measured every 2 seconds and after 5 minutes analysis of the consumption, the content of the program could be determined with high probability. For this purpose, a Power Consumption Prediction Function was trained to estimate the power consumption of the TV based on the brightness of movie sequences. The input of the prediction function is 5 minute sequences of a movie and the output is the possible power consumption of the TV. If the same 5 minute sequences are running on a TV, the power consumption can be compared with the prediction by a correlation coefficient.
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=1\textwidth]{images/Fernseher.png}
+  \caption[Short description]{An example day of a NILM analysis.}
+  \label{fig:Nilm}
+\end{figure}
+\\
+\\
+\textbf{Low Resolution Analysis}
+\\
+\\
+Hence, there is a need for a privacy-preserving solution for smart meters.
+Although the original NILM approach measured power consumption every 5 seconds, there are now methods to identify household appliances when power consumption is measured every 15 minutes.(A Neuron Nets Based)
+\section{Related Work}
 \subsection{Metering for Operations}
 \\
 The paragraph deals with solutions for Metering for Operations, which has been previously discussed in other scientific works. At Metering for Operations, there is currently no established consensus on a solution. Various technical proposals have already been presented in scientific papers, but there is a lack of uniform criteria and often different conditions are set for the power grid. One reason for this could be that smart grids are realized differently in other countries. In the following, the different approaches are divided into categories and presented conceptually.\\
