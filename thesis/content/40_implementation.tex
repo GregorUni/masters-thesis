@@ -50,12 +50,9 @@ Protocol buffers are used by default in gRPC and allow structured data to be ser
 Listing 4.1 shows the implementation of the protocol header as a protocol buffer. Each header field is assigned a data type and also a unique field number that determines the order of the fields.\\
 \lstinputlisting[language=protobuf2, style=protobuf,caption={%
 Protocol Buffers message declaration using \texttt{protobuf/lang} and the
-style in \texttt{protobuf/style}.}]{protobuf/dc_net.proto}\\
-\\
-\textbf{Client Implementation}
+style in \texttt{protobuf/style}.}]{protobuf/dc_net.proto}
+\subsection{Client Implementation}
 %hier ein kleiner text
-\\
-\\
 When the application starts, a fork process is executed on client side. The fork process allows an application to create a second process by duplicating the address space of the calling process. The calling process is called parent and the duplicated process is called child. In the application, the parent process takes care of the child process. If the child process crashes, the parent process ensures that the child is restarted correctly. 
 The actual logic of the application is located in the child process. First, the child establishes a connection to the electricity provider. The child receives a DC network identifier and a client ID. In the protocol from Chapter 3, it was described that the electricity provider must offer a tunnel so that two SMGWs can communicate with each other. But in gRPC all RPC requests are started by the client. The server only responds to the client's requests. Forwarding messages to non-requesting clients is therefore not possible or very difficult to implement in gRPC. Instead of the public keys being forwarded to the clients by the server, as suggested in the protocol, the public keys are stored on the server for a short time and the clients make a request for the public keys. Each client only needs to obtain the public key of its neighbor to compute the secret key. After the Diffie Hellman key exchange has been executed and the PRNG has been configured, the client can create the local sum and send its local sum to the power provider/server for each round. The server calculates the global sum and verifies the correctness of the global sum. If the global sum is incorrect, then a client has failed and could not send a local sum. The defective client is located by the server and the neighboring clients are instructed by the server to resend the local sum without the key of the failed client. The global sum is then updated by the power provider. After each sending of the local sum, all clients check whether a new subscriber wants to register in the DC network. If so, one client is notified by the server that it gets a new neighbor. Then another registration process takes place with the Diffie Hellman key exchange which was described before. Then another registration process takes place with the Diffie Hellman key exchange which was described before. Another deviation from the protocol is that in the implementation each client has no minimum number of neighbors than the required 3 neighbors in the protocol. The flow chart in Figure 4.2 illustrates the structure of the client implementation with the key functions.
 \begin{figure}[tbp]
@@ -64,22 +61,32 @@ The actual logic of the application is located in the child process. First, the 
   \caption[Short description]{An example of a NILM analysis.}
   \label{fig:Appliance_Model}
 \end{figure}
-\\
-\\
-\textbf{Server Implementation}
-\\
-\\
+\subsection{Server Implementation}
 The server implements all functions that are defined as a service in the protocol buffer. The client implements most of the logic of the DC network. However, when the client accesses a service, most of the service functionality is implemented on the server. Therefore, the client prepares all necessary data and sends the data over a communication channel to the server. The data is then processed by the server and the result is communicated to the client as a response. Listing 4.2 shows all service functions implemented on the server. The data is then processed by the server and the result is communicated to the client as a response. Listing 4.2 shows all service functions implemented on the server. Each function in the service is defined as an RPC and a name is assigned to the function. In addition, the RPC can accept a message format. For example, the addClientToDCnet function uses the message format defined in Listing 4.1. 
 \\
 \lstinputlisting[language=protobuf2, style=protobuf,caption={%
 Protocol Buffers message declaration using \texttt{protobuf/lang} and the
 style in \texttt{protobuf/style}.}]{protobuf/dc_net_server.proto}
-\\ The functions of the service can be divided into 2 categories. 1. helper functions for registration or initialization into the DC network. 2. functions in which logic of the DC net is implemented. In the following, the task of the helper functions is described first. Then the more complex functions are described, which also contain logic of the DC network.
+\\ The functions of the service can be divided into 2 categories. First, helper functions for registration or initialization into the DC network. Second, functions in which logic of the DC net is implemented. In the following, the task of the helper functions is described first. Then the more complex functions are described, which also contain logic of the DC network.\\
+\\
+\textbf{Helper Functions}
 \\
 \\
-\textbf{Challenges}
+The helper functions in the service mainly perform tasks to register the client in the DC network or to ensure client communication with each other. Therefore, the helper functions do not take over any core logic in the DC network. In the following a documentation with the tasks of the functions is described.
+\begin{enumerate}
+\item addClientToDCnet:\\
+The first action that the client child performs is to register on the DC network. For this the addClientToDCnet function is used. In the server the request from the client is processed. The client is assigned a client identifier and the identifier is added to a list so that the service has an overview of all clients in the DC network.
+\item ConnectDCClients:\\
+The ConnectDCClients function assigns a random neighbor to a requesting client.
+
+\end{enumerate}
 \\
 \\
+\textbf{DC Network Functions}
+\\
+\\
+
+\section{Challenges}
 %sowas schreiben wie, dass der Mehrfachzugriff auf den Server problematisch war und schwer zu implementieren, da du noch nie mit verteilten Systemen gearbeitet hast. Dann noch schreiben, dass grpc die technischen mögichkeiten eingeschränkt hat, da es keine Client zu CLient kommunikation gab. Vllt zusammenfassen, dass die Clients einfach zu implementieren waren, aber die schwerste aufgabe der server war.
 
 %Den Service noch beschreiben!
