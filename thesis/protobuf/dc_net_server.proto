@@ -1,0 +1,23 @@
+syntax = "proto2";
+package DCnetPackage;
+
+  service DC_round {
+    rpc SendLocalSum(DC_net) returns (Acknowlegde)  {}
+
+    rpc addClientToDCnet(DC_net) returns (DC_net) {}
+
+    rpc connectDCClients(DC_net) returns (DC_net) {}
+
+    rpc ExchangeOpenKeysForDH(Secret) returns (Secret) {}
+
+    rpc getDiffieHellman(Empty) returns (DiffieHelman) {}
+
+    rpc ExchangePRNGSeed(Seed) returns (Seed){}
+
+    rpc deleteClient(DC_net) returns (Acknowlegde){}
+
+    rpc sync(TimeStamp) returns (Acknowlegde){}
+
+    rpc updateGlobalSum(DC_net) returns (Acknowlegde){}
+    }
+  

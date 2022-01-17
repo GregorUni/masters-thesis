@@ -1,0 +1,11 @@
+syntax = "proto2";
+package DCnetPackage;
+
+  message DC_net {
+    optional int32 dc_net_identifier = 1;
+    optional int32 client_identifier = 2;
+    optional int32 transmissionBit = 3;
+    optional string timestamp = 4;
+    optional int32 notification = 5;
+    optional int32 localSum = 6;
+  }

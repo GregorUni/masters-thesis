@@ -20,7 +20,7 @@ Notizen für Design:
 /////////////////////Top-down Approach
 Es gibt eine .pdf vom BSI in der Informationen zum Sicherheitsmodul gefunden werden können. Also welche kryptografische Operationen werden unterstützt.
 
-HEADER: |DC-Net Identifier|Client-Identifier|Übertragungsbit|Zeitstempel|Benachrichtigungen|Daten(lokale Summe) |
+HEADER:Protokoll-ID |DC-Net Identifier|Client-Identifier|Übertragungsbit|Zeitstempel|Benachrichtigungen|Daten(lokale Summe) |
 DC-Net Identifier: eineindeutiger Identifier, der angibt in welchem DC-Netz sich ein SGMW befindet
 Client-Identifier: eineindeutiger CLient Identifier, jeder Client bekommt in einem DC-Netz einen eineindeutigen Identifier
 Zeitstempel: Ist ein Zeitstempel, der angibt für welche generation die daten (lokale summe) bestimmt sind.
@@ -40,8 +40,7 @@ Hier werden alle Möglichen Operationen aufgelistet, die im Protokoll berücksic
 Lösung:
 Jedes DC-Netz (im Falle von mehreren Netzen) erhält eine eineindeutige Identifikationsnummer. Smart Meter Gateways müssen als Clients mit anderen Smart Metern Gateways kommunizieren. Damit die Inhaltsdaten nicht mitgelesen werden können, muss ein Schlüsselgraph erstellt werden, der definiert wie Clients untereinander kommunizieren und ihre Schlüssel addieren oder subtrahieren. Tauschen zwei Clients einen Schlüssel miteinander aus, entsteht eine Kante im Schlüsselgraph. Andere Teilnehmer im DC-Netz wissen jedoch nicht, dass eine Kommunikationsverbindung erstelllt wurde. Gleichzeitig tauschen die beiden Clients Kommunikationsdetails miteinander aus wie z.B die eineindeutige TeilnehmerId, die jeder Teilnehmer im DC-Netz erhält. Die beiden Clients (und auch alle anderen Teilnehmer mit ausnahme des Stromproviders) können keinen Überblick über den eigentlichen Schlüsselgraphen haben, aber durch die ausgetauschten Kommunikationsdetails kennt jeder Teilnehmer im DC-Netz die Identifikationsnummer(oder Teilnehmernummer) seines Nachbarns.
 Der Schlüsselaustausch zwischen zwei Clients spielt dabei eine zentrale Rolle. Für jede gesendete Nachricht muss ein neuer Schlüssel erstellt werden und dann mit der Nachricht verknüpft(Xored) werden.
-Damit nicht bei jeder DC-Runde ein neuer Schlüsselaustausch durchgeführt werden muss, werden einmalig Seeds ausgetauscht mit denen jeweils ein PRNG pro Client initialisiert wird. Wenn unter gleichen Bedingungen der PRNG auf beiden Clients initialisiert wird, dann wird jeweils der gleiche Schlüssel erzeugt. Das führt zu einer Reduktion der theoretischen Sicherheit, aber mit guten PRNG kann immernoch
-eine komplexitätstheoretische Sicherheit erreicht werden.
+Damit nicht bei jeder DC-Runde ein neuer Schlüsselaustausch durchgeführt werden muss,/Es werden einmalig Seeds ausgetauscht mit denen jeweils ein PRNG pro Client initialisiert wird. Wenn unter gleichen Bedingungen der PRNG auf beiden Clients initialisiert wird, dann wird jeweils der gleiche Schlüssel erzeugt. Das führt zu einer Reduktion der theoretischen Sicherheit von DC Netz, aber mit guten PRNG kann immernoch eine komplexitätstheoretische Sicherheit erreicht werden.
 
 
 -Registrierung: Ein Smart Meter Gateway muss sich bei einem Stromanbieter registrieren und sich beim DC-Netz anmelden. (Wie sieht der Schlüsselgraph aus?) (Wie wird mit anderen Smart Meter Gateways kommuniziert, obwohl dies nicht technisch möglich ist)
@@ -53,7 +52,7 @@ In der technischen Richtlinie vom BSI wird definiert, welche Anforderungen und m
 Mit der aktuellen Richtlinie ist es Smart Metern nicht erlaubt ins WAN zu kommunizieren außer es handelt sich um eine Kommunikation mit dem SMGW Admin oder Kommunikation an externe Marktteilnehmer. Es ist nicht vorgesehen, dass verschiedene SMGW untereinander kommunizieren.
 
 Registrierung:
-Eine mögliche Lösung wäre es, wenn ein Teilnehmer ,der sich im DC-Netz anmelden möchte eine spezielle definierte Anfrage an seinen Stromanbieter sendet. Diese Anfrage stellt eine Bitte des SMGW dar, sich in einem DC-Netz anzumelden. Der Stromanbieter ordnet dem anfragenden DC-Client in eine geographische Region zu und schlägt einen geeigneten und bestenfalls bereits im DC-Netz angemeldeten Clients(SMGW) vor. Der Stromprovider baut nun einen Tunnel auf und sendet die Tunnelinformationen an den DC-Client und den registrierenden Client. Über diesen Tunnel ist es den beiden SGMW möglich eine Kommunikationsverbindung über den Stromanbieter aufzubauen. Der DC_Client wird nur vom Stromprovider informiert, dass dieser einen neuen Nachbarn erhält und Kontaktinformationen austauschen muss.
+Eine mögliche Lösung wäre es, wenn ein Teilnehmer ,der sich im DC-Netz anmelden möchte eine spezielle definierte Anfrage an seinen Stromanbieter sendet. Diese Anfrage stellt eine Bitte des SMGW dar, sich in einem DC-Netz anzumelden. Der Stromanbieter ordnet dem anfragenden DC-Client in eine geographische Region zu und schlägt einen geeigneten und bestenfalls bereits im DC-Netz angemeldeten Clients(SMGW) vor. Der Stromprovider baut nun einen Tunnel auf und sendet die Tunnelinformationen an den DC-Client und den registrierenden Client. Über diesen Tunnel ist es den beiden SGMW möglich eine Kommunikationsverbindung über den Stromanbieter aufzubauen. Der bereits im DC Netz vorkommende DC Client wird nur vom Stromprovider informiert, dass dieser einen neuen Nachbarn erhält und Kontaktinformationen austauschen muss.
 Das anfragende SMGW muss nun noch die Seeds zu einem (oder mehreren) Clients im DC-Netz senden. 
 Damit der Stromprovider die Seeds nicht mitlesen kann, tätigen die CLients über den bereit gestellten Tunneln einen Diffie Helmann Schlüsselaustausch, um verschlüsselte Nachrichten versenden zu können. Sobald einmal die Seeds ausgetauscht wurden, wird der Stromprovider von dem anfragenden Client informiert, dass dieser erfolgreich im DC-Netz eingetreten ist.(vllt durch eine verifikation?) Anschließend können alle Teilnehmer im DC-Netz ihre lokale Summen an den Strom provider senden und dieser bildet die globale Summe. Der Stromprovider ist dafür zuständig, dass Nachrichten bei Bedarf auch in Zukunft über den bereits genutzen Tunnel zwischen den angemeldeten Clients ausgetauscht werden können.
 
@@ -101,6 +100,8 @@ Der faulty client kann durch den Internetausfall nicht rechtzeitig die lokale su
 
 also es ist wahrscheinlich besser einfach so den stromverbrauch nachzusenden ohne dc-netz.
 oder den stromverbrauch gar nicht senden.
+
+Normale DC Netz operation
 
 Durchführung: Bisher wurden technische Schritte erklärt um ein DC-Netz in das bereits operierende Stromnetz zu implementieren. Wie sieht eine typische Operation im Stromnetz aus?
 Am besten wäre es, wenn es eine synchronisierte Uhrzeit gibt in der alle DC-Netze(in einer Region) gleichzeitig senden und überlagern. Aus den DC-Netzen werden mehrere Teil-Stromverbräuche gesendet, die an den Stromanbieter weitergeleitet werden. Der Stromanbieter muss nur alle Teilverbräuche (lokale Summen) addieren und bekommt somit den Gesamtverbrauch des Stromnetzes. Diese Daten sind komplett anonym und gibt nur die Auskunft über den Gesamtverbrauches eines kleinen DC-Netzes aus. In der Technischen Richtlinie wird auch erwähnt, wie die Zähler Zeit synchronisieren, also ist eine Zeitgleiche sendung von Nachrichten durchaus umsetzbar.
@@ -184,7 +185,7 @@ Wie umgehen mit Bit overflows also wenn addiert wird von 9+2 auf 11?
 
 
 Zeitstempel für jede Nachricht mitsenden, falls internetausfall vorhanden ist.
-
+##################################################################################################################################################
 Zeitsynchronisation:
 siehe 3.2.6
 //////////////////////////////// Bottom-Up Approach
