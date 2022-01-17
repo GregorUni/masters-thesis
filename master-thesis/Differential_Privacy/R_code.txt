@@ -12,6 +12,7 @@ library(stringr)
 library(ggplot2)
 library(scales)
 library(labeling)
+library(ggthemes)
 
 ########################################
 #this function filters the dataset by a start- and an enddate
@@ -50,6 +51,12 @@ df3
 }
 ##########################################################################
 
+
+nameoffile3<-paste("deviationOf_3_Houses.txt", sep="\t")
+file3 <- read.table(file = nameoffile3,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
+
+
+############################################################################
 #define a set to get the number of LCLid 
 medianOfKWs <- vector()
 setwithLCLid<-as.set(df3[[1]])
@@ -209,11 +216,11 @@ sumdata4<<- sumdata4[-1:-48]
 }
 #getTimeValues<<-head(getKWOfHouse[[3]],17480)
 #getTimeValues<<-as.POSIXct(getTimeValues, format='%Y-%m-%d  %H:%M:%S')
-datevector<<-1:364
+datevector<<-seq(as.Date("2013-01-01"), as.Date("2014-01-01"), by="days")
 averageminusSD<<-averagedata-standarddeviation
 averageplusSD<<-averagedata+standarddeviation
 df <- data.frame(datevector,averagedata,averageplusSD,averageminusSD)
-diagram<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + expand_limits(x = 0, y = 0)
+diagram<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + scale_x_date(limits=as.Date(c("2013-01-01","2013-12-30")),date_labels = "%b" ,expand = c(0,0),date_breaks = "1 months") + scale_y_continuous(expand = c(0,0)) +labs(title= "Average Power Consumption per Day") +ylab("Average Power Consumption per Day")+xlab("Month")
 diagramlist[[counter]]<<-diagram
 }
 #####################################################
@@ -296,12 +303,20 @@ for(TimeStamp in 1:17471)
             }
             z[j]<<-z[j]+1
         }
-        deviation[j]<<-z[j]/17471
+        if(is.na(z[j]/17471))
+        {
+        	deviation[j]<<-z[j]
+        }
+        else
+        {
+         deviation[j]<<-z[j]/17471
+        }
+   
     }
 }
-write.table(deviation, file = sprintf("deviationOf_%d_Houses.txt",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
-write.table(standarddeviationOfHouses, file = sprintf("standarddeviationOf_%d_Houses.txt",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
-write.table(sumOfallHouses, file = sprintf("SumOf_%d_Houses.txt",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
+write.table(deviation, file = sprintf("test/deviationOf_%d_Houses.txt",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
+write.table(standarddeviationOfHouses, file = sprintf("test/standarddeviationOf_%d_Houses.txt",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
+write.table(sumOfallHouses, file = sprintf("test/SumOf_%d_Houses.txt",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
 
 getDiagram(counter,lengthOfTestCase)
 counter<<-counter+1
@@ -320,12 +335,20 @@ yearlyStandardDeviation<<-yearlyStandardDeviation[-1:-48]
 }
 #getTimeValues<<-head(getKWOfHouse[[3]],17480)
 #getTimeValues<<-as.POSIXct(getTimeValues, format='%Y-%m-%d  %H:%M:%S')
-datevector<<-1:364
+datevector<<-seq(as.Date("2013-01-01"),as.Date("2013-12-30"),by="days")
 averageminusSD<<-averagedata-yearlyStandardDeviationForDiagram
 averageplusSD<<-averagedata+yearlyStandardDeviationForDiagram
-df <- data.frame(datevector,averagedata,averageplusSD,averageminusSD)
-write.table(averagedata, file = sprintf("averagedataOf_%d_Houses.txt",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
-diagram<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + expand_limits(x = 0, y = 0)
+#getMin<<-aggregate(averagedata ~ cbind(datevector = format(as.Date(datevector, format = "%Y-%m-%d"))), FUN = min, data=df)
+#getIndex<<-which.min(getMin[[2]])
+titleName<<-paste("Aggregated Electricity Consumption of ",lengthOfTestCase," Houses", sep="")
+plotName<<-paste("Aggregated Electricity Consumption of ",lengthOfTestCase," Houses.png", sep="")
+plotName2<<-paste("Aggregated Electricity Consumption of ",lengthOfTestCase," Houses2.png", sep="")
+df <<- data.frame(datevector,averagedata,averageplusSD,averageminusSD)
+write.table(averagedata, file = sprintf("test/averagedataOf_%d_Houses.txt",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
+diagram<<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + scale_x_date(limits=as.Date(c("2013-01-01","2013-12-30")),date_labels = "%b" ,expan d = c(0,0),date_breaks = "1 months") + scale_y_continuous(expand = c(0,0),limits = c(0,0.5)) +labs(title= titleName) +ylab("Average Electricity Consumption per Day in KWH/hh (per half hours)")+xlab("t in Months") + theme_linedraw()
+ggsave(plotName)
+diagram2<<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + scale_x_date(limits=as.Date(c("2013-01-01","2013-12-30")),date_labels = "%b" ,expand = c(0,0),date_breaks = "1 months") + scale_y_continuous(expand = c(0,0),limits = c(0,0.8)) +labs(title= titleName) +ylab("Average Electricity Consumption per Day in KWH/hh (per half hours)")+xlab("t in Months") + theme_linedraw()
+ggsave(plotName2)
 diagramlist[[counter]]<<-diagram
 }
 #####################################################
@@ -357,8 +380,11 @@ df <- data.frame(datevector,averagedata,averageplusSD,averageminusSD)
 diagram<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + expand_limits(x = 0, y = 0)
 diagramlist[[counter]]<<-diagram
 }
+############################################
+getMin<<-aggregate(averagedata ~ cbind(datevector = format(as.Date(datevector, format = "%Y-%m-%d"))), FUN = min, data=df)
+getIndex<<-which.min(getMin[[2]])
 
-
+ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + scale_x_date(limits=as.Date(c("2013-01-01","2013-12-30")),date_labels = "%b" ,expand = c(0,0),date_breaks = "1 months") + scale_y_continuous(expand = c(0,0)) +labs(title= "Average Power Consumption per Day") +ylab("Average Power Consumption per Day")+xlab("t in Months") + theme_linedraw()  + geom_segment(aes(x=df[getIndex,1], y=df[getIndex,2], xend=df[getIndex,1],yend=0),linetype="dashed",color= "red")
 
 ############################
 #berechne durchschnittlichen verbrauch pro tag
