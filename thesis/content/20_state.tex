@@ -106,11 +106,13 @@ In order to recognize a movie, the result of the prediction function is stored o
 \textbf{Low Resolution Analysis}
 \\
 \\
+\todo{stelle überarbeiten}
 Another approach is to work backwards from large data sets to obtain detailed information from aggregated electricity consumption. The Nilm method attempted to have household appliances detected from individual households and then behavioral analyses could be generated from the detected household appliances. A common approach with low-resolution electricity data is to identify the numerous factors that influence total electricity consumption and to filter them out. 
 In (A Neuron Nets Based) an artificial neural network was trained to identify household appliances from electricity consumption. The power consumption was measured only every 15 minutes.\\%nochmal machen
 In another work(Energy Disaggregation), the power consumption of appliances was measured only every hour. The experiment tried to disaggregate the aggregated power consumption with Discriminative Sparse Coding. The experiment was conducted as follows. First, the disaggregation algorithm was trained with electricity consumption of houses from a data set. Then, the trained algorithm was applied to the aggregated electricity consumption of 2 houses. The algorithm was expected to determine up to 52 individual household appliances from the electricity consumption. The results in the paper showed that the disaggregation algorithm with Discriminative Sparse Coding was up to 55.05 percent correct in its decisions.
 
 \section{Related Work}
+\todo{einführung in das kapitel}
 \subsection{Metering for Operations}
 \\
 The paragraph deals with solutions for Metering for Operations, which has been previously discussed in other scientific works. At Metering for Operations, there is currently no established consensus on a solution. Various technical proposals have already been presented in scientific papers, but there is a lack of uniform criteria and often different conditions are set for the power grid. One reason for this could be that smart grids are realized differently in other countries. In the following, the different approaches are divided into categories and presented conceptually.\\
@@ -292,6 +294,7 @@ In order for the cost electricity consumption to be calculated correctly, it is 
 A GWA is able to force a communication link with the SMGW. This is done via a data packet signed by the GWA. The SMGW then establishes a fixed preconfigured communication connection to the GWA. This enables the GWA to execute administration commands on the SGMW. 
 \end{enumerate}
 %ok angreifer modell. welche angreifer gibt es in deinem Netz? eavesdropping ja aber bringt gar nichts, da eine lokale summe nicht gelesen werden kann. active angreifer ja! wird später beschrieben. angriffe innerhalb des netzwerkes von kunden? ja! das gleiche wi9e active angreifer aber ohne vorteil, da die kosten dadurch nicht reduziert werden. stromanbier ja! hat die meiste administrative funktionen!
+\todo{irgendein vorwort, mit text verbinden}
 \subsection{Eavesdropping}
 Eavesdropping may be the weakest type of attack, but successful eavesdropping on the communications of the smart meter could be useful to e.g. intruders. However, curious neighbors might also have an interest in the behavior inside the house. Turning on/off lights implies that someone is at home or leaving the house. Therefore, eavesdropping on electricity consumption could provide information about when is a suitable time to break in. To prevent eavesdropping, smart meter communication is encrypted to maintain confidentiality. Cryptographic algorithms such as AES are widely used today and have been analyzed for weaknesses over the years by a number of researchers. Hence, a successful attack on encrypted data to extract information is extremely unlikely.
 \subsection{Active Attackers}

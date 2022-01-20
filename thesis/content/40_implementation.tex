@@ -26,7 +26,7 @@
 %Wo gab es probleme bei der implementation? Es gab probleme bei der synchronisation der unterschiedlichen teilnehmer.-> unterschiedliche Sekunden. Außerdem war es neu, dass mehrere nutzer auf den selben servercode "zugreifen" und das parallele programmieren. die fork nicht vergessen.
 % wo gibt es unterschiede? design von grpc eingehen, man kann keine Nachrichten weiterleiten mit grpc. Nur 2 verbindungen zwischen CLients möglich.vllt noch mehr?
 The conceptual approach of the DC network was presented in Chapter 3. Nevertheless, smart grids are a real-world system and it must be shown that the theoretical solution can be implemented in a practical environment. This chapter deals with the implementation of the introduced protocol. It is described which technical tools were used and at which implementation steps problems occurred.
-\section{Structure of the practical implementation}
+\section{Structure of the Testbed}
 A DC network was implemented with the same requirements as defined in chapter 3. For technical reasons, however, the exact same structure could not be implemented. If there are any deviations from the defined protocol, then these will be described and explained in this chapter.
 4 Raspberrypis are used to realise the design, where 3 Raspberrypis simulate the SMGW and 1 Raspberrypi represents the electricity provider.  In the following, the Raspberrpis that represent the SMGW are called clients and the Raspberrypi that represents the power provider is simply referred to as the power provider. All clients have a communication link via Lan to the power provider. However, the clients do not have a physical connection to each other. As suggested in the protocol, the only way for the clients to communicate is through the power provider. After the clients join the DC network, the clients build their local sum and send it periodically to the power provider. The electricity provider adds up the local totals and stores the global total in an external text file. In a smart grid, electricity consumption is sent to the electricity provider every 15-60 minutes. Since the implementation is a demo, the sending interval is 10 seconds. In addition, the demo was implemented in such a way that after 4 messages a client fails and a corrective action must be taken. After that the client can re-enter the DC network. To avoid having to implement the application and the related network protocol, gRPC was used as a framework.\\
 \\
@@ -137,11 +137,11 @@ gRPC offers different ways to send messages. One way is a bidirectional streamin
 In a message stream the server can wait for all client requests before responding or it can respond immediately after each message.  A stream can be defined in the Protocol Buffer syntax with the keyword stream. The stream property can be exploited to implement message forwarding in gRPC. Various solution sketches have been found that promote this approach. However, the proposed solutions were vague and storing the public keys in the short term on the server was much simpler to implement. 
 
 \end{enumerate}\\
-\\
-\textbf{Crashing Parent}
-\\
-\\
-During the implementation there were indeterministic crashes of the parent in the client. The error could not be traced for a long time, because the crash occurred at different times during the runtime of the application. When the parent crashes, the child continues to work without interruptions. However, the child cannot be restarted if the parent crashes. It has been found by accident that the fork function is not executed correctly after the communication channel has been created.  
+%\\
+%\textbf{Crashing Parent}
+%\\
+%\\
+%During the implementation there were indeterministic crashes of the parent in the client. The error could not be traced for a long time, because the crash occurred at different times during the runtime of the application. When the parent crashes, the child continues to work without interruptions. However, the child cannot be restarted if the parent crashes. It has been found by accident that the fork function is not executed correctly after the communication channel has been created.  
 %sowas schreiben wie, dass der Mehrfachzugriff auf den Server problematisch war und schwer zu implementieren, da du noch nie mit verteilten Systemen gearbeitet hast. Dann noch schreiben, dass grpc die technischen mögichkeiten eingeschränkt hat, da es keine Client zu CLient kommunikation gab. Vllt zusammenfassen, dass die Clients einfach zu implementieren waren, aber die schwerste aufgabe der server war. Das Problem mit dem Kommunikationskanal und das der Parent die ganze zeit abgestürzt ist.
 
 %Den Service noch beschreiben!
@@ -150,4 +150,4 @@ During the implementation there were indeterministic crashes of the parent in th
 %%% TeX-master: "diplom"
 %%% End:
 
-\cleardoublepage
+\clearpage
