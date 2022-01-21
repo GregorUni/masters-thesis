@@ -30,27 +30,32 @@ Ref[relative entropy] described which metrics can calculate the information cont
 \textbf{Results}
 \\
 \\
-Figure 5.1 - 5.8 show the results of the experimental tests. Experiments were conducted with 2, 3, 5, 10, 25, 50, 100 and 150 houses, whose electricity consumptions were aggregated. On the X-axis the time in months can be read. On the Y-axis, the average daily electricity consumption within half an hour of a house can be read. If the figure is considered, it can be seen that in the experiments with little aggregated houses (2,3,5,10) more significant variations in the amplitude of the characteristic curves are visible. This can be explained by the fact that in the case of less aggregated houses, individual power consumptions have a greater impact and can therefore have a more significant effect on the overall result. This could be an indication that the information content of a single house can still be determined. From 25 - 150 houses the characteristic curves approach the same pattern. The seasons can be clearly recognized. This is directly evident in the house groups 2-10. The fact that the seasons can be recognized so clearly, can be argued indirectly with the fact that a larger house group is observed. This is because individual household appliances no longer stand out clearly and larger patterns of behavior can be recognized, such as the fact that in the winter, people spend more time inside their homes, while in the summer, they spend more time outside. In addition, it is noticeable that the basic load in each diagram is different, however, quickly converges. The base load can best be seen in the boxplot diagram. The boxplot diagram almost diagram 5.1 -5.8 together as boxplot. In conducting the experiments, the preliminary assumption was that with larger aggregations, the result would approach a horizontal constant. The approximation of a constant would be clear evidence that the information content in the result was lost. The experiment cannot prove the prior conjecture. If the results were to approach a constant at larger aggregations, then the upper quartile and the lower quartile would become narrower piece by piece. However, this observation cannot be gleaned from the boxplot.
+Figure 5.1 - 5.8 show the results of the experimental tests. Experiments were conducted with 2, 3, 5, 10, 25, 50, 100 and 150 random chosen houses per group, whose electricity consumptions were aggregated and the experiments were repeated 2 times. On the X-axis the time in months can be read. On the Y-axis, the average daily electricity consumption within half an hour of a house can be read. If the figure is considered, it can be seen that in the experiments with little aggregated houses (2,3,5,10) more significant variations in the amplitude of the characteristic curves are visible. This can be explained by the fact that in the case of less aggregated houses, individual power consumptions have a greater impact and can therefore have a more significant effect on the overall result. This could be an indication that the information content of a single house can still be determined. As an example, the diagram [ref] with the aggregation group of 2 houses can be viewed. Between the end of March and April there is a noticeable gap and low power consumption in both houses. In London, there were school vacations in 2013 exactly in this period and the assumption is that both households were on vacation in the mentioned period.\\
+From 25 - 150 houses the characteristic curves approach the same pattern. The seasons can be clearly recognized. This is directly evident in the house groups 2-10. The fact that the seasons can be recognized so clearly, can be argued indirectly with the fact that a larger house group is observed. This is because individual household appliances no longer stand out clearly and larger patterns of behavior can be recognized, such as the fact that in the winter, people spend more time inside their homes, while in the summer, they spend more time outside. In addition, it is noticeable that the average base load is different in each graph, but converges briskly for larger aggregation groups. 
 
-%Nachschauen mit den ferien im april bei 2 häusern
-%durchschnittliche Mittelwert(von boxplots)
-%ergebnisse der abweichung
-%versuche wurden 2 mal wiederholt.
+The average base load can best be viewed in the boxplot diagram by the median. The boxplot diagram almost summarizes the diagrams 5.1 -5.8 with one boxplot each. In conducting the experiments, the preliminary assumption was that with larger aggregations, the result would approach a horizontal constant. The approximation of a constant would be clear evidence that the information content in the result was lost. The experiment cannot prove the prior conjecture. If the results were to converge to a constant at larger aggregations, then the upper quartile and the lower quartile would become narrower at larger aggregation groups. However, this observation cannot be obtained from the boxplot. 
+In addition, the number of occurrences that a house's electricity consumption falls outside the REF tolerance range for each timestamp in a year was counted. Figure 5.10 shows the percentage deviation of the tolerance range in the aggregation groups. It can be seen that the percentage deviation is very low for 2 houses and increases sharply for 3 houses and above. The behavior could be observed in both trials of the experiment. One reason for the observation could be that the standard deviation is a measure of the spread of the values of a feature from the average. With so few values, the result of the standard deviation is in many cases larger than the difference of a power consumption to the normalized aggregated result of both houses. Accordingly, almost all values are within the tolerance range. From 3 results onwards, this behavior no longer seems to apply and the number of deviations increases sharply. The number of deviations reaches its highest value in the aggregation group of 10 houses and then the percentage deviation drops sharply. The renewed noticeable increase at 50 houses could not be confirmed in the second experiment and is therefore considered an outlier. The experiment shows that the information content has strongly decreased from an aggregation group of 25 houses and the larger the aggregation group becomes the smaller the counted deviations are outside the tolerance range.
 \afterpage{%
 \begin{figure}[!p]
 \centering
-\includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 2 Houses.png}
+\includegraphics[width=0.85\textwidth]{images/ggplotTest.png}
 \caption[Bandbreite Diagramm mit aktivierter Verschlüsselung]{}
 \label{img:bytes-e}
 \end{figure}
 \begin{figure}[!p]
 \centering
-\includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 3 Houses.png}
+\includegraphics[width=0.85\textwidth]{images/test.png}
 \caption[Diagramm der Bandbreite ohne Verschlüsselung]{}
 \label{img:bytes-we}
 \end{figure}
 \clearpage
 }
+
+%Nachschauen mit den ferien im april bei 2 häusern
+%durchschnittliche Mittelwert(von boxplots)
+%ergebnisse der abweichung
+%versuche wurden 2 mal wiederholt.
+
 \afterpage{%
 \begin{figure}[!p]
 \centering
@@ -96,25 +101,9 @@ Figure 5.1 - 5.8 show the results of the experimental tests. Experiments were co
 \end{figure}
 \clearpage
 }
-\afterpage{%
-\begin{figure}[!p]
-\centering
-\includegraphics[width=0.85\textwidth]{images/ggplotTest.png}
-\caption[Bandbreite Diagramm mit aktivierter Verschlüsselung]{}
-\label{img:bytes-e}
-\end{figure}
-\begin{figure}[!p]
-\centering
-\includegraphics[width=0.85\textwidth]{images/test.png}
-\caption[Diagramm der Bandbreite ohne Verschlüsselung]{}
-\label{img:bytes-we}
-\end{figure}
-\clearpage
-}
 
-\ldots Experiments \ldots
 
-\todo{write evaluation}
+\todo{letztes Experiment implementieren}
 
 \cleardoublepage
 

@@ -79,6 +79,55 @@ rows<- c(2,3,5,10,25,50,100,150)
 dataf <- data.frame(rows,vector1)
 
 ggplot(data=dataf, aes(x=as.factor(rows), y=vector1 ,group = 1)) + geom_line(aes()) +  geom_point()
+###########################################
+nameoffile3<-paste("standarddeviationOf_2_Houses.txt", sep="\t")
+file3 <- read.table(file = nameoffile3,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
+nameoffile4<-paste("standarddeviationOf_3_Houses.txt", sep="\t")
+file4 <- read.table(file = nameoffile4,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
+nameoffile5<-paste("standarddeviationOf_5_Houses.txt", sep="\t")
+file5 <- read.table(file = nameoffile5,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
+nameoffile6<-paste("standarddeviationOf_10_Houses.txt", sep="\t")
+file6 <- read.table(file = nameoffile6,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
+nameoffile7<-paste("standarddeviationOf_25_Houses.txt", sep="\t")
+file7 <- read.table(file = nameoffile7,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
+nameoffile8<-paste("standarddeviationOf_50_Houses.txt", sep="\t")
+file8 <- read.table(file = nameoffile8,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
+nameoffile9<-paste("standarddeviationOf_100_Houses.txt", sep="\t")
+file9 <- read.table(file = nameoffile9,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
+nameoffile10<-paste("standarddeviationOf_150_Houses.txt", sep="\t")
+file10 <- read.table(file = nameoffile10,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
+
+vector1 <- c(median(file3[[2]]),median(file4[[2]]),median(file5[[2]]),median(file6[[2]]),median(file7[[2]]),median(file8[[2]]),median(file9[[2]]),median(file10[[2]]))
+
+vector2 <- c(mean(file3[[2]]),mean(file4[[2]]),mean(file5[[2]]),mean(file6[[2]]),mean(file7[[2]]),mean(file8[[2]]),mean(file9[[2]]),mean(file10[[2]]))
+############################################################################
+nameoffile3<-paste("deviationOf_2_Houses.txt", sep="\t")
+file3 <- read.table(file = nameoffile3,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
+nameoffile4<-paste("deviationOf_3_Houses.txt", sep="\t")
+file4 <- read.table(file = nameoffile4,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
+nameoffile5<-paste("deviationOf_5_Houses.txt", sep="\t")
+file5 <- read.table(file = nameoffile5,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
+nameoffile6<-paste("deviationOf_10_Houses.txt", sep="\t")
+file6 <- read.table(file = nameoffile6,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
+nameoffile7<-paste("deviationOf_25_Houses.txt", sep="\t")
+file7 <- read.table(file = nameoffile7,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
+nameoffile8<-paste("deviationOf_50_Houses.txt", sep="\t")
+file8 <- read.table(file = nameoffile8,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
+nameoffile9<-paste("deviationOf_100_Houses.txt", sep="\t")
+file9 <- read.table(file = nameoffile9,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
+nameoffile10<-paste("deviationOf_150_Houses.txt", sep="\t")
+file10 <- read.table(file = nameoffile10,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
+
+file10 <- file10[!is.na(file10[2]),2]
+file7 <- file7[!is.na(file7[2]),2]
+file8 <- file8[!is.na(file8[2]),2]
+file9 <- file9[!is.na(file9[2]),2]
+vector1 <- c(median(file3[[2]]),median(file4[[2]]),median(file5[[2]]),median(file6[[2]]),median(file7[[2]]),median(file8[[2]]),median(file9[[2]]),median(file10[[2]]))
+rows<- c(2,3,5,10,25,50,100,150)
+dataf <- data.frame(rows,vector1)
+
+ggplot(data=dataf, aes(x=as.factor(rows), y=vector1 ,group = 1)) + geom_line(aes()) +  geom_point()
+
 ############################################################################
 nameoffile3<-paste("averagedataOf_2_Houses.txt", sep="\t")
 file3 <- read.table(file = nameoffile3,header=TRUE, sep = "\t",stringsAsFactors = FALSE,comment.char = "")
