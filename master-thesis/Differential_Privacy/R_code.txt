@@ -50,6 +50,259 @@ k<-k+1
 df3 <<- do.call(rbind, datalist3)
 df3
 }
+#########################################################################
+k<-1
+datalist3 = list()
+datalist4 = list()
+#how many files are used for filtering(current its 20 files)
+for(i in 1:20) {
+nameoffile2<-paste("Power-Networks-LCL-June2015(withAcornGps)v2_",i,".csv", sep="")
+file2 <- read.table(file = nameoffile2,header=TRUE, sep = ",",stringsAsFactors = FALSE,comment.char = "")
+
+setwithLCLid2<-as.set(file2[[1]])
+for(j in 1:length(setwithLCLid2)) {
+elementofset<-set(as.character(setwithLCLid2)[j])
+getData<- subset(file2, LCLid %in% elementofset)
+
+if(any(str_detect(getData[[3]], "2013-01-01"))){
+if(any(str_detect(getData[[3]], "2014-01-02"))){
+datalist3[[k]]<-getData[(getData[[3]] > "2013-04-01" & getData[[3]] <= "2014-04-15"),]
+k<-k+1
+}
+}
+}
+}
+df3 <<- do.call(rbind, datalist3)
+df3
+#########################################################################
+data <- vector()
+sumdata<-numeric()
+difference<-numeric()
+deviation<-numeric()
+lengthofvectors<-vector()
+diagramlist<-list()
+standarddeviation<-vector()
+diagram<-vector()
+averagedata<-vector()
+datevector<-vector()
+standarddeviationOfHouses<-vector()
+sumOfallHouses<-vector()
+z<-vector()
+counter<<-1
+random<-numeric()
+
+initTest<-function()
+{
+data <<- vector()
+sumdata<<-numeric()
+difference<<-numeric()
+deviation<<-numeric()
+lengthofvectors<<-vector()
+diagramlist<<-list()
+standarddeviation<<-vector()
+diagram<<-vector()
+averagedata<<-vector()
+datevector<<-vector()
+standarddeviationOfHouses<<-vector()
+sumOfallHouses<<-vector()
+z<<-vector()
+}
+
+calcDeviationForAWeek<-function(lengthOfTestCase)
+{
+options(scipen = 999) #disabling scientific notation
+l<<-0
+z<<-0
+setwithLCLid<<-as.set(df3[[1]])
+vectorOfLCid<<-as.vector(as.character(setwithLCLid))
+#lengthOfTestCase<<-2
+random<<-sample(vectorOfLCid, lengthOfTestCase)
+random2<<-setdiff(as.character(setwithLCLid),random)
+#stromverbrauch der einzelnen häuser aus dem datensatz ziehen
+#17471 sind die Anzahl aller Einträge in einem Jahr
+#berechne für jeden TimeStamp
+for(TimeStamp in 1:336)
+{
+    Sys.sleep(0.001)
+    print(TimeStamp)
+    for(i in 1:lengthOfTestCase) {
+        #nehme ein zufälliges Haus
+        elementofset<<-random[i]
+        #Bekomme von einem Haus den Stromverbrauch und speichere es in data[i]. es werden über alle häuser iteriert wobei i für ein Haus steht
+        getKWOfHouse<<- subset(df3, LCLid %in% elementofset)
+        data[i]<<-getKWOfHouse[TimeStamp,4]
+        if(is.na(data[i]))
+        {
+        	data[i]<<-0
+        }
+    }
+    #berechne die Standardabweichung von data
+    standarddeviationOfHouses[TimeStamp]<<-sd(data[1:lengthOfTestCase])
+    #errechne den normierten Gesamtverbrauch von allen Häusern
+    sumOfallHousesForAttack[TimeStamp]<<-sum(as.numeric(data))
+    sumOfallHouses[TimeStamp]<<-sum(as.numeric(data))*(1/lengthOfTestCase)
+    #berechne für jedes Haus
+    for(j in 1:lengthOfTestCase) {
+    	if(is.na(sumOfallHouses[TimeStamp]))
+    	{
+    		sumOfallHouses[TimeStamp]<<-0
+    	}
+        difference<<- as.numeric(data[j])-sumOfallHouses[TimeStamp]
+        if(abs(difference) > standarddeviationOfHouses)
+        {
+            if(is.na(z[j]))
+            {
+                z[j]<<-0
+            }
+            z[j]<<-z[j]+1
+        }
+        if(is.na(z[j]/336))
+        {
+        	deviation[j]<<-z[j]
+        }
+        else
+        {
+         deviation[j]<<-z[j]/336
+        }
+   
+    }
+}
+write.table(deviation, file = sprintf("test2/deviationOf_%d_Houses3.txt",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
+write.table(standarddeviationOfHouses, file = sprintf("test2/standarddeviationOf_%d_Houses3.txt",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
+write.table(sumOfallHouses, file = sprintf("test2/SumOf_%d_Houses3.txt",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
+
+performAttack(sumOfallHouses,standarddeviationOfHouses)
+
+getDiagram(counter,lengthOfTestCase)
+counter<-counter+1
+}
+
+getDiagram<-function(counter,lengthOfTestCase)
+{
+sumOfallHouses4<<-sumOfallHouses
+yearlyStandardDeviation<<-standarddeviationOfHouses
+#364
+#for(i in 1:336) 
+#averagedata[i]<<-mean(head(sumOfallHouses4,48))
+#yearlyStandardDeviationForDiagram<<-mean(head(yearlyStandardDeviation,48))
+#sumOfallHouses4<<- sumOfallHouses4[-1:-48]
+#yearlyStandardDeviation<<-yearlyStandardDeviation[-1:-48]
+#
+averageminusSD<<-sumOfallHouses4-standarddeviationOfHouses
+averageplusSD<<-sumOfallHouses4+standarddeviationOfHouses
+
+datevector<<-seq(as.Date("2013-04-01"),as.Date("2013-04-07"),by="days")
+#averageminusSD<<-averagedata-yearlyStandardDeviationForDiagram
+#averageplusSD<<-averagedata+yearlyStandardDeviationForDiagram
+titleName<<-paste("Aggregated Electricity Consumption of ",lengthOfTestCase," Houses", sep="")
+plotName<<-paste("Aggregated Electricity Consumption of ",lengthOfTestCase," Houses.png", sep="")
+plotName2<<-paste("Aggregated Electricity Consumption of ",lengthOfTestCase," Houses2.png", sep="")
+test<<-1:336
+df5 <<- data.frame(datevector,sumOfallHouses,averageplusSD,averageminusSD,test,standarddeviationOfHouses)
+write.table(averagedata, file = sprintf("test2/averagedataOf_%d_Houses.txt3",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
+diagram<<-ggplot(data=df5, aes(x=df5[[5]], y=df5[[2]]))+labs(title= titleName)+ scale_y_continuous(expand = c(0,0),limits = c(0,1.2))  +ylab("Average Electricity Consumption per Day in KWH/hh (per half hours)")+xlab("t in Months") + theme_linedraw() 
+ggsave(plotName)
+diagram2<<-ggplot(data=df5, aes(x=df5[[5]], y=df5[[2]]))+geom_line() + scale_y_continuous(expand = c(0,0),limits = c(0,1.2)) +labs(title= titleName) +ylab("Average Electricity Consumption per Day in KWH/hh (per half hours)")+xlab("t in Months") + theme_linedraw()
+ggsave(plotName2)
+diagramlist[[counter]]<<-diagram
+}
+
+performAttack<-function(sumOfallHouses,standarddeviationOfHouses,lengthOfTestCase)
+{
+#wähle ein nicht bereits genommenes Haus
+random3<<-sample(random2, 1)
+for(TimeStamp in 337:673)
+{
+    Sys.sleep(0.001)
+    print(TimeStamp)
+    for(i in 1:lengthOfTestCase) {
+        #nehme ein zufälliges Haus
+        elementofset<<-random[i]
+        #Bekomme von einem Haus den Stromverbrauch und speichere es in data[i]. es werden über alle häuser iteriert wobei i für ein Haus steht
+        getKWOfHouse3<<- subset(df3, LCLid %in% elementofset)
+        data2[i]<<-getKWOfHouse3[TimeStamp,4]
+        if(is.na(data2[i]))
+        {
+        	data2[i]<<-0
+        }
+    }
+    #berechne die Standardabweichung von data
+    #standarddeviationOfHouses[TimeStamp]
+    #errechne den normierten Gesamtverbrauch von allen Häusern
+    #sumOfallHousesForAttack[TimeStamp]<<-sum(as.numeric(data))
+    sumOfallHouses3[TimeStamp]<<-sum(as.numeric(data2))*(1/(lengthOfTestCase+1)
+    #berechne für jedes Haus
+    for(j in 1:lengthOfTestCase) {
+    	if(is.na(sumOfallHouses3[TimeStamp]))
+    	{
+    		sumOfallHouses3[TimeStamp]<<-0
+    	}
+        difference<<- as.numeric(data2[j])-sumOfallHouses3[TimeStamp]
+        if(abs(difference) > standarddeviationOfHouses)
+        {
+            if(is.na(z[j]))
+            {
+                z[j]<<-0
+            }
+            z[j]<<-z[j]+1
+        }
+        if(is.na(z[j]/336))
+        {
+        	deviation[j]<<-z[j]
+        }
+        else
+        {
+         deviation[j]<<-z[j]/336
+        }
+   
+    }
+}
+
+}
+#########################################################################
+performAttack<-function(sumOfallHouses,standarddeviationOfHouses,lengthOfTestCase)
+{
+#wähle ein nicht bereits genommenes Haus
+random3<<-sample(random2, 1)
+standarddeviationOfHouses3<<-standarddeviationOfHouses
+for(TimeStamp in 1:336)
+{
+#yo das gleiche nochmal programmieren und vergleichen und die relative entropy berechnen.
+elementofset2<<-random3[0]
+#erhalte Stromverbrauch von Haus
+getKWOfHouse2<<- subset(df3, LCLid %in% elementofset)
+        data2[0]<<-getKWOfHouse2[TimeStamp,4]
+           if(is.na(data2[0]))
+        {
+        	data2[0]<<-0
+        }
+        sumOfallHousesForAttack[TimeStamp]<<-(sumOfallHousesForAttack[TimeStamp] + data[0])*(1/(lengthOfTestCase+1))
+        #standarddeviationOfHouses3[TimeStamp]
+    	if(is.na(sumOfallHousesForAttack[TimeStamp]))
+    	{
+    		sumOfallHousesForAttack[TimeStamp]<<-0
+    	}
+        difference<<- as.numeric(data[0])-sumOfallHousesForAttack[TimeStamp]
+        if(abs(difference) > standarddeviationOfHouses3[TimeStamp])
+        {
+            if(is.na(z2[i]))
+            {
+                z2[i]<<-0
+            }
+            z2[i]<<-z2[i]+1
+        }
+        if(is.na(z2[i]/336))
+        {
+        	deviation2[i]<<-z2[i]
+        }
+        else
+        {
+         deviation2[i]<<-z2[i]/336
+        }
+}
+
+}
+
 ##########################################################################
 
 
@@ -496,7 +749,7 @@ plotName<<-paste("Aggregated Electricity Consumption of ",lengthOfTestCase," Hou
 plotName2<<-paste("Aggregated Electricity Consumption of ",lengthOfTestCase," Houses2.png", sep="")
 df <<- data.frame(datevector,averagedata,averageplusSD,averageminusSD)
 write.table(averagedata, file = sprintf("test/averagedataOf_%d_Houses.txt",lengthOfTestCase), sep = "\t", row.names = TRUE, col.names = NA)
-diagram<<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + scale_x_date(limits=as.Date(c("2013-01-01","2013-12-30")),date_labels = "%b" ,expan d = c(0,0),date_breaks = "1 months") + scale_y_continuous(expand = c(0,0),limits = c(0,0.5)) +labs(title= titleName) +ylab("Average Electricity Consumption per Day in KWH/hh (per half hours)")+xlab("t in Months") + theme_linedraw()
+diagram<<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + scale_x_date(limits=as.Date(c("2013-01-01","2013-12-30")),date_labels = "%b" ,expand = c(0,0),date_breaks = "1 months") + scale_y_continuous(expand = c(0,0),limits = c(0,0.5)) +labs(title= titleName) +ylab("Average Electricity Consumption per Day in KWH/hh (per half hours)")+xlab("t in Months") + theme_linedraw()
 ggsave(plotName)
 diagram2<<-ggplot(data=df, aes(x=df[[1]], y=df[[2]]))+geom_line() + scale_x_date(limits=as.Date(c("2013-01-01","2013-12-30")),date_labels = "%b" ,expand = c(0,0),date_breaks = "1 months") + scale_y_continuous(expand = c(0,0),limits = c(0,0.8)) +labs(title= titleName) +ylab("Average Electricity Consumption per Day in KWH/hh (per half hours)")+xlab("t in Months") + theme_linedraw()
 ggsave(plotName2)
