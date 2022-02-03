@@ -1,9 +1,39 @@
-\chapter{Future Work}
-\label{sec:futurework}
+\chapter{Evaluation}
+\label{Evaluation}
+In this chapter the properties of the DC network are analyzed. Various characteristics are evaluated, including the performance of the process, the security and the necessary minimum size of the network.
+\section{Performance}
+Regarding the performance, it is considered to what extent the proposed network is more efficient or inefficient compared to the Technical Guideline.\\
+\\
+\textbf{Computational Performance}
+\\
+\\
+The proposed DC network is highly scalable. Due to the fact that on the SGMW side only a simple computation of the power consumption with a generated key has to be performed to form the local sum, hardly any computational power will have to be used. Furthermore, a local sum is sent only every 15 minutes. The computational overhead caused by the sending the local sum is negligible for the SMGW and the protocol should be able to run without problems even on lightweight systems. It has to be considered that the used PRNG really generates random numbers. The built-in hardware security module in the SGMW should perform this task without faults. On the side of the power provider, only simple operations need to be performed as well. Every single local sum of a SMGW has to be added up to form the global sum. Addition of many thousands of summands is no problem for ordinary computers.  \\
+\\
+\textbf{Performance of the Error Correction}
+\\
+\\
+The transmission bit allows the power provider to immediately detect which SMGW in the network has failed. Even if several SMGW fail at the same time, it is no problem for the neighboring SMGW to resend the updated local sum to the power provider. Then the power provider efficiently calculates the global sum [REF procedure]. \\
+\\
+\textbf{Message Overhead}
+\\
+\\
+The messages sent in the protocol can be implemented with a small header. The message field in which the local sums are entered must always be the same size, otherwise the DC network cannot be implemented. Therefore, large data packets are not to be expected, since the local sums require a sufficiently large message field, which will not require more than several 100 bytes. \\
+\\
+\textbf{Memory Overhead}
+\\
+\\
+The memory overhead of SMGW in a DC network is minimal. Only the PRNG key from the neighbor needs to be stored. However, the power provider needs to store the key graph and the power provider has a larger storage overhead compared to the technical policy. 
+\\
+\\
+\textbf{Message Overhead}
+\\
+\\
+When registering a requesting SMGW in a DC network, several messages must be exchanged between the SMGW and the electricity provider as well as between the requesting SMGW and the neighbor SMGW. If a DC network round runs without errors, no additional messages are exchanged.
+In case of error correction measures, a large number of multiple messages must be sent, otherwise no meaningful global sum can be calculated and the members in a DC network must coordinate to correct the error. Considering that normally only one message is sent to the power provider every 15 minutes, it should be bearable for the power provider if there is a minimal to medium traffic volume every 15 minutes in a DC network.
+\section{Anonymity}
+By using PRNG, anonymity decreases from information-theoretically secure to complexity-theoretically secure anonymity. Nevertheless even if an SMGW is controlled by an attacker, it would not be possible for the attacker to read the power consumption of other SMGWs. This is because the attacker has no access to the global total. This can only be calculated by the electricity provider. With the proposed method, the attacker lacks the necessary information to launch a potential attack on the DC network (if the attacker only has control over one SMGW). Furthermore, the attacker also has no information about the key graph. This further complicates the chances of a successful attack to deanonymize the electricity consumption of costumers. The electricity provider is potentially the most dangerous attacker in the protocol, since the SMGWs cannot communicate with each other, they rely on the electricity provider to register in the DC network. As a result, the power provider has to take over administrative tasks and therefore possesses a lot of control. To ensure that the electricity supplier is not too powerful, its competences have been restricted. The best chance of the electricity provider to break the anonymity to its customers is that the administrative powers are abused to connect individual SMGWs to malicious neighbors. Once the electricity provider manages to link an SMGW with only malicious neighbors, the local sum can be reconstructed and the electricity consumption is visible. This is prevented by forcing the electricity provider to select a random neighbor upon entry and not being able to remove SMGWs from the network on its own. These measures make it almost impossible for the electricity provider to affect the selection of neighbors in the DC network.
 
-\ldots future work \ldots
-
-\todo{write future work}
+\todo{write evaluation}
 
 \cleardoublepage
 
