@@ -17,34 +17,42 @@ The DC network from chapter 3 ensures anonymity of user data in a smart grid. It
 \textbf{Assumption}
 \\
 \\
-The goal of the experiment is that no inferences can be drawn from the result of the aggregated electricity consumption. This includes that no persons can be deanonymized from the result or that no household appliances can be identified from the result. There is no metric that can measure anonymity from electricity consumption, but there are metrics that can measure the information content of electricity consumption. The assumption is therefore that if the information content from the aggregated result of electricity consumption is low, then no conclusions can be drawn about households or household appliances.
+The goal of the experiment is that no inferences can be drawn from the result of the aggregated electricity consumption. This includes that no persons can be deanonymized from the result or that no household appliances can be identified from the result. There is no metric that can measure anonymity from electricity consumption, but there are metrics that can measure the information content of electricity consumption[ref]. The assumption is therefore that if the information content from the aggregated result of electricity consumption is low, then no conclusions can be drawn about households or household appliances.
 \\
 \\
 \textbf{Experimental Setup}
 \\
 \\
-Ref[relative entropy] described which metrics can calculate the information content of aggregated electricity consumptions. For the experiment, a different procedure was chosen. Electricity consumptions from the London Smart Meter dataset were used. In the dataset, the electricity consumption of 5,567 different households between 2011 and 2014 was recorded with measurement intervals of 30 minutes each. In the experiment, n houses were selected and their electricity consumptions were aggregated for each time point. From the aggregated result, the standard deviation for each individual timestamp was calculated and compared to the individual electricity consumption of a house at that time. The comparison looks if the electricity consumption of a single house is within the tolerance limit of the aggregated result. The tolerance limit is the following interval (aggregated erg- standard deviation<standard deviation<aggregated erg+ standard deviation).  If the electricity consumption of a house is above or below the tolerance limit at a point in time, then it is assumed that the electricity consumption of the house has a high information content at that point in time and that this information content could be read from the result. For each timestamp, each house is counted individually for how often the individual power consumptions are outside the tolerance limit. In order to perform the experiment, a script was programmed in R, which selects random houses from the London Smart Meter data set. Additionally, we filtered for houses that have readings between 2013 and 2014. For the highest possible precision of the calculation, it was ensured that when a comparison calculation is performed, the timestamp is also correctly identical. In short every 30 minutes measurements in 2013-2014 of a house were compared whether the electricity consumption is above or below the tolerance limit of the aggregated results of N houses. For each calculation, the number of times the values are outside the tolerance limit is counted. This experiment was repeated with different N sizes to analyze how strong the effects of the information content in the aggregated result are measurable.
+Ref[relative entropy] described which metrics can calculate the information content of aggregated electricity consumptions. For the first experiment, a different procedure was chosen. Electricity consumptions from the London Smart Meter dataset were used. In the dataset, the electricity consumption of 5,567 different households between 2011 and 2014 was recorded with measurement intervals of 30 minutes each. In the experiment, n houses were selected and their electricity consumptions were aggregated for each time point. From the aggregated result, the standard deviation for each individual timestamp was calculated and compared to the individual electricity consumption of a house at that time. The comparison looks if the electricity consumption of a single house is within the tolerance limit of the aggregated result. The tolerance limit is the following interval (aggregated erg- standard deviation<standard deviation<aggregated erg+ standard deviation).  If the electricity consumption of a house is above or below the tolerance limit at a point in time, then it is assumed that the electricity consumption of the house has a high information content at that point in time and that this information content could be read from the result. For each timestamp, each house is counted individually for how often the individual power consumptions are outside the tolerance limit. In order to perform the experiment, a script was programmed in R, which selects random houses from the London Smart Meter data set. Additionally, we filtered for houses that have readings between 2013 and 2014. For the highest possible precision of the calculation, it was ensured that when a comparison calculation is performed, the timestamp is also correctly identical. In short every 30 minutes measurements in 2013-2014 of a house were compared whether the electricity consumption is above or below the tolerance limit of the aggregated results of N houses. For each calculation, the number of times the values are outside the tolerance limit is counted. This experiment was repeated with different N sizes to analyze how strong the effects of the information content in the aggregated result are measurable.\\
+A second experiment was also executed. This time, not the time span of one year was examined, but the time span of 2 weeks. Due to the shorter time span and the thus much faster execution of the second experiment, the Kullback Leiber Divergence could additionally be calculated. 
+The second experiment is carried out essentially like the first experiment. It is counted for one week how often the electricity consumption of one house deviates from the standard deviation of the electricity consumption of all houses. In the second week, another house is added to the pool of houses already analyzed. It is now analyzed if the added house has a high influence on the overall result and if the added house stands out from the standard deviation of the first week and has especially many deviations.If the added house does not differ from the other houses in terms of deviations, then it can be assumed that new users are added to the DC network without any additional user behavior being noticeable in the result. In addition to the standard deviation as a metric for anonymity, the Kullback Leiber Divergence (relative entropy) was calculated for each house in the second experiment.
 \\
 \\
-\textbf{Results}
+\textbf{Yearly Results}
 \\
 \\
-Figure 5.1 - 5.8 show the results of the experimental tests. Experiments were conducted with 2, 3, 5, 10, 25, 50, 100 and 150 random chosen houses per group, whose electricity consumptions were aggregated and the experiments were repeated 2 times. On the X-axis the time in months can be read. On the Y-axis, the average daily electricity consumption within half an hour of a house can be read. If the figure is considered, it can be seen that in the experiments with little aggregated houses (2,3,5,10) more significant variations in the amplitude of the characteristic curves are visible. This can be explained by the fact that in the case of less aggregated houses, individual power consumptions have a greater impact and can therefore have a more significant effect on the overall result. This could be an indication that the information content of a single house can still be determined. As an example, the diagram [ref] with the aggregation group of 2 houses can be viewed. Between the end of March and April there is a noticeable gap and low power consumption in both houses. In London, there were school vacations in 2013 exactly in this period and the assumption is that both households were on vacation in the mentioned period.\\
+Figure 5.1 - 5.8 show the results of the experimental tests. Experiments were conducted with 2, 3, 5, 10, 25, 50, 100 and 150 random chosen houses per group, whose electricity consumptions were aggregated and the experiments were repeated 2 times. On the X-axis the time in months can be read. On the Y-axis, the average daily electricity consumption within half an hour of a house is shown. If the figure is considered, it can be seen that in the experiments with little aggregated houses (2,3,5,10) more significant variations in the amplitude of the characteristic curves are visible. This can be explained by the fact that in the case of less aggregated houses, individual power consumptions have a greater impact and can therefore have a more significant effect on the overall result. This could be an indication that the information content of a single house can still be determined. As an example, the diagram [ref] with the aggregation group of 2 houses can be viewed. Between the end of March and April there is a noticeable gap and low power consumption in both houses. In London, there were school vacations in 2013 exactly in this period and the assumption is that both households were on vacation in the mentioned period.\\
 From 25 - 150 houses the characteristic curves approach the same pattern. The seasons can be clearly recognized. This is directly evident in the house groups 2-10. The fact that the seasons can be recognized so clearly, can be argued indirectly with the fact that a larger house group is observed. This is because individual household appliances no longer stand out clearly and larger patterns of behavior can be recognized, such as the fact that in the winter, people spend more time inside their homes, while in the summer, they spend more time outside. In addition, it is noticeable that the average base load is different in each graph, but converges briskly for larger aggregation groups. 
 
 The average base load can best be viewed in the boxplot diagram by the median. The boxplot diagram almost summarizes the diagrams 5.1 -5.8 with one boxplot each. In conducting the experiments, the preliminary assumption was that with larger aggregations, the result would approach a horizontal constant. The approximation of a constant would be clear evidence that the information content in the result was lost. The experiment cannot prove the prior conjecture. If the results were to converge to a constant at larger aggregations, then the upper quartile and the lower quartile would become narrower at larger aggregation groups. However, this observation cannot be obtained from the boxplot. 
 In addition, the number of occurrences that a house's electricity consumption falls outside the REF tolerance range for each timestamp in a year was counted. Figure 5.10 shows the percentage deviation of the tolerance range in the aggregation groups. It can be seen that the percentage deviation is very low for 2 houses and increases sharply for 3 houses and above. The behavior could be observed in both trials of the experiment. One reason for the observation could be that the standard deviation is a measure of the spread of the values of a feature from the average. With so few values, the result of the standard deviation is in many cases larger than the difference of a power consumption to the normalized aggregated result of both houses. Accordingly, almost all values are within the tolerance range. From 3 results onwards, this behavior no longer seems to apply and the number of deviations increases sharply. The number of deviations reaches its highest value in the aggregation group of 10 houses and then the percentage deviation drops sharply. The renewed noticeable increase at 50 houses could not be confirmed in the second experiment and is therefore considered an outlier. The experiment shows that the information content has strongly decreased from an aggregation group of 25 houses and the larger the aggregation group becomes the smaller the counted deviations are outside the tolerance range.
+\\
+\\
+\textbf{Weekly Results}
+\\
+\\
+\todo{diagramme vom zweiten Experiment erstellen und erkenntnisse aufschreiben.}
 \afterpage{%
 \begin{figure}[!p]
 \centering
 \includegraphics[width=0.85\textwidth]{images/ggplotTest.png}
-\caption[Bandbreite Diagramm mit aktivierter Verschlüsselung]{}
+\caption[Boxplots of the Average Base Load]{}
 \label{img:bytes-e}
 \end{figure}
 \begin{figure}[!p]
 \centering
 \includegraphics[width=0.85\textwidth]{images/test.png}
-\caption[Diagramm der Bandbreite ohne Verschlüsselung]{}
+\caption[Deviation of the Standard Variance]{}
 \label{img:bytes-we}
 \end{figure}
 \clearpage
@@ -59,13 +67,13 @@ In addition, the number of occurrences that a house's electricity consumption fa
 \begin{figure}[!p]
 \centering
 \includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 5 Houses.png}
-\caption[Bandbreite Diagramm mit aktivierter Verschlüsselung]{}
+\caption[Aggregated Electricity Consumption of 5 Houses]{}
 \label{img:bytes-e}
 \end{figure}
 \begin{figure}[!p]
 \centering
 \includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 10 Houses.png}
-\caption[Diagramm der Bandbreite ohne Verschlüsselung]{}
+\caption[Aggregated Electricity Consumption of 10 Houses]{}
 \label{img:bytes-we}
 \end{figure}
 \clearpage
@@ -74,13 +82,13 @@ In addition, the number of occurrences that a house's electricity consumption fa
 \begin{figure}[!p]
 \centering
 \includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 25 Houses.png}
-\caption[Bandbreite Diagramm mit aktivierter Verschlüsselung]{}
+\caption[Aggregated Electricity Consumption of 25 Houses]{}
 \label{img:bytes-e}
 \end{figure}
 \begin{figure}[!p]
 \centering
 \includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 50 Houses.png}
-\caption[Diagramm der Bandbreite ohne Verschlüsselung]{}
+\caption[Aggregated Electricity Consumption of 50 Houses]{}
 \label{img:bytes-we}
 \end{figure}
 \clearpage
@@ -89,18 +97,21 @@ In addition, the number of occurrences that a house's electricity consumption fa
 \begin{figure}[!p]
 \centering
 \includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 100 Houses.png}
-\caption[Bandbreite Diagramm mit aktivierter Verschlüsselung]{}
+\caption[Aggregated Electricity Consumption of 100 Houses]{}
 \label{img:bytes-e}
 \end{figure}
 \begin{figure}[!p]
 \centering
 \includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 150 Houses.png}
-\caption[Diagramm der Bandbreite ohne Verschlüsselung]{}
+\caption[Aggregated Electricity Consumption of 150 Houses]{}
 \label{img:bytes-we}
 \end{figure}
 \clearpage
 }
-
+\includegraphics[width=0.85\textwidth]{images/KLD.png}
+\caption[Kullback Leiber Divergence]{}
+\label{img:bytes-we}
+\end{figure}
 
 \todo{letztes Experiment implementieren}
 

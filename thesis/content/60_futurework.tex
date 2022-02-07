@@ -8,7 +8,7 @@ Regarding the performance, it is considered to what extent the proposed network 
 \textbf{Computational Performance}
 \\
 \\
-The proposed DC network is highly scalable. Due to the fact that on the SGMW side only a simple computation of the power consumption with a generated key through a PRNG has to be performed to form the local sum, hardly any computational power will have to be used. Furthermore, a local sum is sent only every 15 minutes. The computational overhead caused by the sending the local sum is negligible for the SMGW and the protocol should be able to run without problems even on lightweight systems. It has to be considered that the used PRNG really generates random numbers. The built-in hardware security module in the SGMW should perform this task without faults. On the side of the power provider, only simple operations need to be performed as well. Every single local sum of a SMGW has to be added up to form the global sum. Addition of many thousands of summands is no problem for ordinary computers and the complexity of the calculation does not deviate from the proposal of the technical guideline, since the transmitted data has to be summed up as well.  \\
+The proposed DC network is highly scalable. Due to the fact that on the SGMW side only a simple computation of the power consumption with a generated key through a PRNG has to be performed to form the local sum, hardly any computational power will have to be used. Furthermore, a local sum is sent only every 15 minutes. The computational overhead caused by the sending the local sum is negligible for the SMGW and the protocol should be able to run without problems even on lightweight systems. It has to be considered that the used PRNG really generates random numbers. The built-in hardware security module in the SGMW should perform this task without faults. On the side of the power provider, only simple operations need to be performed as well. Every single local sum of a SMGW has to be added up to form the global sum. Addition of many thousands of summands is no problem for ordinary computers and the complexity of the calculation does not deviate from the proposal of the technical guideline, since the transmitted data has to be summed up as well.\\
 \\
 \textbf{Performance of the Error Correction}
 \\
@@ -39,6 +39,7 @@ The security evaluation considers the extent to which the security objectives ar
 \\
 \\
 Availability is one of the most important security objectives of the DC network. If an SGMW should fail, e.g. due to a missing Internet connection, then no global sum can be formed and the functionality of the network is not possible. This is equivalent to an unavailable network for the power provider. Measures have been described to deal with this failure. If an attacker succeeds in taking over an SMGW, he can deliberately send incorrect local sums with the intention of disrupting availability. Against this active attack, an algorithm was proposed that allows the power provider to switch to F-mode and search for the attacker and restore availability. According to this, temporary outages may occur in the DC network, but all of them can be solved in a short time by troubleshooting procedures. A degradation of availability is therefore not expected.
+\todo{Vertraulichkeit}
 \\
 \\
 \textbf{Anonymity}
