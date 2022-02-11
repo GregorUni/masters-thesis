@@ -108,16 +108,14 @@ In order to recognize a movie, the possible power consumption of the TV by the p
 \\
 \textbf{Low Resolution Analysis}
 \\
-\\
-\todo{stelle überarbeiten}
-Another approach is to work backwards from large data sets to obtain detailed information from aggregated electricity consumption. The NILM procedure attempted to have household appliances detected from individual households and then behavioral analyses could be generated from the detected household appliances. A common approach with low-resolution electricity data is to identify the numerous factors that influence total electricity consumption and to filter them out.(großes Paper) 
+\\Another approach is to work backwards from large data sets to obtain detailed information from aggregated electricity consumption. The NILM procedure attempted to have household appliances detected from individual households and then behavioral analyses could be generated from the detected household appliances. A common approach with low-resolution electricity data is to identify the numerous factors that influence total electricity consumption and to filter them out.(großes Paper) 
 But with low resolution methods, a variety of approaches are being pursued.
 For example in (A Neuron Nets Based) an artificial neural network was trained to identify household appliances from electricity consumption. The power consumption was measured only every 15 minutes. But this is the same time interval that the SMGW use as well. With the low resolution, only the household appliances that have a high overall impact on power consumption, such as refrigerators, were considered. A total of 10 different household appliances were attempted to be correctly identified from the electricity consumption. With the final trained ANN, an accuracy of 90% was found.
 \\%nochmal machen
 In another work(Energy Disaggregation), the power consumption of appliances was measured only every hour. The experiment tried to disaggregate a aggregated power consumption with Discriminative Sparse Coding. The experiment was conducted as follows. First, the disaggregation algorithm was trained with electricity consumption of houses from a large data set. Then, the trained algorithm was applied to the aggregated electricity consumption of 2 houses. The algorithm was expected to determine up to 52 individual household appliances from the electricity consumption. The results in the paper showed that the disaggregation algorithm with Discriminative Sparse Coding was up to 55.05 percent correct in its decisions.\footnote[1]{Considering the fact that the time interval is so small and 52 different household appliances were considered, the accuracy of 50 percent is extraordinarily good. If the algorithm would only guess, the accuracy would be at 1.9 percent.}
 
 \section{Related Work}
-After NILM was discovered, the scientific community started to look for possible solutions to technically prevent the analysis of electricity consumption.  In this chapter, the different approaches in Metering for Operations and Metering for Billing are presented. Although in this thesis only a solution of Metering for Operations is presented, for the sake of completeness also the solutions for Metering for Billing are introduced.
+After NILM was discovered, the scientific community started to look for possible solutions to technically prevent the analysis of electricity consumption. In this chapter, the different approaches in Metering for Operations and Metering for Billing are presented. Although in this thesis only a solution of Metering for Operations is presented, for completeness the solutions for Metering for Billing are introduced as well.
 \subsection{Metering for Operations}
 \\
 The paragraph deals with solutions for Metering for Operations, which has been previously discussed in other scientific works. At Metering for Operations, there is currently no established consensus on a solution. Various technical proposals have already been presented in scientific papers, but there is a lack of uniform criteria and often different conditions are set for the power grid. One reason for this could be that smart grids are realized differently in other countries. In the following, the different approaches are divided into categories and presented conceptually.\\
@@ -144,27 +142,27 @@ Therefore, the central repository has to be trusted only in terms of functionali
 \\
 \\
 The solution proposed in this thesis is also one of the methods that aggregate without a trusted third party. The advantage of this approach is that no one has to trust a trusted third party. In general, one has to ask the questions who aggregates the data and who generates the keys. In addition, a common problem to consider is how the procedure deals with a few participants. \\
-In the solution of Mármol et al. again a bihomomorphic encryption method is proposed. The approach of Mármol has already been discussed and implemented in a master thesis at this chair.[quelle biselli] As a reminder, bihomorphic encryption algorithms can perform simple operations such as addition on both the ciphertext and the keys. This property is exploited in the presented method of Mármol. Since it aggregates the keys and not the power consumptions as before. Furthermore, it does not matter which bihomomorphic encryption method is used, as long as all smart meters agree on one method. A key is generated from every smart meter in the power grid. Afterwards, the generated key is used to encrypt the electricity consumption and the encrypted result is sent to the network operator. The transmission channel to the network operator is chosen in such a way that the identity of the smart meter remains secret. This prevents the smart meter from exposing itself during communication with the operator. Groups are formed among smart meters and a smart meter aggregator is selected in each group. The aggregator is selected randomly and all smart meters send their keys to this aggregator. Subsequently, the keys are summed up at the aggregator and sent to the network operator. The network operator receives a single key and with this key it can only decrypt the messages from one smart meter group. additionally, the operator has to add up all the messages and only then it will be possible to decrypt the messages. There is a possibility that aggregator cooperates with the network operator.\todo{hier weiter machen} The aggregator would then be able to send individual keys from smart meters to the operator. While the operator would not be able to match the key to any message, by brute force it could decrypt all messages with that key and see which decrypted message has meaningful content. To prevent this attack, an additional measure is taken. All smart meters in a group organize themselves topologically in a ring structure. In this ring structure, all smart meters cooperate with each other and change their keys every round in such a way that the individual key of a smart meter changes, but not the summed key of all smart meters. Even if the aggregator forwards the keys to the network operator, they would no longer be valid in the next round.(nochmal nachlesen, warum nicht eine individuelle Nachricht entschlüsselt werden kann) A disadvantage of this procedure is that if a smart meter leaves the group, then a new aggregated key must be formed.(Privacy-enhanced architecture for smart metering)\\
+In the solution of Mármol et al. again a bihomomorphic encryption method is proposed. The approach of Mármol has already been discussed and implemented in a master thesis at this chair.[quelle biselli] As a reminder, bihomorphic encryption algorithms can perform simple operations such as addition on both the ciphertext and the keys. This property is exploited in the presented method of Mármol. Since it aggregates the keys and not the power consumptions as before. Furthermore, it does not matter which bihomomorphic encryption method is used, as long as all smart meters agree on one method. A key is generated from every smart meter in the power grid. Afterwards, the generated key is used to encrypt the electricity consumption and the encrypted result is sent to the network operator. The transmission channel to the network operator is chosen in such a way that the identity of the smart meter remains unknown. This prevents the smart meter from exposing itself during communication with the operator. Groups are formed among smart meters and a smart meter aggregator is selected in each group. The aggregator is selected randomly and all smart meters send their keys to this aggregator. Subsequently, the keys are summed up at the aggregator and sent to the network operator. The network operator receives a single key and with this key it can only decrypt the messages from one smart meter group. additionally, the operator has to add up all the messages and only then it will be possible to decrypt the messages. There is a possibility that aggregator cooperates with the network operator. The aggregator would then be able to send individual keys from smart meters to the operator. While the operator would not be able to match the key to any message, by brute force it could decrypt all messages with that key and see which decrypted message has meaningful content. To prevent this attack, an additional measure is taken. All smart meters in a group organize themselves topologically in a ring structure. In this ring structure, all smart meters cooperate with each other and change their keys every round in such a way that the individual key of a smart meter changes, but not the summed key of all smart meters. Even if the aggregator forwards the keys to the network operator, they would no longer be valid in the next round. A disadvantage of this procedure is that if a smart meter leaves the group, then a new aggregated key must be formed and the operations are quite computationally expensive(Privacy-enhanced architecture for smart metering)\\
 \\
 \textbf{Battery Solutions}
 \\
 \\
-The battery approach describes a household with a connected battery that is charged, e.g. by grid purchase or photovoltaic panels. The goal of the approach is that the battery feeds energy into the household in such a way that the grid operator can no longer detect private information based on the electricity consumption. \\
+The battery approach describes a household with a connected battery that is charged, e.g. by grid purchase or by photovoltaic panels. The goal of the approach is that the battery feeds energy into the household in such a way that the grid operator can no longer detect private information based on the electricity consumption. \\
 \begin{figure}[tbp]
   \centering
   \includegraphics[width=1\textwidth]{images/Battery.jpg}
   \caption[Battery Consumption Figure]{The power consumption of a household during the day (red) with battery (green) and the power consumption that the power provider can access (blue).}
   \label{fig:Battery}
 \end{figure}
-The figure \ref{fig:Battery} shows the electricity consumption of a private household with a connected battery that is charged via solar panels. It can be seen 3 lines. The red line shows the electricity consumption of the household. The green line shows when the battery is discharged(when the battery is feeding power to the household). The blue line is the power consumption that the grid operator can see.In the figure you can see that when the battery brings electricity to the household, then grid operator sees that a household does not consume electricity. In other cases, the grid operator sees that electricity is being consumed, but it is much less than the house actually consumes because the battery offsets some of the electricity consumption. In other words, if a household is connected to a battery, the grid operator cannot make correct statements about the behavior of the people in the household. \\
+The figure \ref{fig:Battery} shows the electricity consumption of a private household with a connected battery that is charged via solar panels. 3 lines can be seen. The red line shows the electricity consumption of the household. The green line shows when the battery is discharged (when the battery is feeding power to the household). The blue line is the power consumption that the grid operator can see. In the figure you can see that when the battery brings electricity to the household, then grid operator sees that a household does not consume electricity. In other cases, the grid operator sees that electricity is being consumed, but it is much less than the house actually consumes because the battery offsets some of the electricity consumption. In other words, if a household is connected to a battery, the grid operator cannot make correct statements about the behavior of the people in the household. \\
 An algorithm for batteries was proposed in(Protecting consumer privacy
-from electric load monitoring). This method uses an algorithm that can control the battery to produce a constant characteristic curve in consumption.  The algorithm targets a static and fixed current consumption. The target consumption is calculated differently by the algorithm depending on the house consumption and battery capacity. If the power consumption is below the consumption set by the algorithm, then the battery is charged with the difference from the target consumption. If the power consumption is above the target consumption set by the algorithm, the battery is discharged with the difference from the target consumption. If the consumption is significantly higher, so that the battery can no longer absorb the additional consumption, then it is switched to recovery mode. In recovery mode, the target consumption is temporarily increased, so that the battery can charge on the side, even though the house is currently consuming a lot of power. If the recovery mode can be switched off, then a new target consumption is calculated based on the new data. It is important to remember that this method does not anonymize power consumption, so it is even more important to measure how much information can still be extracted from power consumption. There are the following metrics to calculate how much privacy is gained by the algorithm.
+from electric load monitoring). This method uses an algorithm that can control the battery to produce a constant characteristic curve in consumption. The algorithm targets a static and fixed current consumption. The target consumption is calculated differently by the algorithm depending on the house consumption and battery capacity. If the power consumption is below the consumption set by the algorithm, then the battery is charged with the difference from the target consumption. If the power consumption is above the target consumption set by the algorithm, the battery is discharged with the difference from the target consumption. If the consumption is significantly higher, so that the battery can no longer absorb the additional consumption, then it is switched to recovery mode. In recovery mode, the target consumption is temporarily increased, so that the battery can charge on the side, even though the house is currently consuming a lot of power. If the recovery mode can be switched off, then a new target consumption is calculated based on the new data. It is important to remember that this method does not anonymize power consumption, so it is even more important to measure how much information can still be extracted from power consumption. There are the following metrics to calculate how much privacy is gained by the algorithm.
 \begin{enumerate}
 \item Relative Entropy:\\
-Relative entropy is used to compare two sources of information. In this case it would be the power consumption with the algorithm and the power consumption without the algorithm. These two loads form a stochastic process and can then be compared with the relative entropy. (Affordable privacy for home
+Relative entropy\footnote[2]{Relative entropy is often referred in literature as Information Gain or Kullback-Leibler divergence} is used to compare two sources of information. In this case it would be the power consumption with the algorithm and the power consumption without the algorithm. These two loads form a stochastic process and can then be analyzed with the calculated relative entropy. (Affordable privacy for home
 smart meters)
 \item Cluster Classification:\\
-The cluster classification has already been explained for the NILM method and described in this paper at [ref].  The cluster classification has already been explained for the NILM method and described in this paper at [ref]. It can also be used as a metric to evaluate privacy. Here one would perform a cluster analysis with the battery method and once without. Then one looks at the number of clusters in both measurements and if fewer clusters are found with the battery method, then this is considered a privacy gain.
+The cluster classification has already been explained for the NILM method and described in this paper at [ref]. Cluster Classification is well known as a machine learning approach, but it can also be used as a metric to evaluate privacy. Here one would perform a cluster analysis with the battery method and once without. Then one looks at the number of clusters in both measurements and if fewer clusters are found with the battery method, then this is considered a privacy gain.
 \item Regression Analysis:\\
 In the regression analysis, first a cross-correlation and afterwards a simple linear regression is performed. More precisely, both power consumptions are "superimposed" at the point of their maximum cross-correlation. Subsequently, a linear regression is performed and the privacy is evaluated on the basis of the quality of the predictor.
 \end{enumerate}
@@ -173,105 +171,76 @@ In the regression analysis, first a cross-correlation and afterwards a simple li
 \textbf{Drawbacks}
 \\
 \\
-Although various approaches to solving Metering for Operations are discussed, the following drawbacks must also be considered.\\
+Although various approaches to solving Metering for Operations are discussed, the following drawbacks must also be considered.
+\begin{enumerate}
+\item Pseudonymization:\\
+Pseudonymization does not provide protection against the attacks described in Ref[Nilm]. The only thing pseudonyms protect is the identification of the SMGW. Once it is possible to assign the pseudonym to a customer, the pseudonym becomes invalid and the electricity consumption can be uniquely assigned to a customer. 
 
-1. Pseudonymization:\\
-Pseudonymization does not provide protection against the attacks described in Ref[Nilm]. The only thing pseudonyms protect is the identification of the SMGW. Once it is possible to assign the pseudonym to a customer, the pseudonym becomes invalid and the electricity consumption can be uniquely assigned to a customer.
-
-2. Aggregation with Trusted Third Parties\\
+\item Aggregation with Trusted Third Parties\\
 The approach of trusted third parties is difficult to realize in the smart grid scenario. This is because the question of the neutrality of the TTP remains open. The service of the TTP is not free and it remains unclear which entity in the system will pay for the TTP. If the customer were to bear the costs, then the electricity provider could question the neutrality of the TTP. However, it is much more likely that the electricity provider will pay for the TTP's service. In this case, the neutrality of the TTP would be open to doubt by the customer, since the TTP could be dependent on payments from the electricity provider.
 
-3. Battery Approaches:\\
+\item Battery Approaches:\\
 Battery methods are a good way to mask actual electricity consumption. However, it is also a physical device that needs to be installed in the home and is costly at the same time. Widespread installation of batteries on a large scale is therefore unlikely in the next few years, as not every household has the funds for this investment.
 
-4. Aggregation without Trusted Third Parties:\\
+\item Aggregation without Trusted Third Parties:\\
+A disadvantage of Aggregation without Trusted Third Parties procedures is that they are more complex at the conceptual level than the proposals from the other categories. In addition, many Aggregation without Trusted Third Parties approaches involve homomorphic encryption schemes that are very computationally intensive. Nevertheless, the author believes that this category is the most appropriate for protecting client anonymity, because there is no need to rely on TTP or invest a lot of money as in the battery approaches.
 %vllt sowas wie, dass die verfahren etwas komplexer sind, da eine mögliche entität wegfällt(ttp),die aufgaben übernehmen könnte und die nun durch das verfahren aufgefangen werden muss. Trotz der Komplexität, können die verfahren allerdings performant sein. die verfahren müssen nur fein abgestimmt werden. Das ist der grund, weshalb 
-
+\end{enumerate}
 %dann sowas sagen wie, für jedes verfahren gibt es vor und nachteile. und das es der grund ist, weshalb noch keinen einheitlichen consens der umsetzung gibt.
-\todo{was sind die nachteile?`}
 \subsection{Metering for Billing}
-In order to fully protect the privacy of a household, metering for billing procedures must also be applied. Otherwise, conclusions about electricity consumption can be drawn from the billing. A simple solution would be to increase the frequency of the billing period. But at the same time it is also in the interest of the customer to buy electricity as cheaply as possible. The customer can be offered better electricity contracts if the billing period is shorter. In addition, it cannot be guaranteed that the customer's privacy is not violated in more complex electricity contracts by other features, even if a higher billing period is used. %In the following paragraph, different methods are explained that solve the problem for metering for billing. 
+In order to fully protect the privacy of a household, metering for billing procedures must also be applied. Otherwise, conclusions about electricity consumption may be drawn from the billing. A simple solution would be to increase the frequency of the billing period. But at the same time it is also in the interest of the customer to buy electricity as cheaply as possible and the customer can be offered better electricity contracts if the billing period is shorter. In addition, it cannot be guaranteed that the customer's privacy is not violated in more complex electricity contracts by other features, even if a higher billing period is used. %In the following paragraph, different methods are explained that solve the problem for metering for billing. 
 This master thesis focuses mainly on the metering for operations problem. 
-By implementing Trusted Platform Modules (TPM) in German smart meters, the problem is considered to be solved. For completeness, frequently proposed solutions in the scientific community are presented.\\
+By implementing Trusted Platform Modules (TPM) in German smart meters, the problem is considered to be solved. But for completeness, frequently proposed solutions in the scientific community are presented.\\
 \\
 \textbf{Billing with a Trusted Third Party}
 \\
 \\
-The advantages and disadvantages of a TTP have already been explained in the upper section. The principle is similar to metering for operations. The smart meter sends its measurements to the TTP and the TTP calculates the bill over the time period specified in the electricity contract. The billing is then sent to the electricity provider. On paper, this approach is simple, but important practical questions often remain unanswered. For example, who pays the trusted third party? In this case, the trusted third party provides a service to the electricity provider. However, if the electricity provider pays for the service, then the trusted third party is no longer independent.\\
+The advantages and disadvantages of a TTP have already been explained in the upper section[ref]. The principle is similar to metering for operations. The smart meter sends its measurements to the TTP and the TTP calculates the bill over the time period specified in the electricity contract. The billing is then sent to the electricity provider. On paper, this approach is simple, but important practical questions often remain unanswered. For example, who is paying the trusted third party? In this case, the trusted third party provides a service to the electricity provider. However, if the electricity provider pays for the service, then the trusted third party is no longer independent[quelle].\\
 \\
 \textbf{Billing with a Trusted Platform Module}
 \\
 \\
 Billing can also be implemented on the smart meter with a Trusted Platform Module. A TPM is a chip that is installed within the smart meter and thus additional security features can be used on the smart meter. The TPM contains a cryptographic processor that can generate random numbers, generate RSA keys, generate SHA-1 hashes and it has
-an encryption-decryption-signature engine. In addition, the TPM can be used to prove that nothing has been tampered with the smart meter afterwards. A secured smart meter can therefore perform correct billings at the customers side and the electricity provider can trust the smart meter. However, the TPM is installed by the electricity provider and it only guarantees the validity of the billing. If the electricity provider decides to send additional sensitive information within the calculations in the TPM, the TPM has no advantage for the end user.(Privacy-Aware Smart Metering)\\
+an encryption-decryption-signature engine. In addition, the TPM can be used to prove that nothing has been tampered with the smart meter after in got deployed. A secured smart meter can therefore perform correct billings at the customers side and the electricity provider can trust the smart meter, although it is located at the customer's home. However, the TPM is installed by the electricity provider and it only guarantees the validity of the billing. If the electricity provider decides to send additional sensitive information within the calculations in the TPM, the TPM has no advantage for the end user.(Privacy-Aware Smart Metering)\\
 \\
 \textbf{Billing Secured via Advanced Cryptography}
 \\
 \\
 Lastly, there is the cryptographic commitment method.
-With this approach, no other participant needs to be trusted. A smart meter can use a cryptographic commitment to prove that each bill was calculated correctly. So with cryptographic commitments, billing can be done on the customer side.\\
-Lastly, there is the cryptographic commitment method.
-With this approach, no other participant needs to be trusted. A smart meter can use a cryptographic commitment to prove that each bill was calculated correctly. So with cryptographic commitments, billing can be done on the customer side. A commitment is a cryptographic application and works as follows. Both sides agree on the same commitment procedure. Then it is possible that one side can generate a c=(x,r) as an obligation. Here x would be the calculation and r would be a random number. If one wants to check the commitment for correctness, then there is an Open(c,x,r) function that returns True(if correct) or False(if incorrect).
+With this approach, no other participant needs to be trusted. A smart meter can use a cryptographic commitment to prove that each bill was calculated correctly. So with cryptographic commitments, billing can be done on the customer side. A commitment is a cryptographic application and works as follows. Both sides agree on the same commitment procedure. Then it is possible that one side can generate a c=(x,r) as an obligation. Here x would be the calculation and r would be a random number. If one wants to check the commitment for correctness, then there is an Open(c,x,r) function that returns True (if correct) or False (if incorrect).
 Cryptographic commitments are mathematically constructed so that it is easy to compute a c=(x,r), but hard to find an x /= x' with an r' such that open(c,x',r') returns True. In this use case, the following procedure is often used. [pedersen] \\
-Commit(x, r) · Commit(y, s) = Commit(x+y, r+s)\\
+Commit(x, r) · Commit(y, s) = Commit(x+y, r+s)\\\todo{mathe}
 $Commit(x, r){k}$ = Commit(x · k, r · k)\\
-The special feature of the method of [pedersen] is that at the same time non-homomorphic properties are satisfied. Without going into exact technical details, cryptographic commitments work as follows in a smart grid.
-The smart meter generates a cryptographic commitment for each measurement. Via a public key infrastructure, the smart meter and the electricity provider receive cryptographic keys. With these keys, the smart meter can sign its commitments and then send them to the electricity provider. The electricity provider checks the commitments for correctness and if all data is correct, the electricity provider sends back a list with electricity prices and the corresponding time stamps. The meter now knows at each point in time how much electricity was consumed and what the price was. By exploiting the homomorphic properties of the procedure, the smart meter can now calculate the electricity prices. The electricity price in this case would be the variable k.So the smart meter creates new cryptographic obligations with the electricity price calculated on the consumption and sends these new obligations to the electricity provider. The electricity provider can verify the correctness by performing the same calculations as the smart meter. If the results with the Open(c,x,r) method return true, then the calculations were performed correctly by the smart meter.
+The special feature of the method of [pedersen] is that at the same time non-homomorphic properties are satisfied. Without going into exact technical details, cryptographic commitments work as follows in a smart grid.\\
+The smart meter generates a cryptographic commitment for each measurement. Via a public key infrastructure, the smart meter and the electricity provider receive cryptographic keys. With these keys, the smart meter can sign its commitments and then send them to the electricity provider. The electricity provider checks the commitments for correctness and if all data is correct, the electricity provider sends back a list with electricity prices and the corresponding time stamps. The meter now knows at each point in time how much electricity was consumed and what the price was. By exploiting the homomorphic properties of the procedure, the smart meter can now calculate the electricity prices. The electricity price in this case would be the variable k. So the smart meter creates new cryptographic obligations with the electricity price calculated on the consumption and sends these new obligations to the electricity provider. The electricity provider can verify the correctness by performing the same calculations as the smart meter. If the results with the Open(c,x,r) method return true, then the calculations were performed correctly by the smart meter.
 This method is suitable for simple electricity tariffs when only a factor on the electricity consumption needs to be calculated. If an electricity contract is more complex with different conditions such as a higher electricity price if a certain electricity consumption is exceeded, then this approach can no longer be implemented.
 \section{Technical guideline TR-03109}
-This paragraph will discuss the technical guideline published by the BSI (Federal Office for Information Security). The BSI is the entity of the German federal government that deals with digital security issues and issues recommendations as well as mandatory security guidelines for critical infrastructures. Among other things, technical guidelines are published in which security standards are defined for different IT systems. The technical guideline BSI-TR-03109 defines minimum requirements for the functionality, security and interoperability of smart meters in Germany.  The technical guideline BSI-TR-03109 defines minimum requirements for functionality, security and interoperability that individual components of smart meters in Germany must fulfill. The guideline as a whole consists of 6 different documents, which are shown in Figure \ref{fig:TG03109}. Based on the guidelines, it is possible to have Smart Meter devices certified by test centers. Unless otherwise described, all information are derived from the technical guideline.\\%noch schreiben von welcher technical guideline
+This paragraph will discuss the technical guideline published by the BSI\footnote[3]{BSI - Bundesamt für Sicherheit in der Informationstechnik(eng. Federal Office for Information Security)}. The BSI is the entity of the German federal government that deals with digital security issues and releases recommendations as well as mandatory security guidelines for critical infrastructures. Among other things, technical guidelines are published in which security standards are defined for different IT systems like Smart Meters. The technical guideline BSI-TR-03109 defines minimum requirements for functionality, security and interoperability that individual components of smart meters in Germany must fulfill. The guideline as a whole consists of 6 different documents, which are shown in Figure \ref{fig:TG03109}. Based on the guidelines, it is possible to have Smart Meter devices certified by test centers. Unless otherwise described, all information are derived from the most recent technical guideline[quelle].\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=1\textwidth]{images/BSI-TR-03109.png}
+  \caption[Technical Guideline 03109 Overview]{All documents from BSI that are subdivided under the Technical Guideline 03109.}
+  \label{fig:TG03109}
+\end{figure}
+\\%noch schreiben von welcher technical guideline
 \\
 \textbf{Stakeholder in the Smart Grid}
-%hier ein kleiner text
+The technical guideline describes all stakeholders that participate in a power system. The most important stakeholders for this work are described.
 \\\item Consumer: \\
 The consumer is the person who uses electrical energy, gas, water
 or heat. In addition, the consumer is the owner of the measurements processed and stored in the SMGW. In order to interact with the SMGW, the consumer uses a communication device. All necessary data can be retrieved and displayed through it.\\
 \item SMGW administrator:\\
 A Smart Meter Gateway Administrator (GWA) a trusted entity and each SMGW is assigned a GWA. The GWA handles the configuration, monitoring and control of SMGWs and it is even possible to perform updates of SMGWs via the GWA.\\
 \item Authorized external entities:\\
-External market participants (EMT) are all other authorized participants in the energy network that can establish a communication connection with the SMGW.These include power grid providers and electricity suppliers. The SMGW ignores all other communication requests that do not come from the GWA or EMTs in order to prevent attacks.\\
+External market participants (EMT) are all other authorized participants in the energy network that can establish a communication connection with the SMGW. These include power grid providers and electricity suppliers. The SMGW ignores all other communication requests that do not come from the GWA or EMTs in order to prevent attacks.\\
 \end{enumerate}
-There are several other actors such as Controllable Local Systems, service technicians and meters. However, these actors do not play a major role in the protocol that is proposed here.
+There are several other actors such as Controllable Local Systems, service technicians and meters. However, these actors do not play a major role in the protocol that is proposed here. In Figure \ref{fig:E-Grid} is a exemplary power grid shown with the Stakeholder in the Smart Grid. Every SMGW is connected to one administrator(GWA), which configurates the communication profile of the SMGW. When pseudonymization is activated, the information is not sent directly to the electricity provider, but first to the GWA. Afterwards, the GWA forwards the data to its electricity provider.
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=1\textwidth]{images/BSI-TR-03109.png}
-  \caption[Technical Guideline 03109 Overview]{All documents from BSI that are subdivided under the Technical Guideline 03109.}
-  \label{fig:TG03109}
-\end{figure}\\
-\\
-\textbf{Stakeholder Motives}
-\\
-\\
-It has already been explained in this chapter which participants in the power grid interact with each other. Now in particular it will be discussed which motives the different participants have and which malicious motives can be pursued by the participants or by attackers.  \\
-\\
-The smart meter attempts to achieve the 3 security objectives of confidentiality, integrity and availability. The 3 security goals are often summarized as CIA. Another important security goal for this work is anonymity. The 4 definitions are essential for the understanding of this work. Therefore, the terms are explained below.
-\begin{enumerate}
-\item Confidentiality: \\
-It is not possible for an unauthorized party to gain information about the content of the data sent.
-\item Integrity:\\
-It is not possible for an unauthorized party to modify the content of data without data without this being noticed.
-\item Availability: \\
-It is not possible for an unauthorized party to interfere with the functionality of a service.
-\item Anonymity:\\
-Verbergen der Identität vor dem Kommunikationspartner???
-Vllt wer hat die Daten gesendet, wer hat den Stromverbrauch gesendet?
-\end{enumerate}
- 
- 
-All available attacks will aim at bypassing these security targets to get information about the customer. 
-\\
-\\
-\textbf{Customer's Motives}
-\\
-\\
-For the costumer, all the security goals defined above are important. But by far the most important is the security goal of anonymity through the smart meter. Possible attacks on the electricity consumption penetrate deeply into the private sphere of each customer. Therefore, no conclusions may be drawn from the electricity consumption of a customer.\\
-On the other hand, unethical customers may try to steal electricity to save energy costs. The smart meter is located in or on the customer's house. An unethical customer could attempt to tamper directly with the smart meter's hardware or software. The attempts could look like this, a Costumer could try to reduce the recorded electricity consumption at the Smart meter or the Smart meter could be manipulated to measure less electricity when electricity prices are high and more electricity when electricity prices are low.
-\\
-\\
-\textbf{Electricity Provider's Motives}
-\\
-\\
-For the electricity provider, the authenticity of the billing is the most important security objective because From the electricity provider's point of view, the customer is not trustworthy in the calculation of the bill. In addition, the customer has access to the smart meter at almost any time in an environment trusted by the customer. Unlike analog meters, smart meters cannot be mechanically attacked. But if a customer manages to change the software of the smart meter, the billing can be manipulated at the same time. On the other hand, the electricity provider can also be an overly intrusive electricity provider. In the paragraph [Ref NILM] it was explained how a behavioral analysis can be created from the electricity consumption. This sensitive information could be used to gain an additional source of income. In [SSRN] it was listed which questions could be answered by a Nilm analysis. Quote: "On what days and during what times do you watch TV? How much home time do you spend in front of your computer?" or "Are any of the appliances in your household failing or operating below optimal efficiency? Do you own (and so presumably like) lots of gadgets?". Advertising companies would certainly pay money for this kind of information in order to be able to advertise more accurately. For this reason, it is presumed that the electricity provider is considered an honest-but-curious adversary. 
+  \includegraphics[width=1\textwidth]{images/Electricity_Grid.png}
+  \caption[Exemplary Electricity Grid]{An exemplary electricity grid in the TG-03109}
+  \label{fig:E-Grid}
+\end{figure}
+\todo{grafik nochmal überarbeiten}
 \subsection{Interfaces and functions of the Smart Meter Gateway}
 \begin{figure}[tbp]
   \centering
@@ -297,8 +266,7 @@ In HAN, an SMGW interacts with Controllable Local Systems (e.g., photovoltaic sy
 \textbf{Functionality of the smart meter gateway}
 \\
 \\
-First, the task of SMGW is to store the measurements sent by meters from the LMN. Then, the readings are processed in the SMGW and sent to the authorized EMTs in the WAN after processing. An SMGW must also perform the tasks of a firewall and separate the 3 interfaces. It is therefore impossible for an EMT or GWA to make requests to devices located in the HAN or LMN, even if it is allowed to interact with the SMGW over the WAN. The processing of data from the SMGW is shown in Fig \ref{fig:value_processing}.
-Since the WAN interface is the most important interface for this work, it will be discussed in more detail.\\
+First, the task of SMGW is to store the measurements sent by meters from the LMN. Then, the readings are processed in the SMGW and sent to the authorized EMTs in the WAN after processing. An SMGW must also perform the tasks of a firewall and separate the 3 interfaces. It is therefore impossible for an EMT or GWA to make requests to devices located in the HAN or LMN, even if it is allowed to interact with the SMGW over the WAN. The processing of data from the SMGW is shown in Fig \ref{fig:value_processing}. Since the WAN interface is the most important interface for this work, it will be discussed in more detail.\\
 \\
 \textbf{Functions of the SMGW in the WAN}
 \\
@@ -318,14 +286,57 @@ In order for the cost electricity consumption to be calculated correctly, it is 
 \item Wake-Up Service:\\
 A GWA is able to force a communication link with the SMGW. This is done via a data packet signed by the GWA. The SMGW then establishes a fixed preconfigured communication connection to the GWA. This enables the GWA to execute administration commands on the SGMW. 
 \end{enumerate}
-%ok angreifer modell. welche angreifer gibt es in deinem Netz? eavesdropping ja aber bringt gar nichts, da eine lokale summe nicht gelesen werden kann. active angreifer ja! wird später beschrieben. angriffe innerhalb des netzwerkes von kunden? ja! das gleiche wi9e active angreifer aber ohne vorteil, da die kosten dadurch nicht reduziert werden. stromanbier ja! hat die meiste administrative funktionen!
-\todo{irgendein vorwort, mit text verbinden}
-\subsection{Eavesdropping}
-Eavesdropping may be the weakest type of attack, but successful eavesdropping on the communications of the smart meter could be useful to e.g. intruders. However, curious neighbors might also have an interest in the behavior inside the house. Turning on/off lights implies that someone is at home or leaving the house. Therefore, eavesdropping on electricity consumption could provide information about when is a suitable time to break in. To prevent eavesdropping, smart meter communication is encrypted to maintain confidentiality. Cryptographic algorithms such as AES are widely used today and have been analyzed for weaknesses over the years by a number of researchers. Hence, a successful attack on encrypted data to extract information is extremely unlikely.
-\subsection{Active Attackers}
-In Germany, the smart grid is one of the critical infrastructures. This means that the failure of the smart grid could lead to a significant compromise of public safety or other serious consequences. Such systems are threatened by active attackers. The objective of active attackers may not necessarily be to analyze a user's electricity consumption. They may want to disable availability through e.g. denial of service attacks. These attacks could leave major damage to the power grid and are definitely a realistic threat [quelle]. But this thesis focuses on smart meters and the anonymization of electricity consumption. That's why it is assumed that the active attacker does not carry out system-wide attacks on the power grid. Rather, it is assumed that the attacker attempts to take control in the proposed DC network. Among other things, it is assumed that the attacker has the theoretical ability to take over one or more SMGW and send messages through the SMGW. In addition, if the attacker has taken over an SMGW, it can perform all operations that are possible through the proposed DC network. In the next section, the conceptual solution of the DC-Net is proposed and how the DC-Net could be implemented in the technical guideline of the BSI. It also describes which attacks on the DC-Net are possible with the defined attacker model.
+\\
+\\
+\textbf{Stakeholder Motives}
+\\
+\\
+It has already been explained in this chapter which participants in the power grid interact with each other. Now in particular it will be discussed which motives the different participants have and which malicious motives can be pursued by the participants or by attackers.
+\\
+\\
+\textbf{Customer's Motives}
+\\
+\\
+For the costumer, all the security goals defined above are important. But by far the most important is the security goal of anonymity through the smart meter. Possible attacks on the electricity consumption penetrate deeply into the private sphere of each customer. Therefore, no conclusions may be drawn from the electricity consumption of a customer.\\
+On the other hand, unethical customers may try to steal electricity to save energy costs. The smart meter is located in or on the customer's house. An unethical customer could attempt to tamper directly with the smart meter's hardware or software. The attempts could look like this, a Costumer could try to reduce the recorded electricity consumption at the Smart meter or the Smart meter could be manipulated to measure less electricity when electricity prices are high and more electricity when electricity prices are low.
+\\
+\\
+\textbf{Electricity Provider's Motives}
+\\
+\\
+For the electricity provider, the authenticity of the billing is the most important security objective because From the electricity provider's point of view, the customer is not trustworthy in the calculation of the bill. In addition, the customer has access to the smart meter at almost any time in an environment trusted by the customer. Unlike analog meters, smart meters cannot be mechanically attacked. But if a customer manages to change the software of the smart meter, the billing can be manipulated at the same time. On the other hand, the electricity provider can also be an overly intrusive electricity provider. In the paragraph [Ref NILM] it was explained how a behavioral analysis can be created from the electricity consumption. This sensitive information could be used to gain an additional source of income. In [SSRN] it was listed which questions could be answered by a Nilm analysis. Quote: "On what days and during what times do you watch TV? How much home time do you spend in front of your computer?" or "Are any of the appliances in your household failing or operating below optimal efficiency? Do you own (and so presumably like) lots of gadgets?". Advertising companies would certainly pay money for this kind of information in order to be able to advertise more accurately. For this reason, it is presumed that the electricity provider is considered an honest-but-curious adversary. 
 
-\cleardoublepage
+\subsection{Security Objectives}
+
+The smart meter attempts to achieve the 3 security objectives of confidentiality, integrity and availability. The 3 security goals are often summarized as CIA. Another important security goal for this work is anonymity. The 4 definitions are essential for the understanding of this work. Therefore, the terms are explained below.
+\begin{enumerate}
+\item Confidentiality: \\
+It is not possible for an unauthorized party to gain information about the content of the data sent.
+\item Integrity:\\
+It is not possible for an unauthorized party to modify the content of data without data without this being noticed.
+\item Availability: \\
+It is not possible for an unauthorized party to interfere with the functionality of a service.
+\item Anonymity:\\
+Verbergen der Identität vor dem Kommunikationspartner???
+Vllt wer hat die Daten gesendet, wer hat den Stromverbrauch gesendet?
+\end{enumerate}
+In the ref[3] chapter, the design of the network protocol is presented, which fulfills the mentioned security objectives and thus protects the privacy of the customer from the electricity provider or an attacker. For an attacker his main goal is to try to bypass the security objectives to obtain additional information about the customer.
+\subsection{Attacks on the Smart Grid}
+In Germany, the smart grid is one of the critical infrastructures. This means that the failure of the smart grid could lead to a significant compromise of public safety or other serious consequences. Such systems are threatened by all sorts of attackers. 
+\\
+\\
+\textbf{Eavesdropping}
+\\
+\\
+Eavesdropping may be the weakest type of attack and it is often used by a passive attacker or by an active attacker as a preparation for a larger attack. Successful eavesdropping on the communications of the smart meter could be useful to e.g. intruders. However, curious neighbors might also have an interest in the behavior inside the house. Turning on/off lights implies that someone is at home or leaving the house. Therefore, eavesdropping on electricity consumption could provide information about when is a suitable time to break in. To prevent eavesdropping, smart meter communication is encrypted to maintain confidentiality. Cryptographic algorithms such as AES are widely used today and have been analyzed for weaknesses over the years by a number of researchers. Hence, a successful attack on encrypted data to extract information is extremely unlikely.
+\\
+\\
+\textbf{Active Attackers}
+\\
+\\
+The objective of active attackers may not necessarily be to analyze a user's electricity consumption. They may want to disable availability through e.g. denial of service attacks. These attacks could leave major damage to the power grid and are definitely a realistic threat[quelle]. But this thesis focuses on smart meters and the anonymization of electricity consumption. That's why it is assumed that the active attacker does not carry out system-wide attacks on the power grid. Rather, it is assumed that the attacker attempts to take control in the proposed DC network. Among other things, it is assumed that the attacker has the theoretical ability to take over one or more SMGW and send messages through the SMGW. In addition, if the attacker has taken over an SMGW, it can perform all operations that are possible through the proposed DC network.\\In the next section, the conceptual solution of the DC-Net is proposed and how the DC-Net could be implemented in the technical guideline of the BSI. It also describes which attacks on the DC-Net are possible with the defined attacker model.
+
+\clearpage
 
 %%% Local Variables:
 %%% TeX-master: "diplom"
