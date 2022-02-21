@@ -4,15 +4,28 @@
 \contentsline {todo}{write introduction}{1}{section*.9}%
 \contentsline {todo}{add content}{1}{section*.12}%
 \contentsline {todo}{Figure: Come up with a mindblowing figure.}{2}{figure.caption.13}%
-\contentsline {todo}{mathe}{10}{section*.17}%
-\contentsline {todo}{mathe}{15}{section*.19}%
-\contentsline {todo}{grafik nochmal überarbeiten}{17}{section*.22}%
-\contentsline {todo}{anderen Sektion Namen ausdenken}{23}{section*.25}%
-\contentsline {todo}{alle Bilder nochmal auflösender einfügen}{24}{section*.27}%
-\contentsline {todo}{Wie ist das deutsche Smart Grid aufgebaut und wie ist das design damit vereinbar?}{25}{section*.29}%
-\contentsline {todo}{Was passiert bei missbrauch des F-Modus}{35}{section*.36}%
-\contentsline {todo}{ein wenig mehr schreiben}{43}{section*.40}%
-\contentsline {todo}{Vertraulichkeit}{44}{section*.41}%
-\contentsline {todo}{vllt noch ein wenig mehr?}{46}{section*.42}%
-\contentsline {todo}{diagramme vom zweiten Experiment erstellen und erkenntnisse aufschreiben.}{51}{section*.43}%
-\contentsline {todo}{letztes Experiment implementieren}{51}{section*.46}%
+\contentsline {todo}{was ist ein kontrollzenter?, Was ist ein Smart Grid? Siehe alexander pötzsch paper vllt auch in die introduction}{3}{section*.14}%
+\contentsline {todo}{mathe}{10}{section*.18}%
+\contentsline {todo}{Bild besser screenshoten}{11}{section*.20}%
+\contentsline {todo}{mathe}{15}{section*.21}%
+\contentsline {todo}{FIgure 2.6 Caption schreiben}{17}{section*.23}%
+\contentsline {todo}{Figure 3.2 als 2.6 verwenden}{17}{section*.24}%
+\contentsline {todo}{grafik nochmal überarbeiten}{17}{section*.26}%
+\contentsline {todo}{anderen Sektion Namen ausdenken}{23}{section*.29}%
+\contentsline {todo}{alle Bilder nochmal auflösender einfügen}{24}{section*.31}%
+\contentsline {todo}{hier nochmal drüber lesen}{25}{section*.32}%
+\contentsline {todo}{In English}{25}{section*.34}%
+\contentsline {todo}{Figure auf englisch}{26}{section*.35}%
+\contentsline {todo}{Protocol Identifier}{26}{section*.37}%
+\contentsline {todo}{mathe}{28}{section*.39}%
+\contentsline {todo}{quelle}{29}{section*.40}%
+\contentsline {todo}{hier nochmal drüber schauen}{30}{section*.41}%
+\contentsline {todo}{notification message 6?}{32}{section*.45}%
+\contentsline {todo}{hat man dann noch einen planaren graph?}{34}{section*.46}%
+\contentsline {todo}{Was passiert bei missbrauch des F-Modus}{36}{section*.48}%
+\contentsline {todo}{ein wenig mehr schreiben}{44}{section*.52}%
+\contentsline {todo}{Noch schreiben, dass der größte angreifer der stromanbieter ist und das man das umgehen könnte, wenn man die TR aufweicht und SGMW auch zu authorisierten Entitäten werden, mit denen ein SMGW kommunizieren kann}{45}{section*.53}%
+\contentsline {todo}{Vertraulichkeit}{45}{section*.54}%
+\contentsline {todo}{vllt noch ein wenig mehr?}{46}{section*.55}%
+\contentsline {todo}{diagramme vom zweiten Experiment erstellen und erkenntnisse aufschreiben.}{51}{section*.56}%
+\contentsline {todo}{letztes Experiment implementieren}{51}{section*.59}%

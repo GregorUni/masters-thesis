@@ -41,8 +41,9 @@
 This section introduces an overview of concepts for the basic understanding of this work. Therefore, the key components of the smart grid are explained, what structural changes and what challenges will occur in the smart grid that need to be solved. Because this thesis requires a basic understanding of the German smart grid, the stakeholders and their interests in the smart grid are explained. In addition, the technical guideline from the BSI is introduced because it defines a first security-relevant standard that is required for all Smart Meters in the German smart grid. Moreover, this chapter discusses the current state of research and what solutions are discussed in the scientific community.\\
 
 \section{Smart Grid}
-The original energy network was mainly considered as a transmission system to send electricity from the generators via a elongated network of cables and transformers to the consumers.% vllt hier noch schreiben, dass es erneuerbare Energien wegen der Klimakriese gibt
-Due to the increased integration of renewable energies, the distribution from the traditional few electricity producers (e.g. nuclear power plants, coal-fired power plants), which were responsible for a large part of the electricity generation, is changing to many smaller producers (e.g. wind turbines). %However, renewable power generation is often dependent on external environmental influences. Therefore, smart meters have been widely introduced in households to ensure that the smart grid is stable despite fluctuations in power generation.
+The original energy network was mainly considered as a transmission system to send electricity from the generators via an elongated network of cables and transformers to the consumers.% vllt hier noch schreiben, dass es erneuerbare Energien wegen der Klimakriese gibt
+\todo{was ist ein kontrollzenter?, Was ist ein Smart Grid? Siehe alexander pötzsch paper vllt auch in die introduction}
+ Due to the increased integration of renewable energies, the distribution from the traditional few electricity producers (e.g. nuclear power plants, coal-fired power plants), which were responsible for a large part of the electricity generation, is changing to many smaller producers (e.g. wind turbines). %However, renewable power generation is often dependent on external environmental influences. Therefore, smart meters have been widely introduced in households to ensure that the smart grid is stable despite fluctuations in power generation.
 But, renewable power generation is often dependent on external environmental factors. In order for the electricity grid to be stable despite fluctuations in power generation, smart meters have been introduced to increase the overall grid quality through regular communication of status information and power consumption. Smart Meters enable the electricity provider to receive the electricity consumption of a household every 15 minutes. It offers the possibility to get more easily the current electricity demand from the consumers. Previously, the current electricity demand was simulated from load forecasting models. If the demand should increase spontaneously, peaker plants, mainly consisting of coal-fired power plants, would be turned on to quickly meet this demand. This is costly and environmentally unfriendly. 
 Since then, structural changes have been made to optimize the energy grid and make it more intelligent by exchanging information in near-real-time. This allows the demand to be matched to the available supply. The fundamental component of the smart grid are the smart meters which will be discussed in more detail in the next paragraph.(Quelle:Smart Grid Communications)(Privacy Survey2013)\\
 \\
@@ -82,7 +83,7 @@ Through Nilm, simple observations can be made without analyzing the household be
 \begin{figure}[tbp]
   \centering
   \includegraphics[width=1\textwidth]{images/nilm.png}
-  \caption[Detected NILM Appliances]{The electricity consumption of a household with drawn household appliances detected by NILM.}
+  \caption[Detected NILM Appliances]{The electricity consumption of a household with drawn household appliances detected by NILM[ref].}
   \label{fig:Nilm}
 \end{figure}
 \\
@@ -153,13 +154,13 @@ The battery approach describes a household with a connected battery that is char
   \includegraphics[width=1\textwidth]{images/Battery.jpg}
   \caption[Battery Consumption Figure]{The power consumption of a household during the day (red) with battery (green) and the power consumption that the power provider can access (blue).}
   \label{fig:Battery}
-\end{figure}
+\end{figure}\todo{Bild besser screenshoten}
 The figure \ref{fig:Battery} shows the electricity consumption of a private household with a connected battery that is charged via solar panels. 3 lines can be seen. The red line shows the electricity consumption of the household. The green line shows when the battery is discharged (when the battery is feeding power to the household). The blue line is the power consumption that the grid operator can see. In the figure you can see that when the battery brings electricity to the household, then grid operator sees that a household does not consume electricity. In other cases, the grid operator sees that electricity is being consumed, but it is much less than the house actually consumes because the battery offsets some of the electricity consumption. In other words, if a household is connected to a battery, the grid operator cannot make correct statements about the behavior of the people in the household. \\
 An algorithm for batteries was proposed in(Protecting consumer privacy
 from electric load monitoring). This method uses an algorithm that can control the battery to produce a constant characteristic curve in consumption. The algorithm targets a static and fixed current consumption. The target consumption is calculated differently by the algorithm depending on the house consumption and battery capacity. If the power consumption is below the consumption set by the algorithm, then the battery is charged with the difference from the target consumption. If the power consumption is above the target consumption set by the algorithm, the battery is discharged with the difference from the target consumption. If the consumption is significantly higher, so that the battery can no longer absorb the additional consumption, then it is switched to recovery mode. In recovery mode, the target consumption is temporarily increased, so that the battery can charge on the side, even though the house is currently consuming a lot of power. If the recovery mode can be switched off, then a new target consumption is calculated based on the new data. It is important to remember that this method does not anonymize power consumption, so it is even more important to measure how much information can still be extracted from power consumption. There are the following metrics to calculate how much privacy is gained by the algorithm.
 \begin{enumerate}
 \item Relative Entropy:\\
-Relative entropy\footnote[2]{Relative entropy is often referred in literature as Information Gain or Kullback-Leibler divergence} is used to compare two sources of information. In this case it would be the power consumption with the algorithm and the power consumption without the algorithm. These two loads form a stochastic process and can then be analyzed with the calculated relative entropy. (Affordable privacy for home
+Relative entropy\footnote[2]{Relative entropy is often referred in literature as Information Gain or Kullback-Leibler divergence.} is used to compare two sources of information. In this case it would be the power consumption with the algorithm and the power consumption without the algorithm. These two loads form a stochastic process and can then be analyzed with the calculated relative entropy. (Affordable privacy for home
 smart meters)
 \item Cluster Classification:\\
 The cluster classification has already been explained for the NILM method and described in this paper at [ref]. Cluster Classification is well known as a machine learning approach, but it can also be used as a metric to evaluate privacy. Here one would perform a cluster analysis with the battery method and once without. Then one looks at the number of clusters in both measurements and if fewer clusters are found with the battery method, then this is considered a privacy gain.
@@ -223,7 +224,9 @@ This paragraph will discuss the technical guideline published by the BSI\footnot
 \end{figure}
 \\%noch schreiben von welcher technical guideline
 \\
-\textbf{Stakeholder in the Smart Grid}
+\textbf{Stakeholder Model in the German Smart Grid}
+\\
+\\
 The technical guideline describes all stakeholders that participate in a power system. The most important stakeholders for this work are described.
 \\\item Consumer: \\
 The consumer is the person who uses electrical energy, gas, water
@@ -233,7 +236,8 @@ A Smart Meter Gateway Administrator (GWA) a trusted entity and each SMGW is assi
 \item Authorized external entities:\\
 External market participants (EMT) are all other authorized participants in the energy network that can establish a communication connection with the SMGW. These include power grid providers and electricity suppliers. The SMGW ignores all other communication requests that do not come from the GWA or EMTs in order to prevent attacks.\\
 \end{enumerate}
-There are several other actors such as Controllable Local Systems, service technicians and meters. However, these actors do not play a major role in the protocol that is proposed here. In Figure \ref{fig:E-Grid} is a exemplary power grid shown with the Stakeholder in the Smart Grid. Every SMGW is connected to one administrator(GWA), which configurates the communication profile of the SMGW. When pseudonymization is activated, the information is not sent directly to the electricity provider, but first to the GWA. Afterwards, the GWA forwards the data to its electricity provider.
+There are several other actors such as Controllable Local Systems, service technicians and meters. However, these actors do not play a major role in the protocol that is proposed here. In Figure \ref{fig:E-Grid} is a exemplary power grid shown with the Stakeholder in the Smart Grid. Every SMGW is connected to one administrator(GWA), which configurates the communication profile of the SMGW. When pseudonymization is activated, the information is not sent directly to the electricity provider, but first to the GWA. Afterwards, the GWA forwards the data to its electricity provider.\todo{FIgure 2.6 Caption schreiben}
+\todo{Figure 3.2 als 2.6 verwenden}
 \begin{figure}[tbp]
   \centering
   \includegraphics[width=1\textwidth]{images/Electricity_Grid.png}
@@ -259,7 +263,7 @@ In HAN, an SMGW interacts with Controllable Local Systems (e.g., photovoltaic sy
 \end{enumerate}
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=1\textwidth]{images/Messwertverarbeitung.png}
+  \includegraphics[width=1\textwidth]{images/MessverarbeitungEnglish.png}
   \caption[Measured Value Processing in a SMGW]{An overview of the measured value processing within the SMGW with configuration profiles from the GWA.}
   \label{fig:value_processing}
 \end{figure}
@@ -316,9 +320,12 @@ It is not possible for an unauthorized party to gain information about the conte
 It is not possible for an unauthorized party to modify the content of data without data without this being noticed.
 \item Availability: \\
 It is not possible for an unauthorized party to interfere with the functionality of a service.
+\end{enumerate}
+In the application field of this thesis, anonymity is considered as follows:
+\begin{enumerate}[resume]
 \item Anonymity:\\
-Verbergen der Identität vor dem Kommunikationspartner???
-Vllt wer hat die Daten gesendet, wer hat den Stromverbrauch gesendet?
+%A user is anonymous if the behavior of the user in his messages towards a recipient remains secret.
+A user is anonymous if the behavior of the user sent in a message to its recipient remains secret.
 \end{enumerate}
 In the ref[3] chapter, the design of the network protocol is presented, which fulfills the mentioned security objectives and thus protects the privacy of the customer from the electricity provider or an attacker. For an attacker his main goal is to try to bypass the security objectives to obtain additional information about the customer.
 \subsection{Attacks on the Smart Grid}
