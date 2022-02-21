@@ -22,10 +22,6 @@
 \contentsline {todo}{hier nochmal drüber schauen}{30}{section*.41}%
 \contentsline {todo}{notification message 6?}{32}{section*.45}%
 \contentsline {todo}{hat man dann noch einen planaren graph?}{34}{section*.46}%
-\contentsline {todo}{Was passiert bei missbrauch des F-Modus}{36}{section*.48}%
-\contentsline {todo}{ein wenig mehr schreiben}{44}{section*.52}%
-\contentsline {todo}{Noch schreiben, dass der größte angreifer der stromanbieter ist und das man das umgehen könnte, wenn man die TR aufweicht und SGMW auch zu authorisierten Entitäten werden, mit denen ein SMGW kommunizieren kann}{45}{section*.53}%
-\contentsline {todo}{Vertraulichkeit}{45}{section*.54}%
-\contentsline {todo}{vllt noch ein wenig mehr?}{46}{section*.55}%
-\contentsline {todo}{diagramme vom zweiten Experiment erstellen und erkenntnisse aufschreiben.}{51}{section*.56}%
-\contentsline {todo}{letztes Experiment implementieren}{51}{section*.59}%
+\contentsline {todo}{vllt noch schreiben wie das genauer funktioniert, das rejoinen. Also das nachbarn benachrihtigt werden, dass der defekte nachbar wieder da ist.}{34}{section*.47}%
+\contentsline {todo}{diagramme vom zweiten Experiment erstellen und erkenntnisse aufschreiben.}{52}{section*.52}%
+\contentsline {todo}{letztes Experiment implementieren}{52}{section*.55}%
