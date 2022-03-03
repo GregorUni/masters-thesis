@@ -1,0 +1,4 @@
+Frage verwirrung?!?!
+Wie ist das mit dem Kontrollzentrum im Smart Grid. Laut Alexander Pötzsch werden die Stromdaten an das Kontrollzentrum gesendet. Von dort werden die Daten an den Stromanbieter, Netzbetreiebr etc. weitergeleitet.
+Aber in der Literatur wird Stromanbieter und Netzbetreiber häufig verwechselt bzw das Kontrollzentrum wird gar nicht erwähnt. bzw In A_privacy-preserving_Concept_for_Smart_Grids.pdf wird stromanbieter und netzbetreiber als Electricity Service Provider vereint? keine rede von Kontrollzentrum( ist auch ein deutsches Paper). Die biselli redet auch nicht von einem Kontrollzentrum.....
+Wie soll ich das nun nennen? oder kann ich Netzbetreiber und Stromanbieter als electricity provider zusammenfassen?
