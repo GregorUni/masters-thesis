@@ -106,6 +106,7 @@ In order to recognize a movie, the possible power consumption of the TV by the p
 \\
 \\
 \textbf{Low Resolution Analysis}
+\label{subsec:low_reso}
 \\
 \\Another approach is to work backwards from large data sets to obtain detailed information from aggregated electricity consumption. The NILM procedure attempted to have household appliances detected from individual households and then behavioral analyses could be generated from the household appliances. A common approach with low-resolution electricity data is to identify the numerous factors that influence total electricity consumption and to filter them out.(großes Paper) 
 But with low resolution methods, a variety of approaches are being pursued.
@@ -157,6 +158,7 @@ Figure \ref{fig:Battery} shows the electricity consumption of a private househol
 An algorithm for batteries was proposed in(Protecting consumer privacy
 from electric load monitoring). This method uses an algorithm that can control the battery to produce a constant characteristic curve in consumption. The algorithm targets a static and fixed current consumption. The target consumption is calculated differently by the algorithm depending on the house consumption and battery capacity. If the power consumption is below the consumption set by the algorithm, then the battery is charged with the difference from the target consumption. If the power consumption is above the target consumption set by the algorithm, the battery is discharged with the difference from the target consumption. If the consumption is significantly higher, so that the battery can no longer absorb the additional consumption, then it is switched to recovery mode. In recovery mode, the target consumption is temporarily increased, so that the battery can charge on the side, even though the house is currently consuming a lot of power. If the recovery mode can be switched off, then a new target consumption is calculated based on the new data. It is important to remember that this method does not anonymize power consumption, so it is even more important to measure how much information can still be extracted from power consumption. There are the following metrics to calculate how much privacy is gained by the algorithm.
 \begin{enumerate}
+\label{subsec:information_gain}
 \item Relative Entropy:\\
 Relative entropy\footnote[2]{Relative entropy is often referred in literature as Information Gain or Kullback-Leibler divergence.} is used to compare two sources of information. In this case it would be the power consumption with the algorithm and the power consumption without the algorithm. These two loads form a stochastic process and can then be analyzed with the calculated relative entropy. (Affordable privacy for home
 smart meters)
@@ -223,7 +225,7 @@ Commit(x, r) \cdot Commit(y, s) = Commit(x+y, r+s)
 \end{equation} 
 \begin{equation}
 \label{eq:homomorph2}
-Commit(x, r){k} = Commit(x \cdot k, r \cdot k)
+Commit(x, r)^{k} = Commit(x \cdot k, r \cdot k)
 \end{equation} 
 The special feature of the method of [pedersen] is that at the same time non-homomorphic properties are satisfied. Without going into exact technical details, cryptographic commitments work as follows in a smart grid.\\
 The smart meter generates a cryptographic commitment for each measurement. Via a public key infrastructure, the smart meter and the electricity provider receive cryptographic keys. Using these keys, the smart meter can sign its commitments and then send them to the electricity provider. The electricity provider checks the commitments for correctness and if all data is correct, the electricity provider sends back a list with electricity prices and the corresponding time stamps. The meter now knows at each point in time the exact electricity consumption and the according price. By exploiting the homomorphic properties of the procedure, the smart meter can now calculate the electricity prices. The electricity price in this case would be the variable k. So the smart meter creates new cryptographic obligations with the electricity price calculated on the consumption and sends these new obligations to the electricity provider. The electricity provider can verify the correctness by performing the same calculations as the smart meter. If the results of \ref{eq:open_commit} return true, then the calculations were performed correctly by the smart meter.
