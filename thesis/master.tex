@@ -34,7 +34,7 @@ filebordercolor={0.75 0.75 1},
 linkbordercolor={0.75 0.75 1},
 pagebordercolor={0.75 0.75 1},
 urlbordercolor={0.75 0.75 1},
-pdfborder={0.75 0.75 1},plainpages=false,pdfpagelabels=true]{hyperref}
+pdfborder={0.75 0.75 1},plainpages=false,hidelinks=true,pdfpagelabels=true]{hyperref}
 \hypersetup{
   pdftitle={Privacy-preserving Smart Metering Using DC-Nets},
   pdfauthor={Gregor Garten},
@@ -48,11 +48,18 @@ pdfborder={0.75 0.75 1},plainpages=false,pdfpagelabels=true]{hyperref}
 \input{preamble/style.tex}
 \input{preamble/newcommands.tex}
 
+
+\input{./glossary.tex}
+\makeglossaries 
+
+
+
 % If you know when you will hand in your thesis, enter the date here.
 %\date{30. April 2009}
 %\newcommand{\printdate}{\@date}
 
 \begin{document}
+
 
 \pagenumbering{Roman}
 
@@ -99,11 +106,11 @@ pdfborder={0.75 0.75 1},plainpages=false,pdfpagelabels=true]{hyperref}
 
 \appendix
 
-%\addchap{Glossar}
+%\addchap{Glossary}
 
-% makeglossaries diplom
+ %makeglossaries glossary.tex
 %\printglossary[style=altlist]
-%\printglossary[type=\acronymtype,style=long]
+\printglossary[type=\acronymtype,style=long]
 
 \printbibliography
 \iffalse
