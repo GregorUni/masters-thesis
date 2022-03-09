@@ -1,4 +1,5 @@
-\chapter*{Appendix}
+
+\chapter{}
 \label{sec:Appendix}
 % Hier greift man einige wenige, interessante Gesichtspunkte der
 % Implementierung heraus. Das Kapitel darf nicht mit Dokumentation oder
@@ -18,29 +19,30 @@
 % Faden zu verlieren. Vollständige Quellprogramme haben in einer Arbeit
 % nichts zu suchen, auch nicht im Anhang, sondern gehören auf Rechner,
 % auf denen man sie sich ansehen kann.
-
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1\textwidth]{images/Messverarbeitung_mit_DC_Eng.png}
+  \includegraphics[width=1\textwidth]{images/Messverarbeitung_mit_DC_Eng2.png}
   \caption[Measured Value Processing in a SMGW]{An overview of the measured value processing within the SMGW with configuration profiles from the GWA and DC Network Protocol Extension.}
   \label{fig:value_processing_with_dc}
 \end{figure}
-
-\afterpage{%
-\begin{figure}[!p]
+%\renewcommand\topfraction{1}   
+%\renewcommand\floatpagefraction{1}
+\chapter{Weeklong Experiments}
+\enlargethispage{10}
+\vspace*{-10\baseline}
+\begin{figure}[!Hhtp]
 \centering
-\includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 2 Houses6.png}
+\includegraphics[width=0.8\columnwidth]{images/Aggregated Electricity Consumption of 2 Houses6.png}
 \caption[Aggregated Electricity Consumption of 2 Houses of the 2nd Experiment of the 2nd Experiment]{}
 \label{img:2_Houses_weekly}
-\end{figure}
-\begin{figure}[!p]
+%\vspace*{\floatsep}
 \centering
-\includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 3 Houses5.png}
+\includegraphics[width=0.8\columnwidth]{images/Aggregated Electricity Consumption of 3 Houses5.png}
 \caption[Aggregated Electricity Consumption of 3 Houses of the 2nd Experiment]{}
 \label{img:3_Houses_weekly}
 \end{figure}
-\clearpage
-}
+
+\nopagebreak
 \afterpage{%
 \begin{figure}[!p]
 \centering
@@ -99,6 +101,85 @@
 \includegraphics[width=0.85\textwidth]{images/Deviation1.png}
 \caption[Deviation of the 2nd Experiment]{Deviation}
 \label{img:Dev_2nd}
+\end{figure}
+\clearpage
+}
+
+\chapter{Yearlong Experiments}
+\enlargethispage{10}
+\vspace*{-10\baseline}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\columnwidth]{images/boxplot_neu_neu.png}
+\caption[Boxplots of the Average Base Load]{Boxplots of the Average Base Load}
+\label{img:Box}
+\centering
+\includegraphics[width=0.8\columnwidth]{images/Deviation_Houses.png}
+\caption[Deviation of the Standard Variance]{Deviation of the Standard Variance}
+\label{img:Deviation}
+\end{figure}
+\nopagebreak
+%Nachschauen mit den ferien im april bei 2 häusern
+%durchschnittliche Mittelwert(von boxplots)
+%ergebnisse der abweichung
+%versuche wurden 2 mal wiederholt.
+\afterpage{%
+\begin{figure}[!p]
+\centering
+\includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 2 Houses.png}
+\caption[Aggregated Electricity Consumption of 2 Houses]{}
+\label{img:2_Houses}
+\end{figure}
+\begin{figure}[!p]
+\centering
+\includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 3 Houses.png}
+\caption[Aggregated Electricity Consumption of 3 Houses]{}
+\label{img:3_Houses}
+\end{figure}
+\clearpage
+}
+\afterpage{%
+\begin{figure}[!p]
+\centering
+\includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 5 Houses.png}
+\caption[Aggregated Electricity Consumption of 5 Houses]{}
+\label{img:5_Houses}
+\end{figure}
+\begin{figure}[!p]
+\centering
+\includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 10 Houses.png}
+\caption[Aggregated Electricity Consumption of 10 Houses]{}
+\label{img:10_Houses}
+\end{figure}
+\clearpage
+}
+\afterpage{%
+\begin{figure}[!p]
+\centering
+\includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 25 Houses.png}
+\caption[Aggregated Electricity Consumption of 25 Houses]{}
+\label{img:25_Houses}
+\end{figure}
+\begin{figure}[!p]
+\centering
+\includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 50 Houses.png}
+\caption[Aggregated Electricity Consumption of 50 Houses]{}
+\label{img:50_Houses}
+\end{figure}
+\clearpage
+}
+\afterpage{%
+\begin{figure}[!p]
+\centering
+\includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 100 Houses.png}
+\caption[Aggregated Electricity Consumption of 100 Houses]{}
+\label{img:100_Houses}
+\end{figure}
+\begin{figure}[!p]
+\centering
+\includegraphics[width=0.85\textwidth]{images/Aggregated Electricity Consumption of 150 Houses.png}
+\caption[Aggregated Electricity Consumption of 150 Houses]{}
+\label{img:150_houses}
 \end{figure}
 \clearpage
 }

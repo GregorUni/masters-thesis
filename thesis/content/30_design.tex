@@ -63,7 +63,7 @@ During the registration process the \gls{SMGW}s have to perform a key exchange t
 \\
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=1\textwidth]{images/Top-down_update.png}
+  \includegraphics[width=1\textwidth]{images/Top-down_update2.png}
   \caption[DC Network Compatibility with TR]{
 In the figure, the 6 components of the DC network frame are
 are shown.}
@@ -77,7 +77,7 @@ A message round in the stakeholder model in combination with the DC network look
 \\
 \\\begin{figure}[tbp]
   \centering
-  \includegraphics[width=1\textwidth]{images/Header.png}
+  \includegraphics[width=1\textwidth]{images/Header2.png}
   \caption[DC Network Frame]{
 In the figure, the 6 components of the DC network data package are
 are shown.}
@@ -98,7 +98,7 @@ In order for the DC network to become operational, two \gls{SMGW} must exchange 
 As a result, the same random number sequences would be generated independently of each other by the PRNG on both clients. But there is a current communication barrier that does not allow \gls{SMGW}s to communicate with other \gls{SMGW}s. With the limited communication capabilities, the \gls{SMGW}s rely on the electricity provider. The electricity provider must provide a tunnel for the \gls{SMGW}s so that the \gls{SMGW}s can communicate with each other and exchange the start seed for the PRNG. The tunnel works as follows. An \gls{SMGW} receives the tunnel information by the power provider. The \gls{SMGW} can then send messages to the tunnel of the power provider. When messages arrive at the tunnel, the power provider forwards the messages to the receiving \gls{SMGW}. Of course, the electricity provider has the technical possibility to eavesdrop on the tunnel. For this reason, secret information such as the start value of the PRNG must be exchanged in a cryptographically secured procedure via the tunnel. One method to securely exchange the start value would be the Diffie Hellman key exchange.\\
 \begin{figure}[tbp]
   \centering
-  \includegraphics[scale=0.7]{images/key_exchange.png}
+  \includegraphics[scale=0.7]{images/key_exchange2.png}
   \caption[Diffie-Hellman Key Exchange in TR-03109]{The Diffie-Hellman key exchange between two SMGWs via a electricity supplier \gls{ES}.}
   \label{fig:keyexchange}
 \end{figure}
@@ -147,7 +147,7 @@ An example would be that if a electricity provider wants to get information abou
 \end{table}
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=0.8\textwidth]{images/Registering2.png}
+  \includegraphics[width=0.8\textwidth]{images/Registering3.png}
   \caption[Sequence Diagram Registering]{
 A sequence diagram showing the functions for registering an SMGW in a DC network.}
   \label{fig:sequencediagramregistering}
@@ -196,7 +196,7 @@ The local superposition in the field is added up with all other superpositions a
 \\
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=0.8\textwidth]{images/Exit.png}
+  \includegraphics[width=0.8\textwidth]{images/Exit2.png}
   \caption[Sequence Diagram Exiting]{A sequence diagram showing the functions for a SMGW, which wants to exit a DC network.}
   \label{fig:Exit}
 \end{figure}
@@ -222,7 +222,7 @@ In addition, an Internet loss does not have an impact on the billing of a \gls{S
 \\
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=0.5\textwidth]{images/DC Net before Split.png}
+  \includegraphics[width=0.5\textwidth]{images/DC Net before Split2.png}
   \caption[Example DC Network]{An example of a DC network before it is split in the algorithm. The edges between the nodes represent a PRNG configuration.}
   \label{fig:splitDCNetwork}
 \end{figure}One of the considerations that absolutely must be made in a DC network is: What happens if an \gls{SMGW} intentionally manipulates its local superposition?\todo{dieser satz korrekt?}\todo{planar reinnehmen oder nicht reinnehmen?}
@@ -252,7 +252,7 @@ There can be the special case that the attacker \gls{SMGW} is a border node. Sin
 Since the power provider is granted extended rights in F-mode, it must be ensured that the power provider does not abuse F-mode by, for example, running the DC network in F-mode all the time. To prevent misuse, all \gls{SMGW}s in the DC network must be informed at all times as to which mode the DC network is in. If the DC network is conspicuously often in F-mode, this could be an indication that the electricity provider is abusing its rights. In this case, the \gls{SMGW}s have the option to leave the DC network and terminate the contract with the electricity provider.
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=0.5\textwidth]{images/DC Net Split.png}
+  \includegraphics[width=0.5\textwidth]{images/DC Net Split2.png}
   \caption[DC Network Splitting Algorithm]{The result of the first division of the DC network in F-mode. Red edges are division edges removed from the original network.}
   \label{fig:FirstSplitting}
 \end{figure}
@@ -372,7 +372,7 @@ The server receives all the local superposition and adds them up to get the glob
 After each sending of the local superposition, all clients check whether a new subscriber wants to register in the DC network. If so, one client is notified by the server that it gets a new neighbor. Subsequently, another registration process takes place with the Diffie-Hellman key exchange which was described before. Another deviation from the protocol is that in the implementation each client has no minimum number of neighbors than the required 3 neighbors in the protocol. The flow chart in Figure \ref{fig:Client Implementation} illustrates the structure of the client implementation with the key functions.
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=0.8\textwidth]{images/Client_structure.png}
+  \includegraphics[width=0.8\textwidth]{images/Client_structure2.png}
   \caption[Flowchart Client Implementatioen]{The flowchart shows all program operations that are performed in the client.}
   \label{fig:Client Implementation}
 \end{figure}

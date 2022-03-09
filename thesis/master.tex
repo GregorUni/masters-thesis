@@ -87,7 +87,7 @@ pdfborder={0.75 0.75 1},plainpages=false,hidelinks=true,pdfpagelabels=true]{hype
 % remove this on final
 \listoftodos
 \cleardoublepage
-\renewcommand{\floatpagefraction}{.8}%
+\renewcommand{\floatpagefraction}{.75}%
 \listoffigures
 \cleardoublepage
 
@@ -102,10 +102,17 @@ pdfborder={0.75 0.75 1},plainpages=false,hidelinks=true,pdfpagelabels=true]{hype
 \input{content/50_evaluation.tex}
 %\input{content/60_futurework.tex}
 \input{content/70_conclusion.tex}
-\input{content/40_implementation.tex}
+\providecommand*\appendixmore{}
+\renewcommand*\appendixmore{%
+    \renewcommand*{\chapterformat}{%
+      \mbox{\appendixname~\thechapter\autodot:\enskip}%
+    }%
+}
 
 \appendix
 
+\renewcommand{\thechapter}{\Alph{chapter}}
+\input{content/40_implementation.tex}
 %\addchap{Glossary}
 
  %makeglossaries glossary.tex
