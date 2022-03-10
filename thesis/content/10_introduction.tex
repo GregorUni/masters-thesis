@@ -1,3 +1,4 @@
+%\chapter{Energy transition in power grids}
 \chapter{Introduction}
 \label{sec:intro}
 
@@ -25,73 +26,20 @@
 %since we obviously do not want to rule out such analyses, what differential privacy aims for is not to prevent information disclosure per se, but to guarantee that if an individual provides her data, it does not become significantly easier to make new inferences about that specific individual compared to the situation where her records is not in the dataset.
 
 %statistical disclosure limitation
-\todo{adopt title page}
+The increased focus on renewable energies in recent years has lead to a redistribution in the traditional power grid. The expansion is in fact a central role of the energy transition in Germany and renewable energies account for 45.3\% of gross electricity production in 2020 \cite{umwelt}. The tendency is rising and Germany aims for climate-neutrality by 2035.
+%In recent years, there has been an increased focus on renewable energies and their expansion is a central role of the energy transition in Germany. Renewable energies now account for 45.3\% of gross electricity production in the electricity sector, and the tendency is rising (German Federal Environment Agency). 
+As a result of the development, the distribution of producers in the power grid is changing from a few large power plants to many smaller renewable electricity producers. The volatile power generation of renewable energies requires efficient communication between all components in the power grid to ensure a stable electricity grid. \\
+This interconnection and communication of components in the power grid is called the smart grid. The core part within the smart grid is the smart meter. An intelligent electricity meter that transmits status information and electricity consumption from consumers to the participating electricity suppliers via the Internet. Additionally, the combined consumption of all users makes real-time pricing possible in the first place. With an integrated overview, customers can check their own electricity consumption. This facilitates the individual user to save electricity and to schedule the electricity consumption for times of the day when electricity is particularly cheap.\\ Besides the comfortable advantages, increased communication between the components also has remarkable disadvantages. Smart meters on customers-side send electricity consumption data from residential houses at short intervals, that can provide detailed insight into the behavior of individuals in their own private homes. This is a serious invasion of privacy from which the customer must be protected. Moreover, if the information gets into the wrong hands, it could be misused for criminal purposes such as burglary. Since it is very easy to find out whether someone is at home, by tracking their electricity consumption. In addition, with a simple analysis of the electricity consumption, the daily habits or even the religious affiliation of people can be revealed without much effort.\\ In this master thesis a privacy-preserving solution based on DC networks is presented, which is a privacy-enhancing technology (PET) that is used to achieve anonymity on the communication networks. Therefore, privacy can be guaranteed to the participants and at the same time all advantages of a smart grid can be offered to the energy suppliers. Special attention is paid to the technical guideline-03109 \gls{TR-03109} published by the German Federal Office for Information Security \gls{BSI}, which specifies initial requirements for smart meters. The network protocol is based on these requirements and has been designed for easy integration into the smart grid.\\ The second chapter introduces all the essential terms that are necessary for a basic understanding of this work. All participants in a Smart Grid are introduced and described. Furthermore, other solutions from the scientific community are presented. Finally, the technical guideline-03109 \gls{TR-03109} is discussed in detail and the most important requirements as well as the stakeholder model for the design are described.\\ The functionality of DC networks and the design follows in the third chapter. The design of the network protocol defines all standard operations and describes what behavior the network protocol should ideally have. Then, it introduces error correction procedures for unpredictable events so that the network remains in a consistent state. This concludes the design and moves on to the implementation phase of the thesis. At the end, the proposed solution is evaluated in terms of performance and security objectives.\\
+In the fifth chapter the experiments, which were accomplished apart from the Design and the implementation, are explained. A minimum size of DC networks is searched for, which prevents a conclusion from aggregated power consumption.\\
+All the results of this work are summarized as a conclusion in the last chapter. Additionally, an outlook on future work is given.
 
-\todo{adopt disclaimer}
 
-\todo{write introduction}
 
-\section{A Section}
 
-Referencing other chapters: \ref{sec:state} \ref{sec:design}
-\ref{sec:implementation} \ref{sec:evaluation} \ref{sec:futurework}
-\ref{sec:conclusion}
 
-\begin{table}[htp]
-  \centering
-  \begin{tabular}{lrr}
-    \textbf{Name} & \textbf{Y} & \textbf{Z} \\
-    \hline
-    \textit{Foo} & 20,614 & \SI{23}{\percent} \\
-    \textit{Bar} & 9,914 & \SI{11}{\percent} \\
-    \textit{Foo + Bar} & 30,528 & \SI{34}{\percent} \\
-    \hline
-    \textit{total} & 88,215 & \SI{100}{\percent} \\
-
-  \end{tabular}
-  \caption[Some interesting numbers]{Various very important looking numbers and sums.}
-  \label{tab:numbers}
-\end{table}
-
-More text referencing Table~\ref{tab:numbers}.
-
-\section{Another Section}
-
-\begin{figure}[tbp]
-  \centering
-  \includegraphics[width=0.8\textwidth]{images/squirrel}
-  \caption[Short description]{A long description of this squirrel figure.
-  Image taken from
-  \url{http://commons.wikimedia.org/wiki/File:Sciurus-vulgaris_hernandeangelis_stockholm_2008-06-04.jpg}}
-  \label{fig:squirrel}
-\end{figure}
-
-Citing \cite{bellard2005qfa} other documents \cite{bellard2005qfa, boileau06}
-and Figure~\ref{fig:squirrel}.
-
-Something with umlauts and a year/month date:
-\cite{becher04:_feurig_hacken_mit_firew}.
-
-And some online resources: \cite{green04}, \cite{patent:4819234}
-
-\section{Yet Another Section}
-
-\todo{add content}
-
-\begin{figure}[tbp]
- \missingfigure{Come up with a mindblowing figure.}
- \caption{A mindblowing figure}
- \label{fig:todo}
-\end{figure}
-
-\section{Test commands}
-
-\drops \LLinux \NOVA \QEMU
-\texttt{memcpy}
-A sentence about BASIC. And a correctly formatted one about ECC\@.
 
 \cleardoublepage
-
+%Additionally the combined consumption of all users makes in the first place real-pricing possible. This is instrumental for grid provider to stimulate customer using or not using their electrical device in for the grid provider convenient times. In the future will be this feature more and more necessary to avoid peaks. Through the climate crisis triggered energy transition is it highly likely that for example electrical vehicles and heat pumps are more and more components of private households. Offering the incentives to charge the car or preheating watertanks in more favorable times is only possible with a time-based pricing.
 %%% Local Variables:
 %%% TeX-master: "diplom"
 %%% End:
