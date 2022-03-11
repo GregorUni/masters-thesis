@@ -282,7 +282,7 @@ In \gls{HAN}, an \gls{SMGW} interacts with Controllable Local Systems (e.g., pho
   \caption[Measured Value Processing in a SMGW]{An overview of the measured value processing within the \gls{SMGW} with configuration profiles from the GWA.}
   \label{fig:value_processing}
 \end{figure}
-\textbf{Functionality of the Smart Meter Gateway}
+\textbf{Functionality of the Smart Meter Gateway}\enlargethispage{\baselineskip}
 \\
 \\
 First, the task of \gls{SMGW} is to store the measurements sent by meters from the \gls{LMN}. Then, the readings are processed in the \gls{SMGW} and sent to the authorized \gls{EMT}s in the \gls{WAN} after processing. An \gls{SMGW} must also perform the tasks of a firewall and separate the three interfaces. As a result it is impossible for an \gls{EMT} or \gls{GWA} to make requests to devices located in the \gls{HAN} or \gls{LMN}, even if it is allowed to interact with the \gls{SMGW} over the \gls{WAN}. The processing of data from the \gls{SMGW} is shown in Fig \ref{fig:value_processing}. Since the \gls{WAN} interface is the most important interface for this work, it will be discussed in more detail.\\
@@ -317,7 +317,8 @@ Below the particular motives of the participants are discussed and which malicio
 \textbf{Customer's Motives}
 \\
 \\
-For the costumer, all the security goals defined above are important. But by far the most important is the security goal of anonymity through the smart meter. Possible attacks on the electricity consumption penetrate deeply into the private sphere of each customer. Therefore, no conclusions may be drawn from the electricity consumption of a customer.\\
+\begin{samepage}\enlargethispage{\baselineskip}
+For the costumer, all the security goals defined above are important. But by far the most important is the security goal of anonymity through the smart meter. Possible attacks on the electricity consumption penetrate deeply into the private sphere of each customer. Therefore, no conclusions may be drawn from the electricity consumption of a~customer. \end{samepage}\\
 \begin{samepage}\enlargethispage{\baselineskip}On the other hand, unethical customers may try to steal electricity to save energy costs. The smart meter is located in or on the customer's house. An unethical customer could attempt to tamper directly with the smart meter's hardware or software. The attempts could look like this, a Costumer could try to reduce the recorded electricity consumption at the smart meter or the smart meter could be manipulated to measure less electricity when electricity prices are high and more electricity when electricity \nopagebreak prices~are~low~\cite{lemay2007unified}.\nopagebreak
 \end{samepage}
 \\
